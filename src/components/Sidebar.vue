@@ -14,8 +14,8 @@ export default {
     color: #000000;
     margin-left: 0px;
     margin-top: 0px;
-    width: 404px;
-    height: 100vh;
+    width: 300px;
+    height: 120vh;
     position: absolute;
 
 }
