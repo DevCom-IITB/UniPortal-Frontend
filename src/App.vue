@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+   
+    <Navbar />
+    <Sidebar />
+    <Questionheader />
     <Question />
     
   </div>

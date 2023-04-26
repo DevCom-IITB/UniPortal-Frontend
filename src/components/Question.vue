@@ -47,8 +47,8 @@
     position: absolute;
 width: 1018px;
 height: 210px;
-margin-left: 160px;
-margin-top: 180px;
+margin-left: 440px;
+margin-top: 576px;
 background-color: white;
 
 margin-right: 800px;
@@ -144,7 +144,7 @@ margin-right: 800px;
 }
 
 .line{
-    background-color: bisque;
+    background-color: #bfbcbc;
     margin-top: 230px;
     width:986px;
     height: 2px;
