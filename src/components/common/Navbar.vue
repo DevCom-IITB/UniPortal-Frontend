@@ -1,8 +1,8 @@
 <template>
     <div class="navbar">
-        <h1>Infopost</h1>
-        <h1>Questions</h1>
-        <h1>My Questions</h1>
+        <h1><router-link to="/infopost"><div class="route">Infopost</div></router-link></h1>
+        <h1><router-link to="/questions"><div class="route">Questions</div></router-link></h1>
+        <h1><router-link to="/myquestions"><div class="route">My Questions</div></router-link></h1>
     </div>
 </template>
 
@@ -13,6 +13,11 @@ export default {
 </script>
 
 <style scoped>
+.route {
+background: #CCCCCC;
+color: #000000;
+text-decoration: inherit;   
+}
 h1 {
     background: #CCCCCC;
 }
