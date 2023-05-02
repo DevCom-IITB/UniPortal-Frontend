@@ -47,7 +47,7 @@
     position: absolute;
 width: 1018px;
 height: 210px;
-margin-left: 440px;
+margin-left: 661px;
 margin-top: 576px;
 background-color: white;
 

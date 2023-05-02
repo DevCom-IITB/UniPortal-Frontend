@@ -8,6 +8,7 @@ const routes = [
         name: 'Infopost',
         component: Infopost,
     },
+    
     {
         path: '/myquestions',
         name: 'MyQuestions',

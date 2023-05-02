@@ -22,7 +22,7 @@ font-size: 80px;
 display: flex;
 justify-content: center;
 align-items: center;
-margin-left: 440px;
+margin-left: 661px;
 margin-top: 144px;
 height: 288px;
 width: 55%;
