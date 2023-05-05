@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <div class = "quesmaterial">
         <div class="question">
             
             <div class="name"> 
@@ -12,7 +13,7 @@
             </div>
             <div class="qtext">
                 I would like to update Vamsi Krishna's answer.
-                 Vuetify now provides since v2.3 border utilities 
+                 Vuetify now provides since v2.3 boxrder utilities 
                  to quickly style the border-radius of any element.
                  By continuing, you’re agreeing to our main services 
                  agreement, user terms of service, privacy policy, 
@@ -28,10 +29,11 @@
             <div class="text1">Comment</div>
             
         </div>
-        <div class="line">
+        <!-- <div class="line">
 
-        </div>
+        </div> -->
     </div>
+</div>
 </template>
 
 
@@ -43,6 +45,9 @@
 
 
 <style scoped>
+.quesmaterial{
+    position: relative;
+}
 .container{
     position: absolute;
 width: 1018px;
@@ -145,7 +150,7 @@ margin-right: 800px;
 
 .line{
     background-color: #bfbcbc;
-    margin-top: 230px;
+    
     width:986px;
     height: 2px;
     margin-left: 16px;
