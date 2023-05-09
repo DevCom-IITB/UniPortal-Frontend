@@ -1,5 +1,5 @@
 <template>
- <div class="askQuesButton"><a class="button" href="#popup1">Ask Me a Question</a></div>
+ <div class="askQuesButton"><a class="button" href="#popup1"><i class="fa-solid fa-question"></i>Ask a Question</a></div>
     <div id="popup1" class="overlay">
         <div class="popup">
             <h2>Tanmay Jain</h2>
@@ -44,6 +44,10 @@
   text-align: center;
 }
 
+.fa-solid {
+    color: white;
+    background-color: #3E3C5D;
+}
 .button {
 display: flex;
 flex-direction: row;
