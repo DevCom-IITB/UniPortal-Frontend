@@ -25,7 +25,7 @@ align-items: center;
 margin-left: 661px;
 margin-top: 144px;
 height: 288px;
-width: 55%;
+width: 1018px;
 border-radius: 29px;
 padding: 25px 48px 25px 48px;
 font-weight:400;
