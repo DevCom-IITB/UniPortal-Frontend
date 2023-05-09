@@ -2,7 +2,8 @@
    <div class="sidebar">
     
         <button class="btn-1">
-            <i class="fa-regular fa-globe"></i>Email 
+            
+            <i class="fas fa-globe" style="line-height: 1; color: rgb(30, 48, 80);"></i>Email 
         </button>
         <button class="btn-2">
             <i class="fa-regular fa-globe"></i>SMP Website 
@@ -34,6 +35,7 @@ export default {
     height: 1048px;
     position: fixed;
     border-radius: 24px;
+    justify-content: space-between;
 
 }
 .btn-1{
@@ -74,6 +76,7 @@ button:hover{
 
 .fa-regular {
     color: #000000;
-    z-index: 1;
+    background-color: #e6e6e6;
+    
 }
 </style>
