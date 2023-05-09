@@ -84,8 +84,8 @@
     position: absolute;
 width: 1088px;
 height: 228px;
-margin-left: 0px;
-margin-top: 40px;
+margin-left: 661px;
+margin-top: 576px;
 background-color: white;
 
 margin-right: 800px;
