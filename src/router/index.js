@@ -5,7 +5,7 @@ import Infopost from '../views/Infopost.vue'
 
 const routes = [
     {
-        path: '/infopost',
+        path: '/',
         name: 'Infopost',
         component: Infopost,
     },

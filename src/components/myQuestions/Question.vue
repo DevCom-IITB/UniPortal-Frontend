@@ -13,7 +13,7 @@
             
             </div>
         <div class="question">
-            
+            <div class="top">
             <div class="name"> 
                 <div class="text">Tanmay Jain</div>
                 
@@ -25,6 +25,7 @@
             <div class="verification"> 
                 <div class="vtext">Verified answer</div>
                 
+            </div>
             </div>
 
            
@@ -82,129 +83,114 @@
 <style scoped>
 .container{
     position: absolute;
-width: 1088px;
-height: 228px;
-margin-left: 597px;
-margin-top: 576px;
+width: 59%;
+height: 25vh;
+margin-left: 32%;
+margin-top: 64vh;
 background-color: white;
+display: flex;
 
-margin-right: 800px;
+.top {
+    display: flex;
+    flex-direction: row;
+}
 
 }
 .question{
     background: #bebcbc;
         color: #000000;
-        margin-left: 64px;
+        margin-left: 6vh;
         margin-right:0px;
         margin-top: 0px;
-        width: 1024px;
-        height: 154px;
+        width: 92.5%;
+        height: 18vh;
         position: absolute;
-        border-radius:22px;
+        border-radius: 22px;
+        
 }
 
 .name{
     background:#bebcbc;
         color: #000000;
-        margin-left: 16pt;
+        margin-left: 2%;
         margin-right:0px;
-        margin-top: 16px;
-        width: 130px;
-        height: 40px;
+        margin-top: 2vh;
+        width: 14%;
+        height: 8vh;
         position: absolute;
-        border-radius:24px;
-    
+        border-radius:24px;  
+        text-align:left;
+     
 }
 .verification{
     background:#bebcbc;
         color: #000000;
-        margin-left: 886px;
-       
-        margin-right:0px;
-        margin-top: 16px;
-        width: 130px;
-        height: 40px;
+        margin-left: 80%;
+        
+        margin-top: 2vh;
+        width: 14%;
+        height: 4vh;
         position: absolute;
-        border-radius:24px;
-    
+        border-radius:24px;  
 }
 .timestamp{
     background:#bebcbc;
         color: #000000;
-        margin-left: 114pt;
-        margin-right:0px;
-        margin-top: 16px;
-        width: 130px;
-        height: 40px;
+        margin-left: 20%;
+        margin-right: 0px;
+        margin-top: 1.8vh;
+        width: 14%;
+        height:4vh;
         position: absolute;
-        border-radius:24px;
+        border-radius: 24px;
     
 }
 
 .upvotebox{
     border-radius: 100px;
-    height:82px;
-    width:48px;
+    height:10vh;
+    width:4%;
     background-color:#bebcbc;
-    
     position: absolute;
-    top:50%;
-    margin-top: -41px;
-    margin-left: 8px;
+    top: 50%;
+    margin-top: -8vh;
+    
 }
 
 .upvotetext{
     text-align: center;
     color: black;
-    margin-top: 2px;
+    margin-top: 0.5vh;
     font-size: x-large;
 }
 
 .comment{
-    
     background: #bebcbc;
     color: #000000;
-    margin-left: 921px;
-    margin-right:250px;
-    margin-top: 170px;
-    width: 167px;
-    height: 44px;
+    margin-left: 83%;
+    
+    margin-top: 19vh;
+    width: 15%;
+    height: 5vh;
     position: absolute;
     border-radius:24px;
-
-
 }
 .hidecomment{
-    
     background: #bebcbc;
     color: #000000;
-    margin-left: 740px;
-    margin-right:250px;
-    margin-top: 170px;
-    width: 167px;
-    height: 44px;
+    margin-left: 68%;
+    
+    margin-top: 19vh;
+    width: 15%;
+    height: 5vh;
     position: absolute;
     border-radius:24px;
 
 
 }
-.text{
-    text-align:left;
-    color: black;
-    margin-top: -4px;
-    
-    padding: 5px;
-    font-size: larger;
-    font-weight:500;
-}
 
-.text1{
-    text-align: center;
-    color: black;
-    margin-top: 4px;
-    
-    font-size: large;
-}
+
+
 .timetext{
     text-align: center;
     color: black;
@@ -235,8 +221,12 @@ margin-right: 800px;
     
 }
 .btn1{
-    margin-top: 5px;
-    margin-left: 9px;
+    margin-top: 0.9vh;
+    margin-left: 0.95vh;
+    width: 66%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .btn2{
     margin-top: 0px;

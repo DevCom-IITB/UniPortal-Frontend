@@ -57,10 +57,11 @@ padding: 24px 40px;
 gap: 16px;
 z-index: 1;
 position: fixed;
-width: 293px;
-height: 80px;
-left: 1027px;
-top: 780px;
+width: 16%;
+height: 10vh;
+left: 55.5%;
+top: 87vh;
+line-height: 3.3vh;
 background: #3E3C5D;
 border-color: #3E3C5D;
 text-align: center;
@@ -69,6 +70,7 @@ font-size: x-large;
 font-family: Inter;
 box-shadow: none;
 border-radius: 24px;
+text-decoration: none;
 
 }
 
