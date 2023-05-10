@@ -215,9 +215,10 @@ display: flex;
 .line{
     background-color: bisque;
  
-    width:986px;
+    width:100%;
     height: 2px;
     margin-left: 16px;
+    margin-top: -2vh
     
 }
 .btn1{
@@ -232,6 +233,7 @@ display: flex;
     margin-top: 0px;
     margin-left: 9px;
 }
+
 
 
 
