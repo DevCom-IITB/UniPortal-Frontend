@@ -8,7 +8,7 @@
     </div>
   </template>
   
-  <script>
+  <script lang="ts">
   import Navbar from '../components/common/Navbar.vue'
   import Sidebar from '../components/common/Sidebar.vue'
   import questionBox from '../components/myQuestions/questionBox.vue'

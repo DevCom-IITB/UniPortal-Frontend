@@ -1,17 +1,9 @@
 <template>
     <div class="container">
         
-            <div class="upvotebox">
-                <button class="btn1">
-                        <h1>
-                            
-                                ^
-                            
-                        </h1>
-                    </button>
-                <div class="upvotetext">4</div>
+            <upvote />
             
-            </div>
+            
         <div class="question">
             <div class="top">
             <div class="name"> 
@@ -69,14 +61,18 @@
         <div class="line">
 
         </div>
-    </div>
+        </div>
+    
 </template>
 
 
 <script>
+import upvote from '../common/upvote.vue'
     export default {
-        name: 'Question'
-    }
+        name: 'Question',
+        components: {
+            upvote,
+    }}
     </script>
 
 
@@ -88,14 +84,14 @@ height: 25vh;
 margin-left: 32%;
 margin-top: 64vh;
 background-color: white;
-display: flex;
+display: flex;}
 
 .top {
     display: flex;
     flex-direction: row;
 }
 
-}
+
 .question{
     background: #bebcbc;
         color: #000000;
@@ -146,23 +142,7 @@ display: flex;
     
 }
 
-.upvotebox{
-    border-radius: 100px;
-    height:10vh;
-    width:4%;
-    background-color:#bebcbc;
-    position: absolute;
-    top: 50%;
-    margin-top: -8vh;
-    
-}
 
-.upvotetext{
-    text-align: center;
-    color: black;
-    margin-top: 0.5vh;
-    font-size: x-large;
-}
 
 .comment{
     background: #bebcbc;
@@ -221,14 +201,7 @@ display: flex;
     margin-top: -2vh
     
 }
-.btn1{
-    margin-top: 0.9vh;
-    margin-left: 0.95vh;
-    width: 66%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 .btn2{
     margin-top: 0px;
     margin-left: 9px;
