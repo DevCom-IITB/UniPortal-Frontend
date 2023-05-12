@@ -1,5 +1,8 @@
 <template>
     <div class="container">
+        <div class="del">
+      <Delete /> 
+        </div>
         
             <div class="upvotebox">
                 <button class="btn1">
@@ -74,8 +77,12 @@
 
 
 <script>
+import Delete from "./Delete.vue"
     export default {
-        name: 'Question'
+        name: 'Question',
+        components: {
+            Delete
+        }
     }
     </script>
 
@@ -234,7 +241,13 @@ display: flex;
     margin-left: 9px;
 }
 
-
+.del {
+    
+    margin-left: 84%;
+    margin-top: 1vh;
+    color: red;
+    z-index: 1;
+}
 
 
 
