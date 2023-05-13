@@ -24,7 +24,7 @@
  <style scoped>
  .upvotebox{
     border-radius: 100px;
-    height:10vh;
+    height:12vh;
     width:4%;
     background-color:#bebcbc;
     position: absolute;
@@ -37,14 +37,20 @@
     color: black;
     margin-top: 0.5vh;
     font-size: x-large;
+    background-color: #bebcbc;
 }
 .btn1{
-    margin-top: 0.9vh;
+    margin-top: 1.5vh;
     margin-left: 0.95vh;
     width: 66%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #bebcbc;
+    border-width: 0px;
+}
+h1{
+    background-color: #bebcbc;
 }
 
 </style>

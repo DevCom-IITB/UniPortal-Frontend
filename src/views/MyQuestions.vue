@@ -11,8 +11,7 @@
   <script lang="ts">
   import Navbar from '../components/common/Navbar.vue'
   import Sidebar from '../components/common/Sidebar.vue'
-  import questionBox from '../components/myQuestions/questionBox.vue'
-  import Question from '../components/myQuestions/Question.vue'
+  import Question from '../components/common/questionBox.vue'
   import questionHeader from '../components/myQuestions/questionHeader.vue'
 
   
@@ -21,7 +20,6 @@
     components: {
       Navbar,
       Sidebar,
-      questionBox,
       Question,
       questionHeader
      
