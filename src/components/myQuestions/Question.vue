@@ -1,8 +1,16 @@
 <template>
-    <div class="container">
-        <div class="del">
-      <Delete /> 
-        </div>
+    <div class="del">
+        <Delete />
+    </div>
+
+    
+    
+    
+    
+        <div class="container"> 
+            <div v-show="showComment">
+            <comment @toggle-comment="toggleComment" /> 
+            </div>    
         
             <div class="upvotebox">
                 <button class="btn1">
@@ -11,78 +19,71 @@
                                 ^
                             
                         </h1>
-                    </button>
+                </button>
                 <div class="upvotetext">4</div>
-            
             </div>
-        <div class="question">
-            <div class="top">
-            <div class="name"> 
-                <div class="text">Tanmay Jain</div>
-                
-            </div>
-            <div class="timestamp"> 
-                <div class="timetext">Timestamp</div>
-                
-            </div>
-            <div class="verification"> 
-                <div class="vtext">Verified answer</div>
-                
-            </div>
-            </div>
+        
+            <div class="question">
+                <div class="top">
+                    <div class="name"> 
+                        <div class="text">Saksham</div>
+                    </div>
+                    <div class="timestamp"> 
+                        <div class="timetext">timestamp</div>
+                    </div>
+                    <div class="verification"> 
+                        <div class="vtext">verified answer</div>
+                    </div>
+                </div>
 
            
-            <div class="qtext">
-                I would like to update Vamsi Krishna's answer.
-                 Vuetify now provides since v2.3 border utilities 
-                 to quickly style the border-radius of any element.
-                 By continuing, you’re agreeing to our main services 
-                 agreement, user terms of service, privacy policy, 
-                 cookie policy and Slack supplemental terms.
-            </div>
+                <div class="qtext">
+                    <p>i would like to upvote vamsi krishna's answer</p>.
+                </div>
             
-        </div>
+            </div>
         
-        <div class="comment">
-            <div class="text1">
-                <button class="btn2">
+            <div class="comment">
+                <div class="text1">
+                    <button @click="toggleComment" class="btn2">
                         <h1>
                             
-                                Comment
+                             comment
                             
                         </h1>
                     </button>
-
+                </div>
             </div>
+        </div>
             
-        </div>
-        <div class="hidecomment">
-            <div class="text1">
-                <button class="btn2">
-                        
-                            
-                                 Hide Comment
-                            
-                        
-                    </button>
-
-            </div>
+   
             
-        </div>
-        <div class="line">
-
-        </div>
-    </div>
+    
 </template>
 
 
 <script>
-import Delete from "./Delete.vue"
+
+    import Delete from './Delete.vue'
+    import comment from './comment.vue'
+
     export default {
         name: 'Question',
         components: {
-            Delete
+            Delete,
+            comment
+        },
+        data() {
+            return {
+                showComment: false
+            }
+        },
+        methods: {
+            toggleComment() {
+                this.showComment = !this.showComment
+            }
         }
+        
     }
     </script>
 
@@ -109,7 +110,7 @@ display: flex;
         margin-left: 6vh;
         margin-right:0px;
         margin-top: 0px;
-        width: 92.5%;
+        width: 93.3%;
         height: 18vh;
         position: absolute;
         border-radius: 22px;
@@ -243,10 +244,12 @@ display: flex;
 
 .del {
     
-    margin-left: 84%;
-    margin-top: 1vh;
+    margin-left: 88%;
+    margin-top: -2vh;
     color: red;
     z-index: 1;
+    position: absolute;
+    
 }
 
 

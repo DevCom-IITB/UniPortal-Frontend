@@ -1,9 +1,9 @@
 <template>
     <div class="navbar">
         
-        <router-link to="/"><button class="btn1"><div class="route"><h1>Infopost</h1></div></button></router-link>
-        <router-link to="/questions"><button class="btn2"><div class="route"><h1>Questions</h1></div></button></router-link>
-        <router-link to="/myquestions"><button class="btn3"><div class="route"><h1>My Questions</h1></div></button></router-link>
+        <router-link to="/"><button class="btn1"><div class="route">Infopost</div></button></router-link>
+        <router-link to="/questions"><button class="btn2"><div class="route">Questions</div></button></router-link>
+        <router-link to="/myquestions"><button class="btn3"><div class="route">My Questions</div></button></router-link>
         
         
     </div>
@@ -17,10 +17,22 @@ export default {
 
 <style scoped>
 .route {
-background: #f2f2f2;
+background: transparent;
 color: #000000;
+text-decoration: inherit;
+font-size: 1.8rem;
+}
+
+h1 {
+    background: transparent;
+}
+
+.route:hover {
+background: transparent;
+color: black;
 text-decoration: inherit;   
 }
+
 
 a {
     background-color: #f2f2f2;
@@ -54,7 +66,7 @@ button{
     width: 339.33px;
     display: flex;
     flex-direction: row;
-    background-color: #f2f2f2;
+    background-color: transparent;
     height: 10vh;
     border-radius: 52px;
     border: #f2f2f2;

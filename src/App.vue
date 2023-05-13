@@ -22,6 +22,24 @@ export default {
     Navbar,
     Sidebar,
     popup,
+  },
+  data(){
+    return{
+      questions: []
+    }
+  },
+  created(){
+    this.questions=[
+      {
+        id:1,
+        user_id:'Tanmay Jain',
+        time: 'Timestamp',
+        body:'I would like to update Vamsi Krishnas answer.',
+        ver:'Verified answer',
+        comments: 'Comment'
+
+      }
+    ]
   }
 }
 </script>

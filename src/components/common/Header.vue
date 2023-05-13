@@ -1,6 +1,6 @@
 <template>
     <div class="cont">
-        <div class="Header">Illustration</div>
+        <div class="Header">Infopost</div>
     </div> 
     
 

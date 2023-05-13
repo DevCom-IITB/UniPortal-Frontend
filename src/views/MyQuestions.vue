@@ -22,7 +22,12 @@
       Question,
       questionHeader
      
-    }
+    },
+    data(){
+    return{
+      questions: []
+    }},
+    
   }
   </script>
   
