@@ -7,10 +7,10 @@
     </div>
   </template>
   
-  <script>
-  
-  import questionBox from '../components/myQuestions/questionBox.vue'
-  import Question from '../components/myQuestions/Question.vue'
+  <script lang="ts">
+  import Navbar from '../components/common/Navbar.vue'
+  import Sidebar from '../components/common/Sidebar.vue'
+  import Question from '../components/common/questionBox.vue'
   import questionHeader from '../components/myQuestions/questionHeader.vue'
 
   
@@ -18,7 +18,6 @@
     name: 'Myquestions',
     components: {
       
-      questionBox,
       Question,
       questionHeader
      

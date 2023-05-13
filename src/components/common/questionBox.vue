@@ -12,29 +12,24 @@
             <comment @toggle-comment="toggleComment" /> 
             </div>    
         
-            <div class="upvotebox">
-                <button class="btn1">
-                        <h1>
-                            
-                                ^
-                            
-                        </h1>
-                </button>
-                <div class="upvotetext">4</div>
+            <upvote />
+            
+            
+        <div class="question">
+            <div class="top">
+            <div class="name"> 
+                <div class="text">Tanmay Jain</div>
+                
             </div>
-        
-            <div class="question">
-                <div class="top">
-                    <div class="name"> 
-                        <div class="text">Saksham</div>
-                    </div>
-                    <div class="timestamp"> 
-                        <div class="timetext">timestamp</div>
-                    </div>
-                    <div class="verification"> 
-                        <div class="vtext">verified answer</div>
-                    </div>
-                </div>
+            <div class="timestamp"> 
+                <div class="timetext">Timestamp</div>
+                
+            </div>
+            <div class="verification"> 
+                <div class="vtext">Verified answer</div>
+                
+            </div>
+            </div>
 
            
                 <div class="qtext">
@@ -50,7 +45,7 @@
                             
                              comment
                             
-                        </h1>
+                        
                     </button>
                 </div>
             </div>
@@ -67,6 +62,7 @@
     import Delete from './Delete.vue'
     import comment from './comment.vue'
 
+import upvote from '../common/upvote.vue'
     export default {
         name: 'Question',
         components: {
@@ -83,8 +79,10 @@
                 this.showComment = !this.showComment
             }
         }
-        
-    }
+        ,
+        components: {
+            upvote,
+    }}
     </script>
 
 
@@ -96,16 +94,16 @@ height: 25vh;
 margin-left: 32%;
 margin-top: 64vh;
 background-color: white;
-display: flex;
+display: flex;}
 
 .top {
     display: flex;
     flex-direction: row;
 }
 
-}
+
 .question{
-    background: #bebcbc;
+    background-color: #bebcbc;
         color: #000000;
         margin-left: 6vh;
         margin-right:0px;
@@ -118,20 +116,20 @@ display: flex;
 }
 
 .name{
-    background:#bebcbc;
+    background-color:#bebcbc;
         color: #000000;
         margin-left: 2%;
         margin-right:0px;
-        margin-top: 2vh;
+        margin-top: 1.5vh;
         width: 14%;
-        height: 8vh;
+        height: 5vh;
         position: absolute;
         border-radius:24px;  
         text-align:left;
      
 }
 .verification{
-    background:#bebcbc;
+    background-color:#bebcbc;
         color: #000000;
         margin-left: 80%;
         
@@ -139,12 +137,15 @@ display: flex;
         width: 14%;
         height: 4vh;
         position: absolute;
-        border-radius:24px;  
+        border-radius:15px; 
+        border-color: #000000; 
+        border-width: 1px;
+        border-style: solid;
 }
 .timestamp{
-    background:#bebcbc;
+    background-color:#bebcbc;
         color: #000000;
-        margin-left: 20%;
+        margin-left: 13%;
         margin-right: 0px;
         margin-top: 1.8vh;
         width: 14%;
@@ -154,26 +155,10 @@ display: flex;
     
 }
 
-.upvotebox{
-    border-radius: 100px;
-    height:10vh;
-    width:4%;
-    background-color:#bebcbc;
-    position: absolute;
-    top: 50%;
-    margin-top: -8vh;
-    
-}
 
-.upvotetext{
-    text-align: center;
-    color: black;
-    margin-top: 0.5vh;
-    font-size: x-large;
-}
 
 .comment{
-    background: #bebcbc;
+    background-color: #bebcbc;
     color: #000000;
     margin-left: 83%;
     
@@ -184,7 +169,7 @@ display: flex;
     border-radius:24px;
 }
 .hidecomment{
-    background: #bebcbc;
+    background-color: #bebcbc;
     color: #000000;
     margin-left: 68%;
     
@@ -199,17 +184,36 @@ display: flex;
 
 
 
+
 .timetext{
     text-align: center;
-    color: black;
+    color:rgb(63, 61, 61);
     margin-top: 4px;
+    background-color: #bebcbc;
+
     
     
 }
 .vtext{
     text-align: center;
-    color: black;
+    color: rgb(72, 70, 70);
     margin-top: 4px;
+    background-color: #bebcbc;
+    margin-left: 4px;
+    margin-right: 4px;
+    
+
+}
+.text{
+    text-align:left;
+    color: black;
+    margin-top: 6px;
+    background-color: #bebcbc;
+    margin-left: 4px;
+    margin-right: 4px;
+    height: 3vh;
+    font-size:large;
+    
     
 
 }
@@ -218,6 +222,7 @@ display: flex;
     align-items: center;
     margin-left: 16px;
     margin-top: 64px;
+    background-color: #bebcbc;
 }
 
 .line{
@@ -229,17 +234,12 @@ display: flex;
     margin-top: -2vh
     
 }
-.btn1{
-    margin-top: 0.9vh;
-    margin-left: 0.95vh;
-    width: 66%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 .btn2{
-    margin-top: 0px;
-    margin-left: 9px;
+    margin-top: 3px;
+    margin-left: 35px;
+    height: 10%;
+    background-color: #bebcbc;
 }
 
 .del {

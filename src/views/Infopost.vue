@@ -8,8 +8,8 @@
     </div>
   </template>
   
-  <script>
-  import questionBox from '../components/myQuestions/questionBox.vue'
+  <script lang="ts" >
+  import questionBox from '../components/common/infopostBox.vue'
   import Header from '../components/common/Header.vue'
   import InfoBox from '../components/infopost/InfoBox.vue'
   
