@@ -1,8 +1,8 @@
 <template>
     
     <div class="questionBox"></div> 
-    <div class="questionBox" id="one"></div> 
-    <div class="questionBox" id="two"></div> 
+    <!-- <div class="questionBox" id="one"></div> 
+    <div class="questionBox" id="two"></div>  -->
  </template>
  
  <script lang ="ts">

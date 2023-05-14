@@ -1,16 +1,5 @@
 <template>
-    <div class="del">
-        <Delete />
-    </div>
-
-    
-    
-    
-    
-        <div class="container"> 
-            <div v-show="showComment">
-            <comment @toggle-comment="toggleComment" /> 
-            </div>    
+    <div class="container">
         
             <upvote />
             
@@ -32,54 +21,55 @@
             </div>
 
            
-                <div class="qtext">
-                    <p>i would like to upvote vamsi krishna's answer</p>.
-                </div>
-            
+            <div class="qtext">
+                I would like to update Vamsi Krishna's answer.
+                 Vuetify now provides since v2.3 border utilities 
+                 to quickly style the border-radius of any element.
+                 By continuing, you’re agreeing to our main services 
+                 agreement, user terms of service, privacy policy, 
+                 cookie policy and Slack supplemental terms.
             </div>
+            
+        </div>
         
-            <div class="comment">
-                <div class="text1">
-                    <button @click="toggleComment" class="btn2">
-                        <h1>
+        <div class="comment">
+            <div class="text1">
+                <button class="btn2">
+                        
                             
-                             comment
+                                Comment
                             
                         
                     </button>
-                </div>
+
             </div>
+            
         </div>
+        <div class="hidecomment">
+            <div class="text1">
+                <button class="btn2">
+                        
+                            
+                                 Hide Comment
+                            
+                        
+                    </button>
+
+            </div>
             
-   
-            
+        </div>
+        <div class="line">
+
+        </div>
+        </div>
     
 </template>
 
 
 <script>
-
-    import Delete from './Delete.vue'
-    import comment from './comment.vue'
-
 import upvote from '../common/upvote.vue'
     export default {
         name: 'Question',
-        components: {
-            Delete,
-            comment
-        },
-        data() {
-            return {
-                showComment: false
-            }
-        },
-        methods: {
-            toggleComment() {
-                this.showComment = !this.showComment
-            }
-        }
-        ,
         components: {
             upvote,
     }}
@@ -108,7 +98,7 @@ display: flex;}
         margin-left: 6vh;
         margin-right:0px;
         margin-top: 0px;
-        width: 93.3%;
+        width: 92.5%;
         height: 18vh;
         position: absolute;
         border-radius: 22px;
@@ -207,7 +197,7 @@ display: flex;}
 .text{
     text-align:left;
     color: black;
-    margin-top: 6px;
+    margin-top: 8px;
     background-color: #bebcbc;
     margin-left: 4px;
     margin-right: 4px;
@@ -242,15 +232,7 @@ display: flex;}
     background-color: #bebcbc;
 }
 
-.del {
-    
-    margin-left: 88%;
-    margin-top: -2vh;
-    color: red;
-    z-index: 1;
-    position: absolute;
-    
-}
+
 
 
 

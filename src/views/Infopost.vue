@@ -1,33 +1,43 @@
 <template>
     <div class="container">
       
-      <Header />
-      <InfoBox />
-      <questionBox/>      
+      <Header :headerName="headerName" />
+      <div v-for="id in ids" :key="id"><InfopostBox :id="id" /></div>
       <router-view></router-view>
     </div>
   </template>
   
-  <script lang="ts" >
-  import questionBox from '../components/common/infopostBox.vue'
+  <script>
   import Header from '../components/common/Header.vue'
-  import InfoBox from '../components/infopost/InfoBox.vue'
+  import InfopostBox from '../components/common/infopostBox.vue';
   
-  export default {
-    name: 'Infopost',
-    components: {
-      
-      questionBox,
-      Header, 
-      InfoBox
+export default {
+  name: 'Infopost',
+  data() {
+    return {
+      headerName : 'Infopost',
+      infoposts: null
+    }
+  },
+  components: {
+    InfopostBox,
+    Header
+  },
+  methods:{
+    async created() {
+      const response = await fetch('http://localhost:3000/infoposts')
+      const data = await response.json()
+      console.log(data)
+      this.infoposts = data
+    },
+    computed: {
+      ids() {
+        return this.infoposts ? this.infoposts.map(i => i.id) : []
+      }
     }
   }
+}
   </script>
   
   <style>
-  * {
-    background: white;
-  }
-
-  
   </style>
