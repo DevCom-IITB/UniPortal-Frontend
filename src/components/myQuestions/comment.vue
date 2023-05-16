@@ -15,6 +15,7 @@
 <script>
 export default {
     name: 'comment',
+  
     
 }
 </script>
@@ -24,6 +25,7 @@ export default {
                 margin-right: 10%;
         display: flex;
         position: absolute;
+        flex-grow: 1;
     }
     
 
@@ -31,10 +33,10 @@ export default {
 
 .form-control input {
 
-  width: 5700%;
+  width: 5750%;
   height: 5vh;
-  margin-top: 25vh;
-  margin-left: 280%;
+  margin-top: 27vh;
+  margin-left: 300%;
   padding: 3px 7px;
   font-size: 1rem;
   border-radius: 24px;
@@ -53,7 +55,7 @@ export default {
     background-color: pink;
     color: black;
     margin-top: -3vh;
-    margin-left: 5700%;
+    margin-left: 5820%;
     position: absolute;
     
     

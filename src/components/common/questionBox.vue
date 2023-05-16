@@ -1,10 +1,21 @@
 <template>
-    <div class="container">
+    
+        <div class="del">
+        <Delete />
+        </div>
         
+        <div class="container">
+            
+            
+            
+        
+            <div v-show="showComment" class="comm">
+                <comment />  
+            </div>  
+            
             <upvote />
-            
-            
-        <div class="question">
+
+            <div class="question">
             <div class="top">
             <div class="name"> 
                 <div class="text">Tanmay Jain</div>
@@ -34,45 +45,56 @@
         
         <div class="comment">
             <div class="text1">
-                <button class="btn2">
-                        
+                <button @click="toggleComment" class="btn2">
+                        <h1>
                             
                                 Comment
                             
-                        
+                        </h1>
                     </button>
 
             </div>
             
         </div>
-        <div class="hidecomment">
-            <div class="text1">
-                <button class="btn2">
-                        
-                            
-                                 Hide Comment
-                            
-                        
-                    </button>
+        
+        
 
             </div>
             
-        </div>
-        <div class="line">
-
-        </div>
-        </div>
+        
+        
     
 </template>
 
 
 <script>
 import upvote from '../common/upvote.vue'
+import Delete from '../myQuestions/Delete.vue'
+import comment from '../myQuestions/comment.vue'
+import Viewcomments from './viewcomments.vue'
     export default {
         name: 'Question',
         components: {
             upvote,
-    }}
+            Delete, 
+            comment,
+                Viewcomments
+        },
+        data () {
+            return {
+                showComment: false
+            }
+        },
+        methods: {
+            toggleComment() {
+                this.showComment = !this.showComment
+            }
+        }
+        
+       
+        
+                
+}
     </script>
 
 
@@ -84,25 +106,38 @@ height: 25vh;
 margin-left: 32%;
 margin-top: 64vh;
 background-color: white;
-display: flex;}
+display: flex
+}
 
 .top {
     display: flex;
     flex-direction: row;
 }
 
-
+.comm {
+    display: flex;
+    position:absolute;
+    flex-grow: 1;
+}
 .question{
     background-color: #bebcbc;
         color: #000000;
-        margin-left: 6vh;
+        margin-left: 5%;
         margin-right:0px;
         margin-top: 0px;
-        width: 92.5%;
+        width: 93.3%;
         height: 18vh;
         position: absolute;
         border-radius: 22px;
         
+}
+
+.del {
+    margin-left: 88%;
+    margin-top: -2vh;
+    color: red;
+    z-index: 1;
+    position: absolute;
 }
 
 .name{
@@ -135,8 +170,8 @@ display: flex;}
 .timestamp{
     background-color:#bebcbc;
         color: #000000;
-        margin-left: 13%;
-        margin-right: 0px;
+        margin-left:13%;
+        margin-right: 0;
         margin-top: 1.8vh;
         width: 14%;
         height:4vh;
@@ -159,6 +194,7 @@ display: flex;}
     border-radius:24px;
 }
 .hidecomment{
+    
     background-color: #bebcbc;
     color: #000000;
     margin-left: 68%;
@@ -168,7 +204,7 @@ display: flex;}
     height: 5vh;
     position: absolute;
     border-radius:24px;
-
+    
 
 }
 
@@ -197,7 +233,7 @@ display: flex;}
 .text{
     text-align:left;
     color: black;
-    margin-top: 8px;
+    margin-top: 6px;
     background-color: #bebcbc;
     margin-left: 4px;
     margin-right: 4px;

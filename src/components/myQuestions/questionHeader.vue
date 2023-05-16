@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="qHeader">My Questions</div>
+        <div class="qHeader">My Quenstions</div>
     </div> 
     
 

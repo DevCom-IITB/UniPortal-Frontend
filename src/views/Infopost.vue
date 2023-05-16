@@ -3,6 +3,7 @@
       
       <Header :headerName="headerName" />
       <div v-for="id in ids" :key="id"><InfopostBox :id="id" /></div>
+      <InfoBox />
       <router-view></router-view>
     </div>
   </template>
@@ -10,7 +11,8 @@
   <script>
   import Header from '../components/common/Header.vue'
   import InfopostBox from '../components/common/infopostBox.vue';
-  
+  import InfoBox from '../components/infopost/InfoBox.vue'
+
 export default {
   name: 'Infopost',
   data() {
@@ -21,7 +23,8 @@ export default {
   },
   components: {
     InfopostBox,
-    Header
+    Header,
+    InfoBox
   },
   methods:{
     async created() {

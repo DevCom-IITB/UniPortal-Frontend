@@ -14,7 +14,7 @@
 
   
   export default {
-    name: 'Myquestions',
+    name: 'MyQuestions',
     data() {
     return {
       headerName : 'My Questions'
