@@ -1,6 +1,6 @@
 <template>
-    <div class="question">
-            <div class="top">
+    
+            
             <div class="name"> 
                 <div class="text">Tanmay Jain</div>
                 
@@ -9,7 +9,7 @@
                 <div class="timetext">Timestamp</div>
                 
             </div>
-          </div>
+          
 
            
             <div class="qtext">
@@ -17,32 +17,12 @@
                 Vuetify now provides since v2.3 border utilities 
                 
             </div>
-            
-        </div>
-
-
-        <div class="question" id="one">
-            <div class="top">
-            <div class="name"> 
-                <div class="text">Tanmay Jain</div>
-                
-            </div>
-            <div class="timestamp"> 
-                <div class="timetext">Timestamp</div>
-                
-            </div>
-          </div>
-
-           
-            <div class="qtext">
-                I would like to update Vamsi Krishna's answer.
-                Vuetify now provides since v2.3 border utilities 
-                
-            </div>
-            
-        </div>
         
-       
+            
+        
+
+
+        
        
        
        
@@ -61,20 +41,17 @@
 
 <style scoped>
 
-.top {
-    display: flex;
-    flex-direction: row;
-}
+
 
 
 .question{
-    background-color:#bebcbc;
+    background-color:red;
         color: #000000;
-        margin-left: 35%;
-        margin-right:0px;
+        margin-left: 5%;
+        margin-right:10%;
         margin-top: 92vh;
-        width: 56%;
-        height: 10vh;
+        width: 66%;
+        height: 5vh;
         position: absolute;
         border-radius: 22px;
         
@@ -144,7 +121,7 @@
 .qtext{
     align-items: center;
     margin-left: 22px;
-    margin-top: 52px;
+    margin-top: 62px;
     background-color:transparent;
 }
 

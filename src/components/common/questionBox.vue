@@ -4,6 +4,9 @@
         <Delete />
         </div>
         
+        
+        
+        
         <div class="container">
             
             
@@ -11,6 +14,9 @@
         
             <div v-show="showComment" class="comm">
                 <comment />  
+            </div>  
+            <div v-show="viewComment" class="view">
+                <viewcomments />  
             </div>  
             
             <upvote />
@@ -56,6 +62,20 @@
             </div>
             
         </div>
+
+        <div class="hidecomment">
+            <div class="text1">
+                <button @click="toggle" class="btn2">
+                        <h1>
+                            
+                                view
+                            
+                        </h1>
+                    </button>
+
+            </div>
+            
+        </div>
         
         
 
@@ -71,24 +91,30 @@
 import upvote from '../common/upvote.vue'
 import Delete from '../myQuestions/Delete.vue'
 import comment from '../myQuestions/comment.vue'
-import Viewcomments from './viewcomments.vue'
+import viewcomments from '../common/viewcomments.vue'
     export default {
         name: 'Question',
         components: {
             upvote,
             Delete, 
             comment,
-                Viewcomments
+            viewcomments
         },
         data () {
             return {
-                showComment: false
+                showComment: false,
+                viewComment: false
             }
         },
         methods: {
             toggleComment() {
                 this.showComment = !this.showComment
+
+            },
+            toggle() {
+                this.viewComment = !this.viewComment
             }
+        
         }
         
        
@@ -204,6 +230,15 @@ display: flex
     height: 5vh;
     position: absolute;
     border-radius:24px;
+    
+
+}
+.view{
+    
+    margin-left: 5%;
+    margin-top: 20%;
+    width:266%;
+    height:1px;
     
 
 }
