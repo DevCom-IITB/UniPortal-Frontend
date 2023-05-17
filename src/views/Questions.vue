@@ -51,7 +51,7 @@
       myHeaders.append("Content-Type", "application/json");
 
       var raw = JSON.stringify({
-        "id": 11,
+        "id": 1110,
         "user_ID": 123,
         "hidden": true,
         "body": "QuesAkshattion 1",
@@ -70,7 +70,7 @@
         redirect: 'follow'
       };
 
-      fetch("api/infoposts", requestOptions)
+      fetch("http://localhost:3000/infoposts", requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
@@ -85,7 +85,7 @@
         redirect: 'follow'
       };
 
-      fetch("api/infoposts", requestOptions)
+      fetch("http://localhost:3000/infoposts", requestOptions)
         .then(response => response.text())
         .then(result => this.responseData = result)
         .catch(error => console.log('error', error));

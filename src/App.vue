@@ -2,7 +2,6 @@
   <div class="container">
     
     <Navbar />
-  
     <Sidebar />
     <router-view></router-view>
     <popup />

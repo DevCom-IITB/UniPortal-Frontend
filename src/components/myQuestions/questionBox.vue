@@ -27,7 +27,7 @@ flex-direction: column;
 justify-content: center;
 align-items: center;
 margin-left: 35%;
-margin-top: 70vh;
+margin-top: 118vh;
 height: 10vh;
 width: 55%;
 border-radius: 29px;
@@ -48,10 +48,10 @@ position: absolute;
 
 #one{
     
-    margin-top: 85vh;
+    margin-top: 133vh;
 }
 #two{
-    margin-top: 100vh;
+    margin-top: 148vh;
     margin-bottom: 2.25vh;
     
 }

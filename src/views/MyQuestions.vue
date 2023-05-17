@@ -5,6 +5,7 @@
       <Header :headerName="headerName" />
       <Question />
       
+      
     </div>
   </template>
   
@@ -14,7 +15,7 @@
 
   
   export default {
-    name: 'Myquestions',
+    name: 'MyQuestions',
     data() {
     return {
       headerName : 'My Questions'
