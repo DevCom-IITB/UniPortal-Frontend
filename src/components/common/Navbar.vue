@@ -1,12 +1,13 @@
 <template>
+    
     <div class="navbar">
         
         <router-link to="/"><button class="btn1"><div class="route">Infopost</div></button></router-link>
         <router-link to="/questions"><button class="btn2"><div class="route">Questions</div></button></router-link>
         <router-link to="/myquestions"><button class="btn3"><div class="route">My Questions</div></button></router-link>
         
-        
-    </div>
+    </div>   
+    
 </template>
 
 <script>
@@ -28,15 +29,14 @@ a {
     border-radius: 40px;
 }
 
-h1 {
-    background: #f2f2f2;
-}
+
 .navbar {
 background: #f2f2f2;
 color: #000000;
 font-family: Inter;
 display: flex;
 flex-grow: 1;
+
 justify-content: space-between;
 align-items: center;
 margin-left: 35%;
@@ -45,11 +45,11 @@ height: 10vh;
 width: 55%;
 margin-right: 10%;
 border-radius: 52px;
-padding: 25px;
+
 font-weight:400;
 position: fixed;
 z-index: 1;
-position: absolute;
+
 }
 
 button{
@@ -57,12 +57,15 @@ button{
     display: flex;
     flex-direction: row;
     flex-grow: 1;
+    
     background-color: #f2f2f2;
     height: 10vh;
+    margin-top: 0vh;
     border-radius: 52px;
     border: transparent;
     align-items: center;
     justify-content: center;
+    text-align: center;
     
     
 }
