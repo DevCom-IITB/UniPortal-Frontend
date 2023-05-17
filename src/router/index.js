@@ -1,10 +1,11 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import MyQuestions from '../views/MyQuestions.vue'
+import Questions from '../views/Questions.vue'
 import Infopost from '../views/Infopost.vue'
 
 const routes = [
     {
-        path: '/infopost',
+        path: '/',
         name: 'Infopost',
         component: Infopost,
     },
@@ -13,6 +14,12 @@ const routes = [
         path: '/myquestions',
         name: 'MyQuestions',
         component: MyQuestions,
+    },
+    
+    {
+        path: '/questions',
+        name: 'Questions',
+        component: Questions,
     }
 ]
 
