@@ -1,6 +1,6 @@
 <template>
     <div class="cont">
-        <div class="Header">Illustration</div>
+        <div class="Header">{{ headerName }}</div>
     </div> 
     
 
@@ -8,7 +8,11 @@
  
  <script>
  export default {
-     name: 'Header'
+     name: 'Header',
+     props: ['headerName']
+    //  props: {
+    //     headerName: string, 
+    //  },
  }
  
  </script>

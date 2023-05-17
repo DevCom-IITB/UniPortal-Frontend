@@ -4,10 +4,9 @@
     <Navbar />
   
     <Sidebar />
-    
-    
     <router-view></router-view>
     <popup />
+    
   </div>
 </template>
 

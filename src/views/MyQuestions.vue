@@ -2,36 +2,31 @@
     <div class="container">
      
       
-      <questionHeader />
+      <Header :headerName="headerName" />
       <Question />
       
     </div>
   </template>
   
-  <script>
-  import Navbar from '../components/common/Navbar.vue'
-  import Sidebar from '../components/common/Sidebar.vue'
-  import questionBox from '../components/myQuestions/questionBox.vue'
-  import Question from '../components/myQuestions/Question.vue'
-  import questionHeader from '../components/myQuestions/questionHeader.vue'
+  <script lang="ts">
+  import Question from '../components/common/questionBox.vue'
+  import Header from '../components/common/Header.vue'
 
   
   export default {
     name: 'Myquestions',
+    data() {
+    return {
+      headerName : 'My Questions'
+    }
+  },
     components: {
-      Navbar,
-      Sidebar,
-      questionBox,
       Question,
-      questionHeader
+      Header
      
     }
   }
   </script>
   
-  <style>
-  * {
-    background: white;
-  }
-  
+  <style>  
   </style>
