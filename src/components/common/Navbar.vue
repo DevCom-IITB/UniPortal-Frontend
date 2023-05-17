@@ -22,7 +22,6 @@ text-decoration: inherit;
 }
 
 
-
 h1 {
     background: #f2f2f200;
 }
