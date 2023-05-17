@@ -17,18 +17,14 @@ export default {
 
 <style scoped>
 .route {
-background: #f2f2f2;
 color: #000000;
 text-decoration: inherit;   
 }
 
-a {
-    background-color: #f2f2f2;
-    border-radius: 40px;
-}
+
 
 h1 {
-    background: #f2f2f2;
+    background: #f2f2f200;
 }
 .navbar {
 background: #f2f2f2;
