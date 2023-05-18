@@ -46,7 +46,7 @@
 }
 
 .HeaderText{
-    font-size: 0.7vmax;
+    font-size: 0.9vmax;
     font-weight: 400;
 }
 

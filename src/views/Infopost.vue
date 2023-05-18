@@ -2,17 +2,21 @@
     <div class="container">
       
       <div class="Header"><Header :headerName="headerName" :headerText="headerText" /></div>
-      <div class="Lister"></div>
-      <!-- <div v-for="id in ids" :key="id"><InfopostBox :id="id" /></div>
-      <InfoBox />
-      <router-view></router-view> -->
+      <div class="Lister">
+        <!-- <InfoBox :infoPosts="infoposts" /> -->
+        <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
+          <InfoBox :infopost="infopost"/>
+        </div>
+      </div>
+      
+      <!-- <InfoBox />
+      <router-view></router-view> --> 
     </div>
   </template>
   
   <script>
   import Header from '../components/common/Header.vue'
-  import InfopostBox from '../components/common/infopostBox.vue';
-  import InfoBox from '../components/common/InfoBox.vue';
+  import InfoBox from '../components/common/InfoBox.vue'
 
 export default {
   name: 'Infopost',
@@ -20,26 +24,24 @@ export default {
     return {
       headerName : 'Infopost',
       headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
-      infoposts: null
+      infoposts: []
     }
   },
   components: {
-    InfopostBox,
     Header,
-    InfoBox
+    InfoBox,
   },
   methods:{
-    async created() {
-      const response = await fetch('http://localhost:3000/infoposts')
-      const data = await response.json()
+    async fetchInfoPosts() {
+      const res = await fetch('api/infoposts')
+      const data = await res.json()
       console.log(data)
-      this.infoposts = data
+      return data
     },
-    computed: {
-      ids() {
-        return this.infoposts ? this.infoposts.map(i => i.id) : []
-      }
-    }
+  },
+  async mounted() {
+    this.infoposts = await this.fetchInfoPosts()
+    console.log(this.infoPosts);
   }
 }
   </script>
@@ -62,7 +64,27 @@ export default {
   .Lister{
     height: 64.04%;
     width: 100%;
-    border: 5px solid green;
+    /* border: 5px solid green; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:start;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .Lister::-webkit-scrollbar {
+    display: none;
+}
+
+  .InfoPostBox{
+    height: fit-content;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    color: black;
+    /* border: 5px solid red; */
   }
 
   </style>

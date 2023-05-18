@@ -17,16 +17,6 @@
                 Vuetify now provides since v2.3 border utilities 
                 
             </div>
-        
-            
-        
-
-
-        
-       
-       
-       
-    
 </template>
 
 

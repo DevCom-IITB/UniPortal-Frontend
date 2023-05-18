@@ -7,9 +7,9 @@
       <div class="Questions"><Question /></div> -->
   </div>
       
-  </template>
+</template>
   
-  <script>
+<script>
 
   import Question from '../components/common/questionBox.vue'
   import Header from '../components/common/Header.vue'
@@ -17,13 +17,7 @@
   
   export default {
     
-    name: 'Questions',
-    
-  //   data() {
-  //   return {
-  //     Header_Name : 'Questions'
-  //   }
-  // },
+  name: 'Questions',
 
   data() {
     return {
@@ -33,17 +27,16 @@
   },
   
   
-    components: {
-      Question,
-      Header
-     
-    },
+  components: {
+    Question,
+    Header
+   
+  },
 
-    methods: {
+  methods: {
     postData() {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-
       var raw = JSON.stringify({
         "id": 1110,
         "user_ID": 123,
@@ -72,7 +65,6 @@
     getData() {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-
       var requestOptions = {
         method: 'GET',
         headers: myHeaders,
@@ -85,7 +77,7 @@
         .catch(error => console.log('error', error));
     }
   }
-  }
+}
   </script>
   
   <style scoped>
