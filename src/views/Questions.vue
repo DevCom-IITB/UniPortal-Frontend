@@ -1,18 +1,10 @@
 <template>
     <div class="container">
      
-      <Header :headerName="headerName" />
-      <Question />
-      <form @submit.prevent="postData">
-      <!-- Form inputs -->
-      <button type="submit">Submit</button>
-      </form>
-      <div>
-    <button @click="getData">Get Data</button>
-    <div>{{ responseData }}</div>
+      <div class="Header"><Header :headerName="headerName" /></div>
+      <div class="Questions"><Question /></div>
   </div>
       
-    </div>
   </template>
   
   <script>
@@ -95,4 +87,20 @@
   </script>
   
   <style>
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .header {
+      flex: 3;
+    }
+
+    .questions {
+      flex: 6;
+    }
+
   </style>

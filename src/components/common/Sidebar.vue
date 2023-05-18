@@ -1,19 +1,38 @@
 <template>
    <div class="sidebar">
         
-        <button class="btn-1">
-            <i class="fa-regular fa-globe"></i>Email 
-        </button>
-        <button class="btn-2">
-            <i class="fa-regular fa-globe"></i>SMP Website 
-        </button>
-        <button class="btn-3">
-            <i class="fa-regular fa-globe"></i>Contact info. 
-        </button>
+        <div class="Logo">
+            <div class="Logoimg"><h1>NewBee Logo</h1></div>
+        </div>
+
+        <div class="Info">
+            <div class="InfoText">  
+                <h1 class="Text">This will contain some text regarding the basic information </h1>
+            </div>
+
+            <div class="InfoLinks">
+                <button class="btn">
+                    <i class="fa-regular fa-globe"></i>&nbsp;&nbsp; Email 
+                </button>
+
+                <button class="btn">
+                    <i class="fa-regular fa-globe"></i>&nbsp;&nbsp;  SMP Website 
+                </button>
+
+                <button class="btn">
+                    <i class="fa-regular fa-globe"></i>&nbsp;&nbsp;  Contact info. 
+                </button>
+            </div>
+        </div>
+        <div class="Creds">
+            <button class="btn-1">
+                Credentials 
+            </button>
+        </div>
+
         
-        <button class="btn-4">
-            Credentials 
-        </button>
+        
+        
         
    </div> 
 </template>
@@ -26,62 +45,115 @@ export default {
 
 <style scoped>
 .sidebar{
+    width : 92.38%;
+    margin-top: 4.12%;
     background: #e6e6e6;
     color: #000000;
-    margin-left: 0.86%;
-    margin-top: 1.5vh;
-    margin-bottom: 1.5vh;
-    width: 20%;
-    height: 97vh;
-    position: fixed;
     border-radius: 24px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
-
-.btn-1{
-    position:relative;
-    top: 270px;
+.Logo{
+    height: 12.98%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10%;
 }
 
-.btn-2{
-    position:relative;
-    top: 290px;
+.Logoimg{
+    width: 50%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.btn-3{
-    position:relative;
-    top: 310px;
+.Logoimg h1{
+    font-size: 1.2vmax;
+    font-weight: 700;
 }
 
-.btn-4{
-    margin-top: 65vh;
-    text-align: center;
-    padding-left: 0%;
+.Info{
+    height: 67.10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-button{
-    text-align: left;
-    padding-left: 56px;
-    background-color: #e6e6e6;
-    margin-left: 3%;
+.InfoText{
+    height: 33.66%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 5%;
+}
+
+.InfoText h1{
     width: 90%;
-    border-radius: 24px;
-    height: 64px;
-    z-index: 1;
-    border: #e6e6e6;
-    font-family: Inter;
-    font-size: large;
-    font-weight: bold;
+    height: 70%;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2vmax;
+    font-weight: 400;
 }
-button:hover{
+
+.InfoLinks{
+    height: 66.34%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.btn{
+    width: 87.63%;
+    height: 20.78%;
+    background: #e6e6e6;
+    border: none;
+    border-radius: 100px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: 1vmax;
+    font-weight: 600;
+    padding-left: 7%;
+}
+
+.btn:hover{
     background-color: #d9d9d9;
 }
 
-.fa-regular {
-    color: #000000;
-    z-index: 1;
-    margin-right: 10px;
+
+.Creds{
+    height: 32.90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.btn-1{
+    width: 87.63%;
+    height: 20.78%;
+    background: #e6e6e6;
+    border: none;
+    border-radius: 100px;
+    font-size: 1.1vmax;
+    font-weight: 600;
+    margin-top: 50%;
+}
+
+.btn-1:hover{
+    background-color: #d9d9d9;
+}
+
+
+
 </style>

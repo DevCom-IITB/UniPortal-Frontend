@@ -17,7 +17,13 @@ export default {
 </script>
 
 <style scoped>
-.route {
+.navbar{
+    width: 67.32%;
+    /* border: 5px solid red; */
+}
+
+
+/* .route {
 background: transparent;
 color: #000000;
 text-decoration: inherit; 
@@ -71,7 +77,7 @@ button{
 button:hover{
     background-color: #d9d9d9;
     border: #d9d9d9;
-}
+} */
 
 
 </style>

@@ -11,7 +11,7 @@
   <script>
   import Header from '../components/common/Header.vue'
   import InfopostBox from '../components/common/infopostBox.vue';
-  import InfoBox from '../components/infopost/InfoBox.vue'
+  import InfoBox from '../components/common/InfoBox.vue';
 
 export default {
   name: 'Infopost',
