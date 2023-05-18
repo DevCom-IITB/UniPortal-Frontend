@@ -2,9 +2,9 @@
     
     <div class="navbar">
         
-        <router-link to="/"><button class="btn1"><div class="route">Infopost</div></button></router-link>
-        <router-link to="/questions"><button class="btn2"><div class="route">Questions</div></button></router-link>
-        <router-link to="/myquestions"><button class="btn3"><div class="route">My Questions</div></button></router-link>
+        <router-link to="/" class="btn" ><div class="route"><i class="fa-regular fa-globe"></i>&nbsp;&nbsp;Infopost</div></router-link>
+        <router-link to="/questions" class="btn"><div class="route"><i class="fa-regular fa-globe"></i>&nbsp;&nbsp;Questions</div></router-link>
+        <router-link to="/myquestions" class="btn"><div class="route"><i class="fa-regular fa-globe"></i>&nbsp;&nbsp;My Questions</div></router-link>
         
     </div>   
     
@@ -18,10 +18,36 @@ export default {
 
 <style scoped>
 .navbar{
-    width: 67.32%;
-    /* border: 5px solid red; */
+    width: 100%;
+    height: 64.7%;
+    background:#f2f2f2;
+    border-radius: 52px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: stretch;
 }
 
+.btn{
+    height: 100%;
+    width: 33.33%;
+    background: #f2f2f2;
+    border-radius: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.vmax; 
+    text-decoration: none;
+    color: black;
+}
+
+.btn:hover{
+    background: #d9d9d9;
+}
+
+.route{
+    font-weight: 500;
+}
 
 /* .route {
 background: transparent;
@@ -33,8 +59,8 @@ font-size: 1.8rem;
 
 h1 {
     background: #f2f2f200;
-}
-.navbar {
+} */
+/* .navbar {
 background: #f2f2f2;
 color: #000000;
 font-family: Inter;
@@ -54,9 +80,9 @@ font-weight:400;
 position: fixed;
 z-index: 1;
 
-}
+} */
 
-button{
+/* button{
     width: 339.33px;
     display: flex;
     flex-direction: row;

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="Sidebar"><Sidebar /></div>
     <div class="Content">
-      <div class="Navbar"><!--<Navbar />--></div>
+      <div class="Navbar"><Navbar /></div>
       <div class="RouterView"><!--<router-view></router-view>--></div>
     </div>
      
@@ -50,19 +50,25 @@ export default {
   height: 100vh;
   /* overflow-y: scroll; */
   display: flex;
-  flex-flow: column wrap;
-  align-items: stretch;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  /* border: 5px solid yellow; */
+  border: 5px solid yellow;
 }
 
 .Navbar{
-  height: 15%;
-  /* border: 5px solid blue; */
+  height: 14.29%;
+  width: 66.58%;
+  margin-top: 1.56%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .RouterView{
-  height: 85%;
+  height: 85.71%;
+  width: 66.58%;
+  border: 5px solid purple;
 }
 
 .popup{
