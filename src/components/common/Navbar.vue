@@ -2,9 +2,9 @@
     
     <div class="navbar">
         
-        <router-link to="/" class="btn" ><div class="route"><i class="fa-regular fa-globe"></i>&nbsp;&nbsp;Infopost</div></router-link>
-        <router-link to="/questions" class="btn"><div class="route"><i class="fa-regular fa-globe"></i>&nbsp;&nbsp;Questions</div></router-link>
-        <router-link to="/myquestions" class="btn"><div class="route"><i class="fa-regular fa-globe"></i>&nbsp;&nbsp;My Questions</div></router-link>
+        <router-link to="/" class="btn" ><div class="route">Infopost</div></router-link>
+        <router-link to="/questions" class="btn"><div class="route">Questions</div></router-link>
+        <router-link to="/myquestions" class="btn"><div class="route">My Questions</div></router-link>
         
     </div>   
     
@@ -36,7 +36,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.vmax; 
+    font-size: 1.1vmax; 
     text-decoration: none;
     color: black;
 }
@@ -44,6 +44,7 @@ export default {
 .btn:hover{
     background: #d9d9d9;
 }
+
 
 .route{
     font-weight: 500;

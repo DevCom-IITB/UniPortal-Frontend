@@ -13,7 +13,7 @@
  </script>
  
  <style scoped>
- .questionBox{
+ /* .questionBox{
     background: #D9D9D9;
 color: #000000;
 font-family: 'Zilla Slab', serif;
@@ -48,5 +48,5 @@ position: absolute;
 #two{
     margin-top: 46%;
 }
- 
+  */
  </style>

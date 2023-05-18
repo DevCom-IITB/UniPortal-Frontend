@@ -1,6 +1,9 @@
 <template>
     <div class="cont">
-        <div class="Header">{{ headerName }}</div>
+        <div class="Header">
+            <div class="HeaderTitle">{{ headerName }}</div>
+            <div class="HeaderText">{{ headerText }}</div>
+        </div>
     </div> 
     
 
@@ -9,7 +12,7 @@
  <script>
  export default {
      name: 'Header',
-     props: ['headerName']
+     props: ['headerName', 'headerText']
     //  props: {
     //     headerName: string, 
     //  },
@@ -19,8 +22,36 @@
  
  <style scoped>
 
+.cont{
+    height: 95.12%;
+    width: 100%;
+    background: #f2f2f2;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Header{
+    width: 92.19%;
+    height: 74.36%;
+    display: flex;
+    flex-direction: column;
+}
+
+.HeaderTitle{
+    font-size: 3.5vmax;
+    font-weight: 500;
+}
+
+.HeaderText{
+    font-size: 0.7vmax;
+    font-weight: 400;
+}
+
  
- .Header{
+ /* .Header{
 background: #D9D9D9;
 color: #000000;
 font-family: 'Zilla Slab', serif;
@@ -38,6 +69,6 @@ border-radius: 29px;
 padding: 25px 48px 25px 48px;
 font-weight:400;
 position: absolute;
-}
+} */
 
  </style>

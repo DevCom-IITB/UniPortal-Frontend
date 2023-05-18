@@ -1,8 +1,10 @@
 <template>
     <div class="container">
      
-      <div class="Header"><Header :headerName="headerName" /></div>
-      <div class="Questions"><Question /></div>
+      <div class="Header"><Header :headerName="headerName" :headerText="headerText" /></div>
+      <div class="Lister"></div>
+      <!-- <div class="Header"><Header :headerName="headerName" /></div>
+      <div class="Questions"><Question /></div> -->
   </div>
       
   </template>
@@ -25,9 +27,9 @@
 
   data() {
     return {
-      responseData: '',
-      headerName : 'Questions'
-    }
+      headerName : 'Questions',
+      headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may '
+   }
   },
   
   
@@ -86,21 +88,25 @@
   }
   </script>
   
-  <style>
+  <style scoped>
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+.container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .header {
-      flex: 3;
-    }
+  .Header{
+    height: 35.96%;
+    width: 100%;
+  }
 
-    .questions {
-      flex: 6;
-    }
+  .Lister{
+    height: 64.04%;
+    width: 100%;
+    border: 5px solid green;
+  }
 
   </style>

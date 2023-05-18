@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style scoped>
-div {
+/* div {
     position: absolute;
     margin-left: 35%;
     width: 55%;
@@ -25,6 +25,6 @@ div {
     font-size: 3rem;
     align-content: center;
     justify-content: center;
-    padding-top: 24px;
-} 
+    padding-top: 24px; 
+} */
 </style>
