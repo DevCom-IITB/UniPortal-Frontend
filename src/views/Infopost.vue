@@ -80,8 +80,8 @@ export default {
   .InfoPostBox{
     height: fit-content;
     width: 84.98%;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: 16px;
+    margin-bottom: 16px;
     color: black;
     /* border: 5px solid red; */
   }

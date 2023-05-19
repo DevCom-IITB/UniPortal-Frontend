@@ -9,15 +9,18 @@
                 <div class="inner-container">
                     <div class="stamps">
                         <div class="info">
-                            <div class="name">Sanskar Gosavi</div>
-                            <div class="timestamp">17:12 19/05/23 </div>
+                            <div class="name">{{ question["User_name"] }}</div>
+                            <div class="timestamp">{{ question["timestamp"] }}</div>
                         </div>
-                        <div class="verified"><verified class="icon"/>&nbsp;<p>Verified</p></div>
+                        <div v-if="question.verified" class="verified"><verified class="icon"/>&nbsp;<p>Verified</p></div>
                     </div>
-                    <div class="text">History has shown that features originating from responses to specific access needs (dark mode, text-speech, speech-to-text) are a result of creative problem-solving within specified constraints. Seeing the requirements as opportunities, rather than constraints, has been shown to lead to solutions that hive...</div>
+                    <div class="text">{{ question["body"] }}</div>
                 </div>
             </div>
-            <div class="comments"></div>
+            <div class="comments">
+                <button class="view-comments" >View Comments</button>
+                <button class="comment"><Uparrow class="icon"/><p>Comment</p></button>
+            </div>
         </div>
         <div class="Hide"></div>
     </div>
@@ -29,8 +32,8 @@
 import upvote from '../common/upvote.vue'
 import Delete from '../common/Delete.vue'
 import comment from '../common/comment.vue'
-import viewcomments from '../common/viewcomments.vue'
 import verified from '../icons/new_releases.svg'
+import Uparrow from '../icons/arrow_circle_up.svg'
 
     export default {
         name: 'Question',
@@ -38,8 +41,8 @@ import verified from '../icons/new_releases.svg'
             upvote,
             Delete, 
             comment,
-            viewcomments,
-            verified
+            verified,
+            Uparrow
         },
         data () {
             return {
@@ -86,7 +89,6 @@ import verified from '../icons/new_releases.svg'
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* border: 5px red solid; */
 }
 
 .QuestionBox{
@@ -171,10 +173,49 @@ import verified from '../icons/new_releases.svg'
 }
 
 .comments{
-    border: 5px yellow solid;
     width: 100%;
     height: 20.75%;
     margin-top: 1.56%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+}
+
+.view-comments{
+    border: 1px black solid;
+    width: 19.14%;
+    height: 100%;
+    margin-right: 1.56%;
+    border-radius: 100px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.comment{
+    border-radius: 100px;
+    width: 16.31%;
+    height: 100%;
+    background: #f2f2f2;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.comment p{
+    font-size: 0.93vmax;
+    font-weight: 600;
 }
 
 .Hide{

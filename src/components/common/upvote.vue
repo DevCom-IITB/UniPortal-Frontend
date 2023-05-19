@@ -34,6 +34,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    cursor: pointer;
 }
 
 .icon{
