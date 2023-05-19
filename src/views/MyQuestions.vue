@@ -3,12 +3,12 @@
      
       <div class="Header"><Header :headerName="headerName" :headerText="headerText" /></div>
       <div class="Lister">
-        <!-- <div :key="question['id']" v-for="question in questions" class="QuestionBox">
+        <div :key="question['id']" v-for="question in questions" class="QuestionBox">
+          <Question :question="question"/>
+        </div>
+        <!-- <div class="QuestionBox">
           <Question/>
         </div> -->
-        <div class="QuestionBox">
-          <Question/>
-        </div>
       </div>
 
       
@@ -53,7 +53,7 @@
 
 .container{
     height: 100%;
-    width: 117.66%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -70,8 +70,11 @@
     /* border: 5px solid green; */
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content:start;
     overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 
   .Lister::-webkit-scrollbar {
@@ -79,7 +82,8 @@
   }
 
   .QuestionBox{
-    height: 37.32%;
+    min-height: 37.32%;
+    max-height: 37.32%;
     width: 100%;
     margin-top: 8px;
     margin-bottom: 8px;
