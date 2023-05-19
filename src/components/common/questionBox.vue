@@ -170,6 +170,11 @@ import Uparrow from '../icons/arrow_circle_up.svg'
     height: 64.29%;
     font-size: 0.8vmax;
     line-height: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .comments{
