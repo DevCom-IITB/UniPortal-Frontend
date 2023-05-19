@@ -92,7 +92,7 @@
 
   .Header{
     height: 35.96%;
-    width: 100%;
+    width: 84.98%;
   }
 
   .Lister{

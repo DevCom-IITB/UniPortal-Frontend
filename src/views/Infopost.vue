@@ -41,7 +41,7 @@ export default {
   },
   async mounted() {
     this.infoposts = await this.fetchInfoPosts()
-    console.log(this.infoPosts);
+    console.log(this.infoposts);
   }
 }
   </script>
@@ -58,13 +58,12 @@ export default {
 
   .Header{
     height: 35.96%;
-    width: 100%;
+    width: 84.98%;
   }
 
   .Lister{
     height: 64.04%;
     width: 100%;
-    /* border: 5px solid green; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -80,7 +79,7 @@ export default {
 
   .InfoPostBox{
     height: fit-content;
-    width: 100%;
+    width: 84.98%;
     margin-top: 8px;
     margin-bottom: 8px;
     color: black;

@@ -1,56 +1,58 @@
-<template>
-    
-        
-            <div class="upvotebox">
-                <button class="btn1">
-                        <h1>
-                            
-                                ^
-                            
-                        </h1>
-                    </button>
-                <div class="upvotetext">4</div>
-            
-            
+<template> 
+    <div class="upvotebox">
+        <button class="btn">
+            <div class="icon"><Upvote/></div>
+            <p>4</p>
+        </button>
     </div>
 </template>
 
 <script>
+ import Upvote from "../icons/expand_more.svg"
  export default {
-     name: 'upvote'
+     name: 'upvote',
+     components: {
+         Upvote
+     }
  }
  
  </script>
- <style scoped>
- .upvotebox{
-    border-radius: 100px;
-    height:12vh;
-    width:4%;
-    background-color:#bebcbc;
-    position: absolute;
-    top: 50%;
-    margin-top: -8vh;
+<style scoped>
+
+.upvotebox{
+    height: 100%;
+    width: 100%;
 }
 
-.upvotetext{
-    text-align: center;
-    color: black;
-    margin-top: 0.5vh;
-    font-size: x-large;
-    background-color: #bebcbc;
-}
-.btn1{
-    margin-top: 1.5vh;
-    margin-left: 0.95vh;
-    width: 66%;
+.btn{
+    height: 100%;
+    width: 100%;
+    border: none;
+    background: #f2f2f2;
+    border-radius: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #bebcbc;
-    border-width: 0px;
+    flex-direction: column;
 }
-h1{
-    background-color: #bebcbc;
+
+.icon{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+
+p{
+    height: 100%;
+    font-size: 1vmax;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 
 </style>

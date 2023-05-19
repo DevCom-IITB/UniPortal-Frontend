@@ -65,7 +65,10 @@ export default {
 
 .RouterView{
   height: 85.71%;
-  width: 66.58%;
+  width: 78.35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .popup{
