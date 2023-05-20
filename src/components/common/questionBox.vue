@@ -201,11 +201,11 @@ import eye from '../icons/visibility.svg'
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
-    display: -webkit-box;
+    /* display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    -webkit-box-orient: vertical; */
     overflow: hidden;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis; */
 }
 
 .comments{

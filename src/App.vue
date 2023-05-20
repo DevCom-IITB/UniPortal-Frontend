@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <div class="Sidebar"><Sidebar /></div>
+    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText"/></div>
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view></router-view></div>
     </div>
      
-    <div class="popup"><!--<popup />--></div>
+    <div class="popup"><popup /></div>
     
     
   </div>
@@ -26,12 +26,12 @@ export default {
   },
   data(){
     return{
-      sidebar : '',
-      primary : '',
-      grey : '',
-      unselected : '',
-      hover : '',
-      emphasisText : '',
+      sidebar : '#FFEDB2',
+      primary : '#FFDF80',
+      grey : '#CCB160',
+      unselected : '#FAF4E1',
+      hover : '#FFD899',
+      emphasisText : '#211D12',
     }
   },
   methods:{

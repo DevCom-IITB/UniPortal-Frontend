@@ -1,8 +1,8 @@
 <template>
     
-    <div class="navbar" :style="{ background : unselected}">
+    <div class="navbar" :style="{ background : unselected }">
         
-        <router-link to="/" class="btn" @click="selected1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
+        <router-link to="/" class="btn" id="info" @click="selected1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
         <router-link to="/questions" class="btn" @click="selected2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
         <router-link to="/myquestions" class="btn" @click="selected3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
         
@@ -23,7 +23,7 @@ export default {
     },
     data () {
         return {
-            currentPage : 1
+            currentPage : 1,
         }
     },
     methods : {
@@ -48,6 +48,7 @@ export default {
     width: 100%;
     height: 64.7%;
     border-radius: 52px;
+    background: #FAF4E1;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -63,8 +64,13 @@ export default {
     align-items: center;
     font-size: 1.1vmax; 
     text-decoration: none;
+    color : #CCB160;
 }
 
+/* #info{
+    background: #FFDF80;
+    color : #211d12
+} */
 
 
 .route{

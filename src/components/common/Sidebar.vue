@@ -1,5 +1,5 @@
 <template>
-   <div class="sidebar" :style="{ background : '' }" >
+   <div class="sidebar" :style="{ background : sidebar, color : emphasisText }" >
         
         <div class="Logo">
             <div class="Logoimg"><h1>NewBee Logo</h1></div>
@@ -10,22 +10,22 @@
                 <h1 class="Text">This will contain some text regarding the basic information </h1>
             </div>
 
-            <div class="InfoLinks">
-                <button class="btn">
+            <div class="InfoLinks" >
+                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
                     <i class="fa-regular fa-globe"></i>&nbsp;&nbsp; Email 
                 </button>
 
-                <button class="btn">
+                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
                     <i class="fa-regular fa-globe"></i>&nbsp;&nbsp;  SMP Website 
                 </button>
 
-                <button class="btn">
+                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
                     <i class="fa-regular fa-globe"></i>&nbsp;&nbsp;  Contact info. 
                 </button>
             </div>
         </div>
-        <div class="Creds">
-            <button class="btn-1">
+        <div class="Creds" >
+            <button class="btn-1" :style="{ background : sidebar, color : emphasisText }">
                 Credentials 
             </button>
         </div>
@@ -39,7 +39,11 @@
 
 <script>
 export default {
-    name: 'Sidebar'
+    name: 'Sidebar',
+    props: {
+        sidebar : String,
+        emphasisText : String,
+    }
 }
 </script>
 
@@ -47,8 +51,6 @@ export default {
 .sidebar{
     width : 92.38%;
     margin-top: 4.12%;
-    background: #e6e6e6;
-    color: #000000;
     border-radius: 24px;
     display: flex;
     flex-direction: column;
@@ -116,7 +118,6 @@ export default {
 .btn{
     width: 87.63%;
     height: 20.78%;
-    background: #e6e6e6;
     border: none;
     border-radius: 100px;
     display: flex;
@@ -142,7 +143,6 @@ export default {
 .btn-1{
     width: 87.63%;
     height: 20.78%;
-    background: #e6e6e6;
     border: none;
     border-radius: 100px;
     font-size: 1.1vmax;
