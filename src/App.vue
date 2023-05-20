@@ -2,7 +2,7 @@
   <div class="container">
     <div class="Sidebar"><Sidebar /></div>
     <div class="Content">
-      <div class="Navbar"><Navbar /></div>
+      <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view></router-view></div>
     </div>
      
@@ -23,7 +23,46 @@ export default {
     Navbar,
     Sidebar,
     popup,
-  }
+  },
+  data(){
+    return{
+      sidebar : '',
+      primary : '',
+      grey : '',
+      unselected : '',
+      hover : '',
+      emphasisText : '',
+    }
+  },
+  methods:{
+    async ColorInfoPost(){
+      this.sidebar = '#FFEDB2';
+      this.primary = '#FFDF80';
+      this.grey = '#CCB160';
+      this.unselected = '#FAF4E1';  
+      this.hover = '#FFD899';
+      this.emphasisText = '#211D12';
+      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+    async ColorQuestions(){
+      this.sidebar = '#FFE5E5';
+      this.primary = '#FFD2D1';
+      this.grey = '#CC655E';
+      this.unselected = '#FFF4F2';  
+      this.hover = '#FFA599';
+      this.emphasisText = '#1F1514';
+      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+    async ColorMyQuestions(){
+      this.sidebar = '#E5D7FF';
+      this.primary = '#D4BDFF';
+      this.grey = '#8D87B3';
+      this.unselected = '#E8E7F5';  
+      this.hover = '#C9B4F2';
+      this.emphasisText = '#201E2F';
+      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+  },
 }
 </script>
 

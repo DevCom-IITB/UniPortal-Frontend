@@ -24,7 +24,7 @@ export default {
     /* border: 5px solid red; */
     width: 100%;
     height: 100%;
-    background: #f2f2f2;
+    background: #FFF9E5;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -43,7 +43,7 @@ p{
 
 .Images{
     width: 100%;
-    height: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;

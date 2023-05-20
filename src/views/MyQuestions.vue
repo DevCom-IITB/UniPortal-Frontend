@@ -1,14 +1,11 @@
 <template>
     <div class="container">
      
-      <div class="Header"><Header :headerName="headerName" :headerText="headerText" /></div>
+      <div class="Header"><Header :headerName="headerName" :headerText="headerText" :background="background" :primaryColor="primaryColor"/></div>
       <div class="Lister">
         <div :key="question['id']" v-for="question in questions" class="QuestionBox">
-          <Question :question="question"/>
+          <Question :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"/>
         </div>
-        <!-- <div class="QuestionBox">
-          <Question/>
-        </div> -->
       </div>
 
       
@@ -27,7 +24,11 @@
       return {
         headerName : 'MyQuestions',
         headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
-        questions : []
+        questions : [],
+        background: '#F6F5FF',
+        primaryColor : '#201E2F',
+        secondaryColor : '#8D87B3',
+        primaryAccent : '#D4BDFF'
       }
     },
     components: {
@@ -82,15 +83,17 @@
   }
 
   .QuestionBox{
-    min-height: 37.32%;
-    max-height: 37.32%;
+    height: fit-content;
     width: 100%;
     margin-top: 16px;
     margin-bottom: 16px;
     color: black;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
    }
+
+
 
   </style>

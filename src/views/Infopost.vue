@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       
-      <div class="Header"><Header :headerName="headerName" :headerText="headerText" /></div>
+      <div class="Header"><Header :headerName="headerName" :headerText="headerText" :background="background" :color="color"/></div>
       <div class="Lister">
         <!-- <InfoBox :infoPosts="infoposts" /> -->
         <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
@@ -24,7 +24,9 @@ export default {
     return {
       headerName : 'Infopost',
       headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
-      infoposts: []
+      infoposts: [],
+      background: '#FFF9E5',
+      color : '#CCB160'
     }
   },
   components: {

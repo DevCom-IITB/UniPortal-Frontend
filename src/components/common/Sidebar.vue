@@ -1,5 +1,5 @@
 <template>
-   <div class="sidebar">
+   <div class="sidebar" :style="{ background : '' }" >
         
         <div class="Logo">
             <div class="Logoimg"><h1>NewBee Logo</h1></div>

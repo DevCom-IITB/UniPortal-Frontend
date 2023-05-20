@@ -1,10 +1,10 @@
 <template>
     
-    <div class="navbar">
+    <div class="navbar" :style="{ background : unselected}">
         
-        <router-link to="/" class="btn" ><div class="route">Infopost</div></router-link>
-        <router-link to="/questions" class="btn"><div class="route">Questions</div></router-link>
-        <router-link to="/myquestions" class="btn"><div class="route">My Questions</div></router-link>
+        <router-link to="/" class="btn" @click="selected1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
+        <router-link to="/questions" class="btn" @click="selected2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
+        <router-link to="/myquestions" class="btn" @click="selected3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
         
     </div>   
     
@@ -12,7 +12,34 @@
 
 <script>
 export default {
-    name: 'Navbar'
+    name: 'Navbar',
+    emits: ['selected'],
+    props : {
+        primary : String,
+        grey : String,
+        unselected : String,
+        hover : String,
+        emphasisText : String,
+    },
+    data () {
+        return {
+            currentPage : 1
+        }
+    },
+    methods : {
+        async selected1(){
+            this.$emit('selected1');
+            this.currentPage = 1;
+        },
+        async selected2(){
+            this.$emit('selected2');
+            this.currentPage = 2;
+        },
+        async selected3(){
+            this.$emit('selected3')
+            this.currentPage = 3;
+        },
+    }
 }
 </script>
 
@@ -20,7 +47,6 @@ export default {
 .navbar{
     width: 100%;
     height: 64.7%;
-    background:#f2f2f2;
     border-radius: 52px;
     display: flex;
     flex-direction: row;
@@ -31,80 +57,19 @@ export default {
 .btn{
     height: 100%;
     width: 33.33%;
-    background: #f2f2f2;
     border-radius: 52px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.1vmax; 
     text-decoration: none;
-    color: black;
 }
 
-.btn:hover{
-    background: #d9d9d9;
-}
 
 
 .route{
     font-weight: 500;
 }
-
-/* .route {
-background: transparent;
-color: #000000;
-text-decoration: inherit; 
-font-size: 1.8rem;  
-}
-
-
-h1 {
-    background: #f2f2f200;
-} */
-/* .navbar {
-background: #f2f2f2;
-color: #000000;
-font-family: Inter;
-display: flex;
-flex-grow: 1;
-
-justify-content: space-between;
-align-items: center;
-margin-left: 35%;
-margin-top: 2.25vh;
-height: 10vh;
-width: 55%;
-margin-right: 10%;
-border-radius: 52px;
-
-font-weight:400;
-position: fixed;
-z-index: 1;
-
-} */
-
-/* button{
-    width: 339.33px;
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    
-    background-color: #f2f2f2;
-    height: 10vh;
-    margin-top: 0vh;
-    border-radius: 52px;
-    border: transparent;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    
-    
-}
-
-button:hover{
-    background-color: #d9d9d9;
-    border: #d9d9d9;
-} */
 
 
 </style>
