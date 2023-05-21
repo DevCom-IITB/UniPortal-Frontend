@@ -4,6 +4,7 @@
             <div class="Upvote">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor"/>
             </div>
+            <router-link to="/questionview">
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
                     <div class="inner-container">
@@ -19,9 +20,11 @@
                 </div>
                 <div class="comments">
                     <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">View Comments</button>
-                    <button class="comment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
+                    <button class="comment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" /><p>Comment</p></button>
                 </div> 
             </div>
+            </router-link>
+        
             <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces mayA design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may</div>
@@ -110,6 +113,10 @@ import eye from '../icons/visibility.svg'
     height: fit-content;
 }
 
+a {
+    text-decoration: none;
+}
+
 .Upvote{
     width: 3.98%;
     height: fit-content;
@@ -120,10 +127,10 @@ import eye from '../icons/visibility.svg'
 }
 
 .QuestionBox{
-    width: 84.98%;
+    width: 90%;
     height: fit-content;
-    margin-left: 3.56%;
-    margin-right: 2.53%;
+    margin-left: 4.8%;
+    
     /* overflow: auto; */
     /* border: 1px solid #000000; */
 }
@@ -201,11 +208,11 @@ import eye from '../icons/visibility.svg'
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
-    /* display: -webkit-box;
+    display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical; */
+    -webkit-box-orient: vertical; 
     overflow: hidden;
-    /* text-overflow: ellipsis; */
+    text-overflow: ellipsis;
 }
 
 .comments{
