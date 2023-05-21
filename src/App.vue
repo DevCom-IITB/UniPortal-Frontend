@@ -110,9 +110,7 @@ export default {
   align-items: center;
 }
 
-.popup{
-  flex: 0;
-}
+
 
 
 
