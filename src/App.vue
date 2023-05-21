@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText"/></div>
+    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover"/></div>
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view></router-view></div>

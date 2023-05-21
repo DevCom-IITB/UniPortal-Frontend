@@ -10,15 +10,15 @@
             </div>
 
             <div class="InfoLinks" >
-                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
+                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
                     <email />&nbsp;&nbsp;Email 
                 </button>
 
-                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
+                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
                     <Globe />&nbsp;&nbsp;SMP Website 
                 </button>
 
-                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
+                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
                     <contact />&nbsp;&nbsp;Contact info. 
                 </button>
             </div>
@@ -47,12 +47,18 @@ export default {
     props: {
         sidebar : String,
         emphasisText : String,
+        hover : String,
     },
     components : {
         Logo,
         Globe,
         email,
         contact,
+    },
+    data () {
+        return {
+            hovering : 0,
+        }
     },
 }
 </script>
