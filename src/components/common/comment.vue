@@ -1,4 +1,5 @@
 <template>
+  <div class="main">
     <form class="add-form">
     <div class="form-control">
       
@@ -8,6 +9,8 @@
       </div>
       </div>
     </form>
+  </div>
+    
     
     
 </template>
@@ -33,10 +36,10 @@ export default {
 
 .form-control input {
 
-  width: 5750%;
+  width: 450%;
   height: 5vh;
-  margin-top: 27vh;
-  margin-left: 300%;
+  margin-top: 0vh;
+  margin-left: 0%;
   padding: 3px 7px;
   font-size: 1rem;
   border-radius: 24px;
