@@ -13,7 +13,7 @@
                                 <div class="name" :style="{ color : primaryColor }">{{ question["User_name"] }}</div>
                                 <div class="timestamp" :style="{ color : secondaryColor }">{{ question["timestamp"] }}</div>
                             </div>
-                            <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon" :style="{ color : secondaryColor }"/>&nbsp;<p>Verified Answer</p></div>
+                            <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                         </div>
                         <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
                     </div>
@@ -199,6 +199,8 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: visible;
+    border: 1px solid #000000;
 }
 
 .text{
