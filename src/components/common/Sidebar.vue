@@ -2,25 +2,24 @@
    <div class="sidebar" :style="{ background : sidebar, color : emphasisText }" >
         
         <div class="Logo">
-            <div class="Logoimg"><h1>NewBee Logo</h1></div>
+            <div class="Logoimg"><Logo /></div>
         </div>
 
         <div class="Info">
-            <div class="InfoText">  
-                <h1 class="Text">This will contain some text regarding the basic information </h1>
+            <div class="InfoText">This will contain some text regarding the basic information
             </div>
 
             <div class="InfoLinks" >
-                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
-                    <i class="fa-regular fa-globe"></i>&nbsp;&nbsp; Email 
+                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
+                    <email />&nbsp;&nbsp;Email 
                 </button>
 
-                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
-                    <i class="fa-regular fa-globe"></i>&nbsp;&nbsp;  SMP Website 
+                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
+                    <Globe />&nbsp;&nbsp;SMP Website 
                 </button>
 
-                <button class="btn" :style="{ background : sidebar, color : emphasisText }">
-                    <i class="fa-regular fa-globe"></i>&nbsp;&nbsp;  Contact info. 
+                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
+                    <contact />&nbsp;&nbsp;Contact info. 
                 </button>
             </div>
         </div>
@@ -38,12 +37,29 @@
 </template>
 
 <script>
+import Logo from '../icons/Logo.svg'
+import Globe from '../icons/globe.svg'
+import email from '../icons/email.svg'
+import contact from '../icons/contact.svg'
+
 export default {
     name: 'Sidebar',
     props: {
         sidebar : String,
         emphasisText : String,
-    }
+        hover : String,
+    },
+    components : {
+        Logo,
+        Globe,
+        email,
+        contact,
+    },
+    data () {
+        return {
+            hovering : 0,
+        }
+    },
 }
 </script>
 
@@ -55,6 +71,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
 }
 
 .Logo{
@@ -66,20 +83,14 @@ export default {
 }
 
 .Logoimg{
-    width: 50%;
-    height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.Logoimg h1{
-    font-size: 1.2vmax;
-    font-weight: 700;
-}
 
 .Info{
-    height: 67.10%;
+    width: 87.63%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -87,45 +98,37 @@ export default {
 }
 
 .InfoText{
-    height: 33.66%;
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: 5%;
-}
-
-.InfoText h1{
-    width: 90%;
-    height: 70%;
-    text-align: left;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2vmax;
-    font-weight: 400;
+    padding-left: 15px;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 80px;
 }
 
 .InfoLinks{
-    height: 66.34%;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    margin-bottom: 80px;
 }
 
 .btn{
-    width: 87.63%;
-    height: 20.78%;
-    border: none;
+    width: 100%;
+    height: 48px;
+    border : none;
     border-radius: 100px;
     display: flex;
+    flex-direction: row;
     justify-content: left;
     align-items: center;
-    font-size: 1vmax;
+    font-size: 16px;
     font-weight: 600;
     padding-left: 7%;
+    margin: 8px 0px;
 }
 
 .btn:hover{
@@ -134,15 +137,12 @@ export default {
 
 
 .Creds{
-    height: 32.90%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .btn-1{
-    width: 87.63%;
-    height: 20.78%;
     border: none;
     border-radius: 100px;
     font-size: 1.1vmax;
