@@ -1,4 +1,5 @@
 <template>
+    
     <div class="main-container">
         <div class="container">
             <div class="Upvote">
@@ -21,16 +22,29 @@
                     
                 </div>
                 <div class="comments">
-                    <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">View Comments</button>
-                    <button class="comment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" /><p>Comment</p></button>
+                    <button class="view-comments" @click="viewComments" ref="btnToggle" :style="{ color : primaryColor }">View Comments</button>
+                    <button class="comment" @click="inputcomment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
                 </div> 
             </div>
             
         
             <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
-        <div v-if="showComments" class="comment-boxes">A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces mayA design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may</div>
-    </div>
+        <div v-if="showComments" class="comment-boxes">
+            <div class="Lister"><div class="CommentBox"><viewcomments /></div></div>
+        </div>
+
+            <div v-if="inputComments" class="comment-boxes-input">
+            
+            <div class="CommentBox"><comment/></div>
+            </div>    
+            
+                
+                
+            
+            
+        </div>
+    
         
 
 </template>
@@ -38,6 +52,8 @@
 
 <script>
 import upvote from '../common/upvote.vue'
+
+import viewcomments from '../common/viewcomments.vue'
 import Delete from '../common/Delete.vue'
 import comment from '../common/comment.vue'
 import verified from '../icons/new_releases.svg'
@@ -52,23 +68,34 @@ import eye from '../icons/visibility.svg'
             comment,
             verified,
             Uparrow,
-            eye
+            eye,
+            viewcomments
         },
         data () {
             return {
+                
+                inputComments: false,
                 showComments: false,
                 background : this.background,
                 primaryColor1 : this.primaryColor,
                 secondaryColor : this.secondaryColor,
                 primaryAccent : this.primaryAccent,
+                comments : [],
             }
         },
         methods: {
             viewComments(){
-                this.showComments = !this.showComments
+                this.showComments = !this.showComments,
+                this.$refs.btnToggle.innerText = this.show?'View Comments':'Hide Comments';
+
+            },
+            inputcomment(){
+                this.inputComments = !this.inputComments
+
             }
         },
         props: {
+            
             question: {
                 type: Object,
                 required: true
@@ -281,5 +308,58 @@ import eye from '../icons/visibility.svg'
     border: 1px solid #000000;
     margin-top: 16px;
     width: 84.98%;
+    height:22vh;
+    
 }
+.comment-boxes-input{
+    border: 0px solid #000000;
+    margin-top: 16px;
+    width: 84.98%;
+    height:9vh;
+    
+}
+
+.CommentBox{
+    height: fit-content;
+    width: 100%;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:left;
+   }
+
+   .Lister{
+    margin-top: 1%;
+    height: 87.04%;
+    width: 170%;
+    
+    /* border: 5px solid green; */
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:start;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .Lister::-webkit-scrollbar {
+    display: none;
+  }
+  .view{
+    display: flex;
+    width:100%;
+    align-items: top;
+    justify-content:start;
+    margin-left: 0%;
+
+  }
+  .inputComment{
+    display: flex;
+    
+  }
+
 </style>

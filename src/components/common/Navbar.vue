@@ -2,9 +2,9 @@
     
     <div class="navbar" :style="{ background : unselected }">
         
-        <router-link to="/" class="btn" id="info" @click="selected1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
-        <router-link to="/questions" class="btn" @click="selected2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
-        <router-link to="/myquestions" class="btn" @click="selected3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
+        <router-link to="/" class="btn" id="info" @click="selected1" @hover="hover1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
+        <router-link to="/questions" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
+        <router-link to="/myquestions" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
         
     </div>   
     
@@ -24,6 +24,7 @@ export default {
     data () {
         return {
             currentPage : 1,
+            hovering : 0,
         }
     },
     methods : {
@@ -39,6 +40,15 @@ export default {
             this.$emit('selected3')
             this.currentPage = 3;
         },
+        async hover1(){
+            this.hovering = 1;
+        },
+        async hover2(){
+            this.hovering = 2;
+        },
+        async hover3(){
+            this.hovering = 3;
+        }
     }
 }
 </script>
