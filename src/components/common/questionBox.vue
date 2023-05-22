@@ -4,9 +4,10 @@
             <div class="Upvote">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor"/>
             </div>
-            <router-link to="/questionview">
+            
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
+                    
                     <div class="inner-container">
                         <div class="stamps">
                             <div class="info">
@@ -17,13 +18,14 @@
                         </div>
                         <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
                     </div>
+                    
                 </div>
                 <div class="comments">
                     <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">View Comments</button>
                     <button class="comment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" /><p>Comment</p></button>
                 </div> 
             </div>
-            </router-link>
+            
         
             <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
@@ -107,15 +109,13 @@ import eye from '../icons/visibility.svg'
 .container{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     height: fit-content;
 }
 
-a {
-    text-decoration: none;
-}
+
 
 .Upvote{
     width: 3.98%;
@@ -127,9 +127,10 @@ a {
 }
 
 .QuestionBox{
-    width: 90%;
+    width: 84.98%;
     height: fit-content;
-    margin-left: 4.8%;
+    margin-left: 0.6vw;
+    margin-right: 1.35vw;
     
     /* overflow: auto; */
     /* border: 1px solid #000000; */
@@ -145,6 +146,11 @@ a {
     padding: 12px 16px 12px 16px;
 }
 
+.route {
+    text-decoration: none;
+    width: 100%;
+    
+}
 .inner-container{
     height: fit-content;
     display: flex;
@@ -152,6 +158,7 @@ a {
     justify-content: space-between;
     align-items: start;
 }
+
 
 .stamps{
     width: 100%;
@@ -199,8 +206,8 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible;
-    border: 1px solid #000000;
+    
+    
 }
 
 .text{
@@ -265,8 +272,8 @@ a {
 
 
 .Hide{
-    width: 4.98%;
-    height: 25%;
+    width: 2vw;
+    
     cursor: pointer;
 }
 

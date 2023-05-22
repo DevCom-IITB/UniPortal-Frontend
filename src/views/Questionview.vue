@@ -2,13 +2,15 @@
     <div class="container">
      
      
-     <div class="Lister">
+     <!-- <div class="Lister">
         <div :key="question['id']" v-for="question in questions" class="QuestionBox">
          <Question :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"/>
         </div>
         
-     </div>
+     </div> -->
 
+     {{ question["id"] }}
+    
     
      
    </div>

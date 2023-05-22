@@ -5,6 +5,7 @@
      <div class="Lister">
         <div :key="question['id']" v-for="question in questions" class="QuestionBox">
          <Question :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"/>
+         
         </div>
         
      </div>
@@ -16,7 +17,7 @@
 </template>
   
 <script>
-import Question from '../components/common/questionBox.vue'
+  import Question from '../components/common/questionBox.vue'
   import Header from '../components/common/Header.vue'
 
   
@@ -78,6 +79,7 @@ import Question from '../components/common/questionBox.vue'
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    
   }
 
   .Lister::-webkit-scrollbar {
