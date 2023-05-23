@@ -129,6 +129,7 @@ export default {
     font-weight: 600;
     padding-left: 7%;
     margin: 8px 0px;
+    cursor: pointer;
 }
 
 .btn:hover{

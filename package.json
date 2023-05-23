@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "backend": "json-server --watch db.json --port 5000",
+    "backend": "json-server --watch db.json --port 6000",
     "server": "npm-run-all --parallel dev backend"
   },
   "dependencies": {
