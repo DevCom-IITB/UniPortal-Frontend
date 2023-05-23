@@ -4,10 +4,10 @@
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view></router-view></div>
+      <div class="popup"><popup :lightText="lightText" /></div>
     </div>
      
-    <div class="popup"><popup :primary="primary" /></div>
-    
+        
     
   </div>
 </template>
@@ -32,6 +32,7 @@ export default {
       unselected : '#FAF4E1',
       hover : '#FFD899',
       emphasisText : '#211D12',
+      lightText : '#52492E'
     }
   },
   methods:{
@@ -42,6 +43,7 @@ export default {
       this.unselected = '#FAF4E1';  
       this.hover = '#FFD899';
       this.emphasisText = '#211D12';
+      this.lightText = '#52492E';
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorQuestions(){
@@ -51,6 +53,7 @@ export default {
       this.unselected = '#FFF4F2';  
       this.hover = '#FFA599';
       this.emphasisText = '#1F1514';
+      this.lightText = '#3E2A28';
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorMyQuestions(){
@@ -60,6 +63,7 @@ export default {
       this.unselected = '#E8E7F5';  
       this.hover = '#C9B4F2';
       this.emphasisText = '#201E2F';
+      this.lightText = '#3E3C5D';
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
   },
@@ -110,8 +114,12 @@ export default {
   align-items: center;
 }
 
-
-
+.popup{
+  position: fixed;
+  margin-top: 85vh;
+  width : 15.79%;
+  height: 10%;
+}
 
 
 </style>
