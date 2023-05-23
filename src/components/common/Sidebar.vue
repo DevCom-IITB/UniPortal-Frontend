@@ -154,6 +154,12 @@ export default {
     background-color: #d9d9d9;
 }
 
-
+@media screen and (max-width:760px) {
+    .sidebar{
+        width: 0%;
+        overflow: auto;
+        
+}
+}
 
 </style>

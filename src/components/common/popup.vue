@@ -1,38 +1,110 @@
 <template>
  <div class="askQuesButton"><a class="button" href="#popup1"><i class="fa-solid fa-question"></i>Ask a Question</a></div>
-    <div id="popup1" class="overlay">
+    <div id="popup1" class="overlay" >
+      <div class="popupholder">
         <div class="popup">
             <h2>Tanmay Jain</h2>
-            <a class="close" href="#">&times;</a>
+            <a class="close" href="#"><img class="imgrem" id="closebut" src="../icons/cancel.svg" alt="SVG Image"></a>
             <div class="content">
-              <textarea class="questionAsk" placeholder="Type in your question..."></textarea>
+              <textarea id="myTextBox" class="questionAsk" placeholder="Type in your question..." ></textarea>
               <div class="Images">
                 <div class="img">
-                  <img class = "pics" src="https://www.iitb.ac.in/sites/www.iitb.ac.in/themes/touchm/logo.png">
-                  <svg class="imgrem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>
-                </div>
+                  <img class = "pics" src="https://www.iitb.ac.in/sites/www.iitb.ac.in/themes/touchm/logo.png" alt="internet load kar">
+                  <img class="imgrem" src="../icons/cancel.svg" alt="SVG Image">                </div>
                 <div class="img">
                   <img class = "pics" src="https://www.iitb.ac.in/sites/www.iitb.ac.in/themes/touchm/logo.png">
-                    <svg class="imgrem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>
+                  <img class="imgrem" src="../icons/cancel.svg" alt="SVG Image">
                 </div>
                 
               </div>
-              <button class="addPhotoButton"><svg class="addPhotoButtonlog" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg> Add a photo</button>
-              <button id = "discard" class="addPhotoButton" onclick="location.href='#';" >Discard</button>  
-              <button id = "post" class="addPhotoButton">Post</button>
+              <div class="pupButCont">
+                <div class="button-container">
+                  <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+                   <button class="addPhotoButton" onclick="document.getElementById('photo-upload').click()"><img class="svg-image" src="../icons/add_photo_alternate.svg" alt="SVG Image"><p class="addphototext">Add a photo</p> </button>
+             
+                    <div class="right-buttons">
+                      <button id = "discard" class="addPhotoButton" onclick="location.href='#';clearTextBox();" >Discard</button>  
+                      <button id = "post" class="addPhotoButton">Post</button>
+                    </div>
+                </div>
+              </div>
             </div>
         </div>
+    </div>
     </div>
 
  </template>
  
  <script>
  export default {
-     name: 'popup'
+     name: 'popup',
+     clearTextBox() {
+  document.getElementById("myTextBox").value = "";
+  },
  }
  </script>
  
  <style scoped>
+ .popupholder{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 12%;
+    /* position: fixed; */
+    /* top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; */
+ }
+
+ #closebut{
+  height: 32px !important;
+ }
+ .button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .right-buttons {
+    display: flex;
+  }
+
+ .addphototext{
+  display: inline;
+  top: -5px;
+  margin-left: 10px;
+ }
+ .svg-image {
+    width: 20%;
+    height: auto;
+    margin-left:-20px ;
+    margin-top: 4px;
+  }
+ /* .addCircle{
+height: 2px;
+width: 20px;
+ } */
+
+.popButCont{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ }
+
+ #post{
+  background-color: #c0bfbf;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+#discard{
+    border: 2px solid #5d5c5c !important;
+    background-color: white !important;
+    color:#5d5c5c !important;
+}
+
  .box {
   width: 60%;
   margin: 0 auto;
@@ -96,14 +168,15 @@ text-decoration: none;
 }
 
 .popup {
-  margin-top: 15%;
-  margin-left: 25%;
+  /* margin-top: 15%;
+  margin-left: 25%; */
   padding: 20px;
-  /* background: #dbd9d9; */
+  background: #dbd9d9;
   border-radius: 20px;
   width: 50%;
-  position: relative;
+  /* position: relative; */
   z-index: 10;
+  
 
 }
 
@@ -160,7 +233,7 @@ font-family: Arial, Helvetica, sans-serif
   height: 20px;
   width: 20px;
   top: -73%;
-    right: 14%;
+    right: 6%;
   position:relative;
   cursor: pointer;
 }
@@ -189,18 +262,9 @@ padding-right: 25px !important;
 font-size: 20px;
 border: 0px;
 cursor: pointer;
+order: 0;
 }
-#post{
-  background-color: #c0bfbf;
-  margin-left: 5px;
-  margin-right: 10px;
-}
-#discard{
-    margin-left: 43%;
-    border: 2px solid #5d5c5c !important;
-    background-color: white !important;
-    color:#5d5c5c !important;
-}
+
 .img{
   background-color:   white;
   border-radius: 24px;

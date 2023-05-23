@@ -3,6 +3,7 @@ import MyQuestions from '../views/MyQuestions.vue'
 import Questions from '../views/Questions.vue'
 import Infopost from '../views/Infopost.vue'
 
+
 const routes = [
     {
         path: '/',
@@ -20,8 +21,12 @@ const routes = [
         path: '/questions',
         name: 'Questions',
         component: Questions,
-    }
+    },
+
+    
 ]
+
+
 
 const router = createRouter({
     history: createWebHistory(),
