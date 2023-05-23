@@ -93,6 +93,7 @@ import eye from '../icons/visibility.svg'
         },
         props: {
             
+            
             question: {
                 type: Object,
                 required: true
@@ -303,7 +304,8 @@ import eye from '../icons/visibility.svg'
 .comment-boxes{
     margin-top: 16px;
     width: 84.98%;
-    height:22vh;
+    height:27vh;
+    
     
 }
 .comment-boxes-input{
@@ -315,6 +317,7 @@ import eye from '../icons/visibility.svg'
 }
 
 .CommentBox{
+    padding-left: 5px;
     height: fit-content;
     width: 100%;
     margin-top: 16px;
