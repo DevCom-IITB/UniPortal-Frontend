@@ -26,7 +26,11 @@
             <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
-            <div class="Lister"><div class="CommentBox"><viewcomments /></div></div>
+            <div class="Lister">
+                <div class="CommentBox"><viewcomments :secondaryColor="secondaryColor" /></div>
+                    
+                
+            </div>
         </div>
 
             <div v-if="inputComments" class="comment-boxes-input">
@@ -90,6 +94,7 @@ import eye from '../icons/visibility.svg'
             }
         },
         props: {
+            
             
             question: {
                 type: Object,
@@ -294,7 +299,8 @@ import eye from '../icons/visibility.svg'
     border: 1px solid #000000;
     margin-top: 16px;
     width: 84.98%;
-    height:22vh;
+    height:27vh;
+    
     
 }
 .comment-boxes-input{
@@ -306,6 +312,7 @@ import eye from '../icons/visibility.svg'
 }
 
 .CommentBox{
+    padding-left: 5px;
     height: fit-content;
     width: 100%;
     margin-top: 16px;
@@ -319,7 +326,7 @@ import eye from '../icons/visibility.svg'
 
    .Lister{
     margin-top: 1%;
-    height: 87.04%;
+    height: 88.04%;
     width: 170%;
     
     /* border: 5px solid green; */
