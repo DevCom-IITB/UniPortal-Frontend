@@ -205,7 +205,7 @@ import eye from '../icons/visibility.svg'
 }
 
 .name{
-    margin-right:16px ;
+    margin-right: 16px;
     font-size: 16px;
     font-weight: 600;
 }
@@ -362,4 +362,45 @@ import eye from '../icons/visibility.svg'
     
   }
 
+  @media screen and (max-width: 768px){
+    .Upvote {
+        display: none;
+    }
+    .QuestionBox{
+        margin-left: -35% ;
+    }
+    .content{
+        width: 170%;
+    }
+  }
+
+  .name{
+    font-size: 1.7vmax;
+  }
+
+  .verified{
+    font-size: 1.3vmax;
+  }
+
+  .info{
+    flex-direction: column;
+    justify-content: left;
+    
+  }
+  .comments {
+    justify-content: space-between;
+    align-items: end;
+    width: 170%;
+    
+  }
+  .view-comments{
+    font-size: 1.7vmax;
+    width: 50%;
+  }
+.comment{
+    width:50%;
+}
+  
+  
+  
 </style>

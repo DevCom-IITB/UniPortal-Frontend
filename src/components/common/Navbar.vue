@@ -87,5 +87,18 @@ export default {
     font-weight: 500;
 }
 
+@media screen and (max-width:760px) {
+    .navbar{
+    margin-top: 30%;
+    width: 100%;
+    height: 50%;
+    
+} 
+   .btn {
+    font-size: 1.8vmax;
+   } 
+   
+    
+}
 
 </style>
