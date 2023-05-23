@@ -80,7 +80,6 @@
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    
   }
 
   .Lister::-webkit-scrollbar {

@@ -32,7 +32,9 @@
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
-                <viewcomments />
+                <div :key="comment['id']" v-for="comment in comments" class="comment-box">
+                    <viewcomments :comment="comment" />
+                </div>
             </div>
         </div>
 
@@ -79,11 +81,12 @@ import eye from '../icons/visibility.svg'
                 primaryColor1 : this.primaryColor,
                 secondaryColor : this.secondaryColor,
                 primaryAccent : this.primaryAccent,
-                comments : [],
+                comments : this.question.comments,
             }
         },
         methods: {
             viewComments(){
+                console.log(this.comments);
                 this.showComments = !this.showComments,
                 this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
             },
@@ -336,7 +339,7 @@ import eye from '../icons/visibility.svg'
     /* border: 5px solid green; */
     display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: start;
     justify-content:start;
     overflow-y: scroll;
     -ms-overflow-style: none;  /* IE and Edge */
@@ -346,6 +349,7 @@ import eye from '../icons/visibility.svg'
   .Lister::-webkit-scrollbar {
     display: none;
   }
+
   .view{
     display: flex;
     width:100%;

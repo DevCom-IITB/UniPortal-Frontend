@@ -1,50 +1,19 @@
 <template>
     <div class="question">
-            <div class="top">
+        <div class="top">
             <div class="name"> 
-                Tanmay Jain                
+                {{ comment['User_name'] }}                
             </div>
 
-            <div class="timestamp" :style="{ color : secondaryColor }">timestamp</div>
+            <div class="timestamp" :style="{ color : secondaryColor }">{{ comment['timestamp'] }}</div>
               
-          </div>
-            <div class="qtext">
-                I would like to update Vamsi Krishna's answer.
-                Vuetify now provides since v2.3 border utilities    
-            </div>        
+        </div>
+        <div class="qtext">
+            {{ comment['body']  }}  
+        </div>        
     </div>
 
-    <div class="question">
-            <div class="top">
-            <div class="name"> 
-                Tanmay Jain                
-            </div>
-
-            <div class="timestamp" :style="{ color : secondaryColor }">timestamp</div>
-              
-          </div>
-            <div class="qtext">
-                I would like to update Vamsi Krishna's answer.
-                Vuetify now provides since v2.3 border utilities    
-            </div>
-            
-    </div>
-
-    <div class="question">
-            <div class="top">
-            <div class="name"> 
-                Tanmay Jain                
-            </div>
-
-            <div class="timestamp" :style="{ color : secondaryColor }">timestamp</div>
-              
-          </div>
-            <div class="qtext">
-                I would like to update Vamsi Krishna's answer.
-                Vuetify now provides since v2.3 border utilities    
-            </div>
-            
-    </div>       
+      
     
 </template>
 
@@ -54,15 +23,18 @@
     export default {
         name: 'viewcomments',
         props: {
-         secondaryColor: {
-             type: String,
-             required: true
-         }
+         comment : Object,
         }        
     }
     </script>
 
 <style scoped>
+
+.question{
+   padding: 6px 12px;    
+   width: 100%;
+   border: 1px solid b;   
+}
 
 .top {
     display: flex;
@@ -70,9 +42,7 @@
     align-items: center;
 }
 
-.question{
-   padding: 6px 12px;       
-}
+
 .name{
     margin-right: 16px;
     font-size: 16px;

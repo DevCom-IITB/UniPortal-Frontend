@@ -61,6 +61,7 @@ export default {
     background: #FAF4E1;
     display: flex;
     flex-direction: row;
+    font-size: 18px;
     justify-content: space-around;
     align-items: stretch;
 }
@@ -71,11 +72,11 @@ export default {
     border-radius: 52px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    font-size: 1.1vmax; 
+    align-items: center; 
     text-decoration: none;
     color : #CCB160;
 }
+
 
 /* #info{
     background: #FFDF80;

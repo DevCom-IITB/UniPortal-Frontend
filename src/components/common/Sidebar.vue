@@ -144,11 +144,19 @@ export default {
 }
 
 .btn-1{
-    border: none;
+    width: 100%;
+    height: 48px;
+    border : none;
     border-radius: 100px;
-    font-size: 1.1vmax;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    font-size: 16px;
     font-weight: 600;
-    margin-top: 50%;
+    padding-left: 7%;
+    margin: 8px 0px;
+    cursor: pointer;
 }
 
 .btn-1:hover{
