@@ -99,16 +99,5 @@
     align-items: center;
    }
 
-  @media screen and (max-width: 768px){
-    .container{
-      margin-top: 20%;
-    }
-    .Header {
-      height: 30%;
-    }
-    .QuestionBox{
-      margin-top: 0%;
-    }
-  }
 
   </style>

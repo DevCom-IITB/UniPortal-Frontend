@@ -22,7 +22,7 @@
                     
                 </div>
                 <div class="comments">
-                    <button class="view-comments" @click="viewComments" ref="btnToggle" :style="{ color : primaryColor }">View Comments</button>
+                    <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                     <button class="comment" @click="inputcomment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
                 </div> 
             </div>
@@ -31,16 +31,14 @@
             <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
-            <div class="Lister"><div class="CommentBox"><viewcomments /></div></div>
+            <div class="Lister">
+                <viewcomments />
+            </div>
         </div>
 
             <div v-if="inputComments" class="comment-boxes-input">
-            
             <div class="CommentBox"><comment/></div>
             </div>    
-            
-                
-                
             
             
         </div>
@@ -76,6 +74,7 @@ import eye from '../icons/visibility.svg'
                 
                 inputComments: false,
                 showComments: false,
+                commentbtn_text:'View Comments',
                 background : this.background,
                 primaryColor1 : this.primaryColor,
                 secondaryColor : this.secondaryColor,
@@ -86,12 +85,10 @@ import eye from '../icons/visibility.svg'
         methods: {
             viewComments(){
                 this.showComments = !this.showComments,
-                this.$refs.btnToggle.innerText = this.show?'View Comments':'Hide Comments';
-
+                this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
             },
             inputcomment(){
                 this.inputComments = !this.inputComments
-
             }
         },
         props: {
@@ -205,7 +202,7 @@ import eye from '../icons/visibility.svg'
 }
 
 .name{
-    margin-right: 16px;
+    margin-right:16px ;
     font-size: 16px;
     font-weight: 600;
 }
@@ -233,7 +230,6 @@ import eye from '../icons/visibility.svg'
     display: flex;
     justify-content: center;
     align-items: center;
-    
     
 }
 
@@ -305,7 +301,6 @@ import eye from '../icons/visibility.svg'
 }
 
 .comment-boxes{
-    border: 1px solid #000000;
     margin-top: 16px;
     width: 84.98%;
     height:22vh;
@@ -334,8 +329,7 @@ import eye from '../icons/visibility.svg'
    .Lister{
     margin-top: 1%;
     height: 87.04%;
-    width: 170%;
-    
+    width: 100%;
     /* border: 5px solid green; */
     display: flex;
     flex-direction: column;
@@ -362,45 +356,4 @@ import eye from '../icons/visibility.svg'
     
   }
 
-  @media screen and (max-width: 768px){
-    .Upvote {
-        display: none;
-    }
-    .QuestionBox{
-        margin-left: -35% ;
-    }
-    .content{
-        width: 170%;
-    }
-  }
-
-  .name{
-    font-size: 1.7vmax;
-  }
-
-  .verified{
-    font-size: 1.3vmax;
-  }
-
-  .info{
-    flex-direction: column;
-    justify-content: left;
-    
-  }
-  .comments {
-    justify-content: space-between;
-    align-items: end;
-    width: 170%;
-    
-  }
-  .view-comments{
-    font-size: 1.7vmax;
-    width: 50%;
-  }
-.comment{
-    width:50%;
-}
-  
-  
-  
 </style>
