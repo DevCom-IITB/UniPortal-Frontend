@@ -62,9 +62,4 @@
     display: none;
 }
 
-@media screen and (max-width: 768px) {
-    .HeaderTitle{
-        font-size: 6vmax;
-    }
-}
  </style>

@@ -58,13 +58,4 @@ img{
     max-width: 100%;
 }
 
-@media screen and (max-width:768px) {
-    p{
-        font-size: 1.3vmax;
-    }
-    .container{
-        margin-top: 10%;
-    }
-}
-
 </style>
