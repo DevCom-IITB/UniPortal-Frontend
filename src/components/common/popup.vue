@@ -2,12 +2,12 @@
  <div class="askQuesButton"><a class="button" href="#popup1"><i class="fa-solid fa-question"></i>Ask a Question</a></div>
     <div id="popup1" class="overlay" >
       <div class="popupholder">
-        <div class="popup">
+        <div class="popup" :style="{ background : primary }">
             <h2>Tanmay Jain</h2>
             <a class="close" href="#"><img class="imgrem" id="closebut" src="../icons/cancel.svg" alt="SVG Image"></a>
             <div class="content">
               <textarea id="myTextBox" class="questionAsk" placeholder="Type in your question..." ></textarea>
-              <div class="Images">
+              <!-- <div class="Images">
                 <div class="img">
                   <img class = "pics" src="https://www.iitb.ac.in/sites/www.iitb.ac.in/themes/touchm/logo.png" alt="internet load kar">
                   <img class="imgrem" src="../icons/cancel.svg" alt="SVG Image">                </div>
@@ -16,7 +16,7 @@
                   <img class="imgrem" src="../icons/cancel.svg" alt="SVG Image">
                 </div>
                 
-              </div>
+              </div> -->
               <div class="pupButCont">
                 <div class="button-container">
                   <input type="file" id="photo-upload" accept="image/*" style="display: none;">
@@ -36,11 +36,14 @@
  </template>
  
  <script>
- export default {
-     name: 'popup',
-     clearTextBox() {
-  document.getElementById("myTextBox").value = "";
-  },
+  export default {
+      name: 'popup',
+      clearTextBox() {
+        document.getElementById("myTextBox").value = "";
+      },
+      props : {
+        primary : String,
+      }
  }
  </script>
  
@@ -50,13 +53,6 @@
     justify-content: center;
     align-items: center;
     top: 12%;
-    /* position: fixed; */
-    /* top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999; */
  }
 
  #closebut{

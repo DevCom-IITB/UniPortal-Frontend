@@ -6,7 +6,7 @@
       <div class="RouterView"><router-view></router-view></div>
     </div>
      
-    <div class="popup"><popup /></div>
+    <div class="popup"><popup :primary="primary" /></div>
     
     
   </div>
