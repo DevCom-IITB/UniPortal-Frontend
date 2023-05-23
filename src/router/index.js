@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import MyQuestions from '../views/MyQuestions.vue'
 import Questions from '../views/Questions.vue'
 import Infopost from '../views/Infopost.vue'
-import Login from '../views/Login.vue'
+
 
 const routes = [
     {
@@ -23,12 +23,10 @@ const routes = [
         component: Questions,
     },
 
-    {
-        path: '/login',
-        name: 'Login',
-        component: Login,
-    }
+    
 ]
+
+
 
 const router = createRouter({
     history: createWebHistory(),

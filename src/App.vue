@@ -68,13 +68,14 @@ export default {
 
 <style scoped>
 
+
 .container{
   display: flex;
   align-items: stretch;
   height: 100vh;
   width: 100vw;
   flex-flow: row wrap;
-  /* border: 5px solid red; */
+  
 }
 
 .Sidebar{
@@ -110,8 +111,44 @@ export default {
   align-items: center;
 }
 
+/* @media screen and (max-width: 760) {
+  .Content {
+    width: 100%;
+    
+  }
+  .container{
+    
+    border: 5px solid red;
+  }
 
+  .Sidebar{
+  width: 0.45%;
+  
+}
+  
+}
+ */
 
+@media screen and (max-width: 760px) {
+  .Sidebar {
+    width: 0%;
+    
+  }
+  .Content {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .container {
+    margin-left: -12vw;
+    width: 136vw;
+    
+  }
+  .Navbar {
+    margin-left: -12vw;
+    
+  }
+}
 
 
 </style>

@@ -5,8 +5,10 @@
             <div class="Upvote">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor"/>
             </div>
+            
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
+                    
                     <div class="inner-container">
                         <div class="stamps">
                             <div class="info">
@@ -17,12 +19,15 @@
                         </div>
                         <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
                     </div>
+                    
                 </div>
                 <div class="comments">
                     <button class="view-comments" @click="viewComments" ref="btnToggle" :style="{ color : primaryColor }">View Comments</button>
                     <button class="comment" @click="inputcomment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
                 </div> 
             </div>
+            
+        
             <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
@@ -131,11 +136,13 @@ import eye from '../icons/visibility.svg'
 .container{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     height: fit-content;
 }
+
+
 
 .Upvote{
     width: 3.98%;
@@ -149,8 +156,9 @@ import eye from '../icons/visibility.svg'
 .QuestionBox{
     width: 84.98%;
     height: fit-content;
-    margin-left: 3.56%;
-    margin-right: 2.53%;
+    margin-left: 0.6vw;
+    margin-right: 1.35vw;
+    
     /* overflow: auto; */
     /* border: 1px solid #000000; */
 }
@@ -165,6 +173,11 @@ import eye from '../icons/visibility.svg'
     padding: 12px 16px 12px 16px;
 }
 
+.route {
+    text-decoration: none;
+    width: 100%;
+    
+}
 .inner-container{
     height: fit-content;
     display: flex;
@@ -172,6 +185,7 @@ import eye from '../icons/visibility.svg'
     justify-content: space-between;
     align-items: start;
 }
+
 
 .stamps{
     width: 100%;
@@ -191,7 +205,7 @@ import eye from '../icons/visibility.svg'
 }
 
 .name{
-    margin-right:16px ;
+    margin-right: 16px;
     font-size: 16px;
     font-weight: 600;
 }
@@ -219,8 +233,8 @@ import eye from '../icons/visibility.svg'
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: visible;
-    border: 1px solid #000000;
+    
+    
 }
 
 .text{
@@ -230,11 +244,11 @@ import eye from '../icons/visibility.svg'
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
-    /* display: -webkit-box;
+    display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical; */
+    -webkit-box-orient: vertical; 
     overflow: hidden;
-    /* text-overflow: ellipsis; */
+    text-overflow: ellipsis;
 }
 
 .comments{
@@ -285,8 +299,8 @@ import eye from '../icons/visibility.svg'
 
 
 .Hide{
-    width: 4.98%;
-    height: 25%;
+    width: 2vw;
+    
     cursor: pointer;
 }
 
@@ -348,4 +362,45 @@ import eye from '../icons/visibility.svg'
     
   }
 
+  @media screen and (max-width: 768px){
+    .Upvote {
+        display: none;
+    }
+    .QuestionBox{
+        margin-left: -35% ;
+    }
+    .content{
+        width: 170%;
+    }
+  }
+
+  .name{
+    font-size: 1.7vmax;
+  }
+
+  .verified{
+    font-size: 1.3vmax;
+  }
+
+  .info{
+    flex-direction: column;
+    justify-content: left;
+    
+  }
+  .comments {
+    justify-content: space-between;
+    align-items: end;
+    width: 170%;
+    
+  }
+  .view-comments{
+    font-size: 1.7vmax;
+    width: 50%;
+  }
+.comment{
+    width:50%;
+}
+  
+  
+  
 </style>
