@@ -3,7 +3,7 @@
     <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover"/></div>
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view></router-view></div>
+      <div class="RouterView"><router-view @comment="ask"></router-view></div>
       <div class="popup" @click="ask"><popup :lightText="lightText" /></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask"/></div>
     </div>

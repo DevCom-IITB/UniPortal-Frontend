@@ -23,7 +23,7 @@
                 </div>
                 <div class="comments">
                     <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
-                    <button class="comment" @click="inputcomment" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
+                    <button class="comment" @click="$emit('comment')" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
                 </div> 
             </div>
             
@@ -67,8 +67,6 @@ import eye from '../icons/visibility.svg'
         },
         data () {
             return {
-                
-                inputComments: false,
                 showComments: false,
                 commentbtn_text:'View Comments',
                 background : this.background,
@@ -84,9 +82,6 @@ import eye from '../icons/visibility.svg'
                 this.showComments = !this.showComments,
                 this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
             },
-            inputcomment(){
-                this.inputComments = !this.inputComments
-            }
         },
         props: {
             
