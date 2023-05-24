@@ -4,8 +4,10 @@
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view></router-view></div>
-      <div class="popup"><popup :lightText="lightText" /></div>
+      <div class="popup" @click="ask"><popup :lightText="lightText" /></div>
+      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask"/></div>
     </div>
+    <div class="glass" v-if="askQuestion == true" @click="ask"></div>
      
         
     
@@ -16,6 +18,7 @@
 import Navbar from './components/common/Navbar.vue'
 import Sidebar from './components/common/Sidebar.vue'
 import popup from './components/common/popup.vue'
+import askBox from './components/common/askBox.vue'
 
 export default {
   name: 'App',
@@ -23,6 +26,7 @@ export default {
     Navbar,
     Sidebar,
     popup,
+    askBox,
   },
   data(){
     return{
@@ -32,7 +36,9 @@ export default {
       unselected : '#FAF4E1',
       hover : '#FFD899',
       emphasisText : '#211D12',
-      lightText : '#52492E'
+      lightText : '#52492E',
+      background : '#FFF9E5',
+      askQuestion : false,
     }
   },
   methods:{
@@ -44,6 +50,7 @@ export default {
       this.hover = '#FFD899';
       this.emphasisText = '#211D12';
       this.lightText = '#52492E';
+      this.background = '#FFF9E5';
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorQuestions(){
@@ -54,6 +61,7 @@ export default {
       this.hover = '#FFA599';
       this.emphasisText = '#1F1514';
       this.lightText = '#3E2A28';
+      this.background = '#FFF3F2';
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorMyQuestions(){
@@ -64,8 +72,12 @@ export default {
       this.hover = '#C9B4F2';
       this.emphasisText = '#201E2F';
       this.lightText = '#3E3C5D';
+      this.background = '#F6F5FF';
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
+    async ask(){
+      this.askQuestion = !this.askQuestion;
+    }
   },
 }
 </script>
@@ -119,6 +131,28 @@ export default {
   margin-top: 85vh;
   width : 15.79%;
   height: 10%;
+  cursor: pointer;
+}
+
+.ask{
+  position: fixed;
+  width: 52.33vw;
+  height: 30vh;
+  margin-bottom: 42vh;
+  z-index: 1;
+  background: white;
+  border: 1px solid black;
+  border-radius: 24px;
+  padding: 16px 24px;
+}
+
+.glass{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  
 }
 
 

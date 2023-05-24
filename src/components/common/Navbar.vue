@@ -13,7 +13,7 @@
 <script>
 export default {
     name: 'Navbar',
-    emits: ['selected'],
+    emits: ['selected1', 'selected2', 'selected3'],
     props : {
         primary : String,
         grey : String,

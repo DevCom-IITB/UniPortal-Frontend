@@ -24,6 +24,7 @@
         name: 'viewcomments',
         props: {
          comment : Object,
+         secondaryColor : String,
         }        
     }
     </script>

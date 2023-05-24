@@ -33,17 +33,11 @@
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
                 <div :key="comment['id']" v-for="comment in comments" class="comment-box">
-                    <viewcomments :comment="comment" />
+                    <viewcomments :comment="comment" :secondaryColor="secondaryColor"/>
                 </div>
             </div>
         </div>
-
-            <div v-if="inputComments" class="comment-boxes-input">
-            <div class="CommentBox"><comment/></div>
-            </div>    
-            
-            
-        </div>
+    </div>
     
         
 
