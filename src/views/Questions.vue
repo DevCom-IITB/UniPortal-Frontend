@@ -5,7 +5,7 @@
      <div class="Lister">
        <div :key="question['id']" v-for="question in questions" class="QuestionBox">
         
-         <Question :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
+         <Question :showAnswerBox="this.true" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
          
         </div>
         
@@ -32,7 +32,9 @@
         background: '#FFF3F2',
         primaryColor : '#1F1514',
         secondaryColor : '#CC655E',
-        primaryAccent : '#FFD2D1'
+        primaryAccent : '#FFD2D1',
+        true : true,
+        false : false
       }
     },
     components: {
@@ -42,6 +44,7 @@
     methods:{
       async fetchQuestions() {
         const res = await fetch('api/questions')
+        console.log(res);
         const data = await res.json()
         console.log(data)
         return data

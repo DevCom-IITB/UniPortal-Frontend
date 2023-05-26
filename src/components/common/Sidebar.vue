@@ -3,6 +3,7 @@
         
         <div class="Logo">
             <div class="Logoimg"><Logo /></div>
+            <h1>NewBee</h1>
         </div>
 
         <div class="Info">
@@ -77,9 +78,15 @@ export default {
 .Logo{
     height: 12.98%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 10%;
+    padding-top: 20%;
+
+}
+
+.Logo h1{
+    font-weight: 600;
 }
 
 .Logoimg{

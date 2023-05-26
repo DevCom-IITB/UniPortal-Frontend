@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import MyQuestions from '../views/MyQuestions.vue'
 import Questions from '../views/Questions.vue'
 import Infopost from '../views/Infopost.vue'
+import Questionview from '../views/Questionview.vue'
 
 
 const routes = [
@@ -22,6 +23,13 @@ const routes = [
         name: 'Questions',
         component: Questions,
     },
+
+    {
+        path: '/question/:id',
+        name: 'Questionview',
+        component: Questionview,
+        props : true,
+    }
 
     
 ]

@@ -1,92 +1,110 @@
 <template>
-    <div class="container">
-     
-     
-     <!-- <div class="Lister">
-        <div :key="question['id']" v-for="question in questions" class="QuestionBox">
-         <Question :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"/>
-        </div>
-        
-     </div> -->
-
-     {{ question["id"] }}
-    
-    
-     
-   </div>
+  <div class="container">
+   
+    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :showAnswerBox="this.true" :comments="comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Lister">
+      <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
+        <Question :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
+      </div>
       
-</template>
-  
-<script>
-import Question from '../components/common/questionBox.vue'
-  import Header from '../components/common/Header.vue'
+    </div>
 
-  
-  export default {
-    name: 'MyQuestions',
-    data() {
-      return {
-        headerName : 'Questions',
-        headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
-        questions : [],
-        background: '#FFF3F2',
-        primaryColor : '#1F1514',
-        secondaryColor : '#CC655E',
-        primaryAccent : '#FFD2D1'
-      }
-    },
-    components: {
-      Question,
-      Header
-    },
-    methods:{
-      async fetchQuestions() {
-        const res = await fetch('api/questions')
+ 
+   
+ </div>
+    
+</template>
+
+<script>
+import Question from '../components/common/questionBoxMax.vue'
+import axios from 'axios'
+
+export default {
+  name: 'Questionview',
+  data() {
+    return {
+      headerName : 'Questions',
+      headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
+      background: '#FFF3F2',
+      primaryColor : '#1F1514',
+      secondaryColor : '#CC655E',
+      primaryAccent : '#FFD2D1',
+      grey : '#F2F2F2',
+      question : {},
+      answers : [],
+      comments : [],  
+      true : true,
+      false : false
+    }
+  },
+  components: {
+    Question,
+  },
+  methods:{
+      async fetchQuestions(id) {
+        const res = await fetch(`http://localhost:7000/questions/${id}`)
+        console.log("we got the response : ",res);
         const data = await res.json()
-        console.log(data)
+        console.log("we get the data : ",data);
         return data
       },
+      test(){
+        console.log(this.question.comments);
+      }
     },
     async mounted() {
-      this.questions = await this.fetchQuestions()
-      console.log(this.questions);
+      const id = decodeURIComponent(window.location.pathname).split('/')[2];
+      console.log(id);
+      this.question = await this.fetchQuestions(id)
+      this.answers = this.question.answers;
+      this.comments = this.question.comments;
+      console.log(this.question);
+      console.log(this.question.answers);
     }
-  }
-  </script>
-  
-  <style scoped>
+}
+</script>
+
+<style scoped>
 
 .container{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 
-  .Header{
-    height: 35.96%;
-    width: 84.98%;
-  }
-
-  .Lister{
-    height: 64.04%;
-    width: 100%;
-    /* border: 5px solid green; */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content:start;
-    overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  .Lister::-webkit-scrollbar {
+.container::-webkit-scrollbar {
     display: none;
   }
 
-  .QuestionBox{
+.Question{
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 2px solid;
+}
+
+.Lister{
+  max-height: 64.04%;
+  width: 100%;
+  /* border: 5px solid green; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:start;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.Lister::-webkit-scrollbar {
+  display: none;
+}
+
+.QuestionBox{
     height: fit-content;
     width: 100%;
     margin-top: 16px;
@@ -99,4 +117,5 @@ import Question from '../components/common/questionBox.vue'
    }
 
 
-  </style>
+
+</style>
