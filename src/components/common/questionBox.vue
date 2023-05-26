@@ -160,9 +160,9 @@ export default {
 }
 
 .QuestionBox{
-    width: 84.98%;
+    width: 85.38%;
     height: fit-content;
-    margin-left: 0.6vw;
+    margin-left: 1.1vw;
     margin-right: 1.35vw;
     
     /* overflow: auto; */
@@ -370,12 +370,23 @@ p{
     align-items: start;
     justify-content:start;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    overflow-x: hidden
   }
 
   .Lister::-webkit-scrollbar {
-    display: none;
+    width : 8px;
+  }
+
+  .Lister::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+
+  .Lister::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+
+  .Lister::-webkit-scrollbar-thumb:hover {
+    background: #555; 
   }
 
   .view{

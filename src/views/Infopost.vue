@@ -71,12 +71,25 @@ export default {
     align-items: center;
     justify-content:start;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    overflow-x: hidden;
   }
 
-  .Lister::-webkit-scrollbar {
-    display: none;
+ /* width */
+.Lister::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+ 
+/* Handle */
+.Lister::-webkit-scrollbar-thumb {
+  background: #CCB160; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.Lister::-webkit-scrollbar-thumb:hover {
+  background: #52492E; 
 }
 
   .InfoPostBox{

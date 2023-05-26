@@ -81,12 +81,21 @@ export default {
   align-items: center;
   justify-content:start;
   overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  overflow-x: hidden;
 }
 
 .Lister::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+}
+
+
+.Lister::-webkit-scrollbar-thumb {
+  background: #8D87B3;
+  border-radius: 10px;
+}
+
+.Lister::-webkit-scrollbar-thumb:hover {
+  background: #201E2F;
 }
 
 .QuestionBox{

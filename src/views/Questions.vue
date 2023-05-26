@@ -75,18 +75,26 @@
   .Lister{
     height: 64.04%;
     width: 100%;
-    /* border: 5px solid green; */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content:start;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    overflow-x: hidden;
   }
 
   .Lister::-webkit-scrollbar {
-    display: none;
+    width : 8px;
+  }
+
+
+  .Lister::-webkit-scrollbar-thumb {
+    background: #CC655E;
+    border-radius: 10px;
+  } 
+
+  .Lister::-webkit-scrollbar-thumb:hover {
+    background: #3E2A28;
   }
 
   .QuestionBox{

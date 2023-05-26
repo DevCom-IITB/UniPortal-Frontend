@@ -99,14 +99,22 @@ export default {
   align-items: center;
   justify-content:start;
   overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  overflow-x: hidden;
 }
 
 .Lister::-webkit-scrollbar {
-  display: none;
+  width: 8px;
 }
 
+
+.Lister::-webkit-scrollbar-thumb {
+  background: #CC655E;
+  border-radius: 24px;
+}
+
+.Lister::-webkit-scrollbar-thumb:hover {
+  background: #3E2A28;
+}
 .QuestionBox{
     height: fit-content;
     width: 100%;

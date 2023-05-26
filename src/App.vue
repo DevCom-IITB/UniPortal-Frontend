@@ -120,7 +120,7 @@ export default {
 
 .RouterView{
   height: 85.71%;
-  width: 78.35%;
+  width: 78.65%;
   display: flex;
   justify-content: center;
   align-items: center;
