@@ -1,10 +1,10 @@
 <template>
   <div class="container">
    
-    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :showAnswerBox="this.true" :comments="comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :upvotes="upvotes" :showAnswerBox="this.true" :comments="comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
-        <Question :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
+        <Question :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
       </div>
       
     </div>
@@ -33,6 +33,7 @@ export default {
       question : {},
       answers : [],
       comments : [],  
+      upvotes : 0,
       true : true,
       false : false
     }
@@ -58,8 +59,10 @@ export default {
       this.question = await this.fetchQuestions(id)
       this.answers = this.question.answers;
       this.comments = this.question.comments;
+      this.upvotes = this.question.upvotes;
       console.log(this.question);
       console.log(this.question.answers);
+      console.log("upvotes : ",this.upvotes);
     }
 }
 </script>

@@ -3,7 +3,7 @@
     <div class="main-container">
         <div class="container">
             <div class="Upvote" @click="test">
-                <upvote :background="primaryAccent" :primaryColor1="primaryColor"/>
+                <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
             <div class="QuestionBox">
@@ -79,6 +79,7 @@ export default {
             secondaryColor : this.secondaryColor,
             primaryAccent : this.primaryAccent,
             comments : [],
+            upvotes : 0
         }
     },
     methods: {
@@ -94,6 +95,7 @@ export default {
     },
     async mounted(){
         this.comments = this.question.comments;
+        this.upvotes = this.question.upvotes;
     },
     props: {    
         question: {

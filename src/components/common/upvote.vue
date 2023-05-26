@@ -2,7 +2,7 @@
     <div class="upvotebox">
         <button class="btn" :style="{ color : primaryColor, background: background }">
             <div class="icon"><Upvote/></div>
-            <p>4</p>
+            <p>{{ upvotes }}</p>
         </button>
     </div>
 </template>
@@ -23,6 +23,10 @@
              type: String,
              required: true
          },
+         upvotes: {
+             type: Number,
+             required: true
+         }
      }
  }
  </script>

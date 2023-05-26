@@ -34,7 +34,7 @@
         secondaryColor : '#CC655E',
         primaryAccent : '#FFD2D1',
         true : true,
-        false : false
+        false : false,
       }
     },
     components: {
