@@ -1,18 +1,18 @@
 <template>
 
-    <div class="asker" >
+    <form class="asker" @submit="OnSubmit" >
         <div class="name">Sanskar Gosavi</div>
-        <div class="text" :style="{  borderColor : grey }"></div>
+        <textarea class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
         <div class="actions">
             <div class="photo" :style="{ background : background }"><add />&nbsp;&nbsp;<p>Add photo</p></div>
             <div class="decision">
                 <div class="discard" :style="{ color : grey }" @click="$emit('discard')">Discard</div>
-                <div class="post" :style="{ background : primary }">Post</div>
+                <input class="post" :style="{ background : primary }" value="Post" type="submit" />
             </div>
         </div>
 
 
-    </div>
+    </form>
 
 </template>
 
@@ -24,6 +24,27 @@ export default {
         grey : String,
         background : String,
         primary : String,
+    },
+    data(){
+        return {
+            text : '',
+        }
+    },
+    methods : {
+        async OnSubmit(e){
+            e.preventDefault();
+            if(!this.text){
+                alert('Please enter some text')
+                return;
+            }
+
+            const newPost = {
+                text : this.text,
+            }
+
+            this.$emit('post',newPost);
+            this.text = '';
+        }
     },
     components : {
         add,
@@ -56,6 +77,8 @@ export default {
     height: 56%;
     border: 1px solid;
     border-radius: 10px;
+    padding: 8px 8px ;
+    resize: none;
 }
 
 .actions{
@@ -107,6 +130,7 @@ p{
 .post{
     padding-left: 16px;
     padding-right: 16px;
+    border: none;
     border-radius: 50px;
     display: flex;
     justify-content: center;

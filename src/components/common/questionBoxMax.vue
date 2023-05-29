@@ -401,4 +401,32 @@ p{
     
   }
 
+  @media only screen and (max-width: 1150px){
+
+    .name{
+        font-size: 14px;
+    }
+
+    .timestamp{
+        font-size: 8px;
+    }
+
+    .verified{
+        font-size: 8px;
+    }   
+
+    .text{
+        font-size: 10px;
+    }
+
+    .view-comments{
+        font-size: 14px;
+    }
+
+    p{
+        font-size: 14px;
+    }
+
+}
+
 </style>

@@ -56,5 +56,15 @@ p{
 }
 
 
+@media only screen and (max-width: 1150px) {
+    .btn{
+        padding: 3px 10px 3px 10px;
+        margin-left: 1px;
+    }
+    p{
+        font-size: 14px;
+    }
+}
+
 
 </style>

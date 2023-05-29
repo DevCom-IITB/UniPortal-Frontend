@@ -69,4 +69,17 @@
     background: #000;
 }
 
+@media only screen and (max-width: 1150px){
+
+    .HeaderTitle{
+        font-size: 48px;
+    }
+
+    .HeaderText{
+        font-size: 14px;
+    }
+
+
+}
+
  </style>

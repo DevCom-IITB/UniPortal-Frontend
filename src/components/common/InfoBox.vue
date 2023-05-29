@@ -37,7 +37,7 @@ export default {
 }
 
 p{
-    font-size: 0.9vmax;
+    font-size: 14px;
     font-weight: 400;
 }
 
@@ -56,6 +56,12 @@ p{
 
 img{
     max-width: 100%;
+}
+
+@media only screen and (max-width: 1150px) {
+    p{
+        font-size: 12px;
+    }
 }
 
 </style>

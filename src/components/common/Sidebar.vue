@@ -170,6 +170,24 @@ export default {
     background-color: #d9d9d9;
 }
 
+@media only screen and (max-width : 1150px){
+
+    .InfoText{
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 50px;
+    }
+
+    .btn{
+        font-size: 14px;
+    }
+
+    .btn-1{
+        font-size: 14px;
+    }
+
+}
+
 
 
 </style>

@@ -64,6 +64,18 @@
     align-items: center;
 }
 
+@media only screen and (max-width: 1150px) {
+    .name{
+        font-size: 12px;
+    }
+    .timestamp{
+        font-size: 8px;
+    }
+    .qtext{
+        font-size: 10px;
+    }
+}
+
 </style>
 
 

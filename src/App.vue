@@ -5,7 +5,7 @@
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView"></router-view></div>
       <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
-      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask"/></div>
+      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
     <div class="glass" v-if="askQuestion == true" @click="ask"></div>
      
@@ -54,6 +54,17 @@ export default {
       this.background = '#FFF9E5';
       this.askPopup = true;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+    async OnSubmit(newPost){
+      const response = await fetch('api/questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newPost)
+      })
+
+      this.askQuestion = false;
     },
     async ColorQuestions(){
       this.sidebar = '#FFE5E5';
@@ -156,7 +167,6 @@ export default {
   margin-bottom: 42vh;
   z-index: 1;
   background: white;
-  border: 1px solid black;
   border-radius: 24px;
   padding: 16px 24px;
 }
@@ -169,6 +179,7 @@ export default {
   cursor: pointer;
   
 }
+
 
 
 </style>
