@@ -1,6 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import MyQuestions from '../views/MyQuestions.vue'
 import Questions from '../views/Questions.vue'
+import UnAnswered from '../views/UnAnswered.vue'
+import Answered from '../views/Answered.vue'
 import Infopost from '../views/Infopost.vue'
 import Questionview from '../views/Questionview.vue'
 
@@ -22,6 +24,18 @@ const routes = [
         path: '/questions',
         name: 'Questions',
         component: Questions,
+    },
+
+    {
+        path: '/unanswered',
+        name: 'UnAnswered',
+        component: UnAnswered,
+    },
+
+    {
+        path: '/answered',
+        name: 'Answered',
+        component: Answered,
     },
 
     {

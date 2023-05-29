@@ -61,7 +61,8 @@ export default {
       this.comments = this.question.comments;
       this.upvotes = this.question.upvotes;
       console.log(this.question);
-      console.log(this.question.answers);
+      //console.log(this.question.answers.length?"yes":"no");
+      console.log(this.question.verified);
       console.log("upvotes : ",this.upvotes);
     }
 }
