@@ -54,12 +54,19 @@
     font-size: 16px;
     font-weight: 500;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
 }
 
 .HeaderText::-webkit-scrollbar {
-    display: none;
+    width : 8px;
+}
+
+.HeaderText::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.HeaderText::-webkit-scrollbar-thumb:hover {
+    background: #000;
 }
 
  </style>

@@ -3,7 +3,7 @@
         
         <div class="Logo">
             <div class="Logoimg"><Logo /></div>
-            <h1>NewBee</h1>
+            <!-- <h1>NewBee</h1> -->
         </div>
 
         <div class="Info">

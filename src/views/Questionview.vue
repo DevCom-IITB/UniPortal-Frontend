@@ -23,13 +23,13 @@ export default {
   name: 'Questionview',
   data() {
     return {
-      headerName : 'Questions',
-      headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
-      background: '#FFF3F2',
-      primaryColor : '#1F1514',
-      secondaryColor : '#CC655E',
-      primaryAccent : '#FFD2D1',
-      grey : '#F2F2F2',
+      sidebar : '#F0F3E8',
+      background: '#FDFDF6',
+      primaryColor : '#3E3C5D',
+      secondaryColor : '#386A20',
+      primaryAccent : '#D9E7CB',
+      unselected : '#F0F3E8',
+
       question : {},
       answers : [],
       comments : [],  
@@ -108,12 +108,12 @@ export default {
 
 
 .Lister::-webkit-scrollbar-thumb {
-  background: #CC655E;
+  background: #386A20;
   border-radius: 24px;
 }
 
 .Lister::-webkit-scrollbar-thumb:hover {
-  background: #3E2A28;
+  background: #3E3C5D;
 }
 .QuestionBox{
     height: fit-content;

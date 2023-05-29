@@ -107,7 +107,6 @@ p{
 .post{
     padding-left: 16px;
     padding-right: 16px;
-    margin-right: 8px;
     border-radius: 50px;
     display: flex;
     justify-content: center;

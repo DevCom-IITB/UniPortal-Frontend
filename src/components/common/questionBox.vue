@@ -8,7 +8,7 @@
             
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
-                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute"  >                                            
+                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute" @click="$emit('askView')" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">

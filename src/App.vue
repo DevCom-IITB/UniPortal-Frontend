@@ -3,8 +3,8 @@
     <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover"/></div>
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view @comment="ask"></router-view></div>
-      <div class="popup" @click="ask"><popup :lightText="lightText" /></div>
+      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView"></router-view></div>
+      <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask"/></div>
     </div>
     <div class="glass" v-if="askQuestion == true" @click="ask"></div>
@@ -39,6 +39,7 @@ export default {
       lightText : '#52492E',
       background : '#FFF9E5',
       askQuestion : false,
+      askPopup : true,
     }
   },
   methods:{
@@ -51,6 +52,7 @@ export default {
       this.emphasisText = '#211D12';
       this.lightText = '#52492E';
       this.background = '#FFF9E5';
+      this.askPopup = true;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorQuestions(){
@@ -62,6 +64,7 @@ export default {
       this.emphasisText = '#1F1514';
       this.lightText = '#3E2A28';
       this.background = '#FFF3F2';
+      this.askPopup = true;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorMyQuestions(){
@@ -73,6 +76,18 @@ export default {
       this.emphasisText = '#201E2F';
       this.lightText = '#3E3C5D';
       this.background = '#F6F5FF';
+      this.askPopup = true;
+      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+    async ColorQuestionView(){
+      this.sidebar = '#F0F3E8';
+      this.primary = '#D9E7CB';
+      this.grey = '#386A20';
+      this.unselected = '#F0F3E8';  
+      this.hover = '#D9E7CB';
+      this.emphasisText = '#1C1B1F';
+      this.background = '#FDFDF6';
+      this.askPopup = false;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ask(){

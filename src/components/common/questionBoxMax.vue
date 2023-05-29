@@ -7,19 +7,17 @@
             </div>
             
             <div class="QuestionBox">
-                <div class="content" :style="{ background : background}">
-                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute"  >                                            
-                        <div class="inner-container">
-                            <div class="stamps">
-                                <div class="info">
-                                    <div class="name" :style="{ color : primaryColor }">{{ question["User_name"] }}</div>
-                                    <div class="timestamp" :style="{ color : secondaryColor }">{{ question["timestamp"] }}</div>
-                                </div>
-                                <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
+                <div class="content" :style="{ background : background}">                                           
+                    <div class="inner-container">
+                        <div class="stamps">
+                            <div class="info">
+                                <div class="name" :style="{ color : primaryColor }">{{ question["User_name"] }}</div>
+                                <div class="timestamp" :style="{ color : secondaryColor }">{{ question["timestamp"] }}</div>
                             </div>
-                            <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
+                            <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                         </div>
-                    </router-link>
+                        <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
+                    </div>
                 </div>
                 <div class="box-footer">
                     <div v-if="showAnswerBox" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
