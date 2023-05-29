@@ -23,7 +23,7 @@
 
   
   export default {
-    name: 'MyQuestions',
+    name: 'Questions',
     data() {
       return {
         headerName : 'Questions',
