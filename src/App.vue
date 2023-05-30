@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover"/></div>
+    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content">
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView"></router-view></div>
@@ -40,7 +40,17 @@ export default {
       background : '#FFF9E5',
       askQuestion : false,
       askPopup : true,
+      windowWidth : window.innerWidth,
+      showSidebar : false,
     }
+  },
+  mounted() {
+      this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+      })
+  },
+  beforeDestroy() { 
+      window.removeEventListener('resize', this.onResize); 
   },
   methods:{
     async ColorInfoPost(){
@@ -103,6 +113,13 @@ export default {
     },
     async ask(){
       this.askQuestion = !this.askQuestion;
+    },
+    onResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    async Burger(value){
+      this.showSidebar = value;
+      console.log(this.showSidebar);
     }
   },
 }
@@ -178,6 +195,17 @@ export default {
   background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
   
+}
+
+@media only screen and (max-width:750px){
+
+.Sidebar{
+  height: 100vh;
+  z-index: 2;
+  position: fixed;
+  justify-content: start;
+}
+
 }
 
 

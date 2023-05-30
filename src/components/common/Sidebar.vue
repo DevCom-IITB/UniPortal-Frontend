@@ -1,31 +1,30 @@
 <template>
-   <div class="sidebar" :style="{ background : sidebar, color : emphasisText }" >
+   <div class="sidebar" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : showSidebar ? { background : background } : { width : '0px'}" >
         
-        <div class="Logo">
+        <div class="Logo" :style="windowWidth<750 ? { background : primary } : { background : sidebar }">
+            <div v-if="windowWidth<750" class="burger" @click="Burger"><burger /></div>
             <div class="Logoimg"><Logo /></div>
-            <!-- <h1>NewBee</h1> -->
         </div>
 
-        <div class="Info">
-            <div class="InfoText">This will contain some text regarding the basic information
-            </div>
+        <div class="Info" v-if="windowWidth>750 || (showSidebar && windowWidth<750)">
+            <div class="InfoText">Welcome aboard! <br/> With the all new freshers’ portal clear all your doubts regarding the admission process</div>
 
             <div class="InfoLinks" >
-                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
+                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
                     <email />&nbsp;&nbsp;Email 
                 </button>
 
-                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
+                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
                     <Globe />&nbsp;&nbsp;SMP Website 
                 </button>
 
-                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : { background : sidebar, color : emphasisText }">
+                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
                     <contact />&nbsp;&nbsp;Contact info. 
                 </button>
             </div>
         </div>
-        <div class="Creds" >
-            <button class="btn-1" :style="{ background : sidebar, color : emphasisText }">
+        <div class="Creds" v-if="windowWidth>750 || (showSidebar && windowWidth<750)" >
+            <button class="btn-1" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
                 Credentials 
             </button>
         </div>
@@ -42,6 +41,7 @@ import Logo from '../icons/Logo.svg'
 import Globe from '../icons/globe.svg'
 import email from '../icons/email.svg'
 import contact from '../icons/contact.svg'
+import burger from '../icons/menu.svg'
 
 export default {
     name: 'Sidebar',
@@ -49,18 +49,42 @@ export default {
         sidebar : String,
         emphasisText : String,
         hover : String,
+        background : String,
+        primary : String,
     },
     components : {
         Logo,
         Globe,
         email,
         contact,
+        burger,
     },
     data () {
         return {
             hovering : 0,
+            windowWidth : window.innerWidth,
+            showSidebar : false,
         }
     },
+    mounted() {
+        this.$nextTick(() => {
+        window.addEventListener('resize', this.onResize);
+        })
+    },
+
+    beforeDestroy() { 
+        window.removeEventListener('resize', this.onResize); 
+    },
+
+    methods: {  
+        onResize() {
+        this.windowWidth = window.innerWidth;
+        },
+        async Burger(){
+            this.showSidebar = !this.showSidebar
+            this.$emit('Burger', this.showSidebar)
+        }
+    }
 }
 </script>
 
@@ -75,6 +99,8 @@ export default {
     align-items: center;
 }
 
+
+
 .Logo{
     height: 12.98%;
     display: flex;
@@ -85,9 +111,12 @@ export default {
 
 }
 
-.Logo h1{
-    font-weight: 600;
+.burger{
+    position: fixed;
+    left: 16px;
+    margin-top: 8px;
 }
+
 
 .Logoimg{
     display: flex;
@@ -139,9 +168,6 @@ export default {
     cursor: pointer;
 }
 
-.btn:hover{
-    background-color: #d9d9d9;
-}
 
 
 .Creds{
@@ -166,9 +192,6 @@ export default {
     cursor: pointer;
 }
 
-.btn-1:hover{
-    background-color: #d9d9d9;
-}
 
 @media only screen and (max-width : 1150px){
 
@@ -205,6 +228,54 @@ export default {
 }
 
 }
+
+@media only screen and (max-width : 750px){
+
+.sidebar{
+    width: 70%;
+    margin-top: 0px;
+    border-radius: 0%;
+    align-items: start;
+}
+
+.Logo{
+    height: 10%;
+    padding-top: 0%;
+    width: 100vw;
+}
+
+.Info{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+.InfoText{
+    font-size: 16px;
+}
+
+.btn{
+    font-size: 16px;
+}
+
+
+.Creds{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width : 100%;
+}
+
+.btn-1{
+    justify-content: center;
+    font-size: 16px;
+}
+
+
+}
+
 
 
 
