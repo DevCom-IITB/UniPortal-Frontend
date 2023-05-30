@@ -2,7 +2,7 @@
     
     <div class="main-container">
         <div class="container">
-            <div class="Upvote" @click="test">
+            <div class="Upvote" @click="test" v-if="windowWidth > 750">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
@@ -20,7 +20,8 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <div v-if="showAnswerBox" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
+                    <div v-if="showAnswerBox && windowWidth > 750" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                         <button class="comment" @click="$emit('comment')" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp;<p>Comment</p></button>
@@ -29,7 +30,7 @@
             </div>
             
         
-            <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" ><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
@@ -76,6 +77,7 @@ export default {
             primaryColor1 : this.primaryColor,
             secondaryColor : this.secondaryColor,
             primaryAccent : this.primaryAccent,
+            windowWidth: window.innerWidth,
         }
     },
     methods: {
@@ -87,10 +89,19 @@ export default {
         test(){
             console.log(this.question);
             console.log(this.comments);
-        }
+        },
+        onResize() {
+            this.windowWidth = window.innerWidth;
+        },
     },
     async mounted(){
         this.upvotes = this.question.upvotes;
+        this.$nextTick(() => {
+            window.addEventListener('resize', this.onResize);
+        })
+    },
+    beforeDestroy() { 
+        window.removeEventListener('resize', this.onResize); 
     },
     props: {    
         question: {
