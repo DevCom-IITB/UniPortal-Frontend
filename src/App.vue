@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
-    <div class="Content">
+    <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView"></router-view></div>
       <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
@@ -133,6 +133,7 @@ export default {
   height: 100vh;
   width: 100vw;
   flex-flow: row wrap;
+  overflow-y: hidden;
   /* border: 5px solid red; */
 }
 
@@ -143,7 +144,6 @@ export default {
 }
 
 .Content{
-  width: 78.55%;
   height: 100vh;
   /* overflow-y: scroll; */
   display: flex;
@@ -206,8 +206,16 @@ export default {
   justify-content: start;
 }
 
+.Content{
+  margin-top: 64px;
+  height: 92vh;
 }
 
+.Navbar{
+  width: 95vw;
+}
+
+}
 
 
 </style>

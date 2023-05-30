@@ -1,5 +1,5 @@
 <template>
-   <div class="sidebar" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : showSidebar ? { background : background } : { width : '0px'}" >
+   <div class="sidebar" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : showSidebar ? { background : sidebar } : { width : '0px'}" >
         
         <div class="Logo" :style="windowWidth<750 ? { background : primary } : { background : sidebar }">
             <div v-if="windowWidth<750" class="burger" @click="Burger"><burger /></div>
@@ -10,21 +10,21 @@
             <div class="InfoText">Welcome aboard! <br/> With the all new freshers’ portal clear all your doubts regarding the admission process</div>
 
             <div class="InfoLinks" >
-                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
+                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
                     <email />&nbsp;&nbsp;Email 
                 </button>
 
-                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
+                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
                     <Globe />&nbsp;&nbsp;SMP Website 
                 </button>
 
-                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
+                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
                     <contact />&nbsp;&nbsp;Contact info. 
                 </button>
             </div>
         </div>
         <div class="Creds" v-if="windowWidth>750 || (showSidebar && windowWidth<750)" >
-            <button class="btn-1" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : background }">
+            <button class="btn-1" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
                 Credentials 
             </button>
         </div>
@@ -239,7 +239,7 @@ export default {
 }
 
 .Logo{
-    height: 10%;
+    height: 80px;
     padding-top: 0%;
     width: 100vw;
 }
