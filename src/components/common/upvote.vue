@@ -41,7 +41,7 @@
     align-items: center;
     flex-direction: column;
     cursor: pointer;
-    padding: 5px 10px 5px 10px;; 
+    padding: 5px 7px 5px 7px;; 
 }
 
 
@@ -58,11 +58,21 @@ p{
 
 @media only screen and (max-width: 1150px) {
     .btn{
-        padding: 3px 10px 3px 10px;
+        padding: 5px 5px 5px 5px;
         margin-left: 1px;
     }
     p{
         font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .btn{
+        padding: 5px 3px 5px 3px;
+        margin-left: 1px;
+    }
+    p{
+        font-size: 12px;
     }
 }
 

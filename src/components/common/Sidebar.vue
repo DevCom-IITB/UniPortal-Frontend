@@ -188,6 +188,24 @@ export default {
 
 }
 
+@media only screen and (max-width : 950px){
+
+.InfoText{
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 50px;
+}
+
+.btn{
+    font-size: 12px;
+}
+
+.btn-1{
+    font-size: 12px;
+}
+
+}
+
 
 
 </style>

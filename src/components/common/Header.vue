@@ -82,4 +82,15 @@
 
 }
 
+@media only screen and (max-width: 950px){
+
+    .HeaderTitle{
+        font-size: 42px;
+    }
+
+    .HeaderText{
+        font-size: 12px;
+    }
+}
+
  </style>
