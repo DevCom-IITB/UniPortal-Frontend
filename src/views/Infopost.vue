@@ -97,8 +97,24 @@ export default {
     width: 84.98%;
     margin-top: 16px;
     margin-bottom: 16px;
-    color: black;
     /* border: 5px solid red; */
   }
+
+@media only screen and (max-width:750px){
+
+.Header{
+  width: 100%;
+  height: 30%;
+}
+
+.Lister::-webkit-scrollbar {
+  width : 4px;
+}
+
+.InfoPostBox{
+  width: 100%;
+}
+
+}
 
   </style>

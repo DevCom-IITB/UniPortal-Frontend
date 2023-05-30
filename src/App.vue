@@ -215,6 +215,19 @@ export default {
   width: 95vw;
 }
 
+.RouterView{
+  width: 95vw;
+}
+
+.Sidebar{
+  width: 0px;
+}
+
+.popup{
+  width: 40%;
+  height: 5%;
+}
+
 }
 
 

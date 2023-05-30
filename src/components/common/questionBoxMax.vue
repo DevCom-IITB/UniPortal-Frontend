@@ -429,4 +429,45 @@ p{
 
 }
 
+
+
+@media only screen and (max-width:750px){
+
+.main-container{
+    width: 100%;
+}
+
+.QuestionBox{
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.name{
+    font-size: 12px;
+}
+
+.timestamp{
+    font-size: 8px;
+}
+
+.verified{
+    font-size: 6px;
+} 
+
+.view-comments{
+    font-size: 10px;
+}
+
+p{
+    font-size: 10px;
+}
+
+.Upvote{
+    margin-left: 48px;
+    flex-direction: row;
+}
+
+}
+
 </style>

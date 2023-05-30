@@ -223,5 +223,18 @@ export default {
   align-items: center;
  }
 
+ @media only screen and (max-width:750px){
+
+.Header{
+  width: 100%;
+  height: 30%;
+}
+
+.Lister::-webkit-scrollbar {
+  width : 4px;
+}
+
+}
+
 
 </style>

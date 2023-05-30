@@ -49,6 +49,14 @@ import email from '../icons/email.svg'
 @media screen and (max-width: 950px) {
 
 .askQuestion{
+  border-radius: 12px;
+}
+
+}
+
+@media screen and (max-width: 750px) {
+
+.askQuestion{
   font-size: 12px;
 }
 
