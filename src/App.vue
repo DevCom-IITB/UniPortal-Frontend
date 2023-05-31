@@ -10,6 +10,7 @@
     <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
   </div>
   <div class="login" v-if="!loggedIn">
+    <DC class="DC"/>
     <login_background class="login-background" />
     <div class="login-form"><Login /></div>
   </div>
@@ -22,6 +23,7 @@ import popup from './components/common/popup.vue'
 import askBox from './components/common/askBox.vue'
 import login_background from './components/background_images/Group 9.svg'
 import Login from './components/common/Login.vue'
+import DC from './components/icons/DC.svg'
 
 export default {
   name: 'App',
@@ -32,6 +34,7 @@ export default {
     askBox,
     login_background,
     Login,
+    DC,
   },
   data(){
     return{
@@ -212,6 +215,13 @@ export default {
 }
 
 .login-background{
+  position: fixed;
+}
+
+.DC{
+  left: 10px;
+  top: 0px;
+  z-index: 1;
   position: fixed;
 }
 
