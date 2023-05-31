@@ -38,6 +38,28 @@ import email from '../icons/email.svg'
   font-size: 18px;
 }
 
+@media screen and (max-width: 1150px) {
 
+  .askQuestion{
+    font-size: 14px;
+  }
+
+}
+
+@media screen and (max-width: 950px) {
+
+.askQuestion{
+  border-radius: 12px;
+}
+
+}
+
+@media screen and (max-width: 750px) {
+
+.askQuestion{
+  font-size: 12px;
+}
+
+}
 
  </style>

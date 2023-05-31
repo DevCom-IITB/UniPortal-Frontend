@@ -1,18 +1,18 @@
 <template>
 
-    <div class="asker" >
+    <form class="asker" @submit="OnSubmit" >
         <div class="name">Sanskar Gosavi</div>
-        <div class="text" :style="{  borderColor : grey }"></div>
+        <textarea class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
         <div class="actions">
             <div class="photo" :style="{ background : background }"><add />&nbsp;&nbsp;<p>Add photo</p></div>
             <div class="decision">
                 <div class="discard" :style="{ color : grey }" @click="$emit('discard')">Discard</div>
-                <div class="post" :style="{ background : primary }">Post</div>
+                <input class="post" :style="{ background : primary }" value="Post" type="submit" />
             </div>
         </div>
 
 
-    </div>
+    </form>
 
 </template>
 
@@ -24,6 +24,27 @@ export default {
         grey : String,
         background : String,
         primary : String,
+    },
+    data(){
+        return {
+            text : '',
+        }
+    },
+    methods : {
+        async OnSubmit(e){
+            e.preventDefault();
+            if(!this.text){
+                alert('Please enter some text')
+                return;
+            }
+
+            const newPost = {
+                text : this.text,
+            }
+
+            this.$emit('post',newPost);
+            this.text = '';
+        }
     },
     components : {
         add,
@@ -56,6 +77,8 @@ export default {
     height: 56%;
     border: 1px solid;
     border-radius: 10px;
+    padding: 8px 8px ;
+    resize: none;
 }
 
 .actions{
@@ -64,6 +87,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: end;
 }
 
 .photo{
@@ -107,7 +131,7 @@ p{
 .post{
     padding-left: 16px;
     padding-right: 16px;
-    margin-right: 8px;
+    border: none;
     border-radius: 50px;
     display: flex;
     justify-content: center;
@@ -117,5 +141,38 @@ p{
     cursor: pointer;
 }
 
+@media only screen and (max-width:750px){
+
+    .asker{
+        justify-content: start;
+    }
+
+    .name{
+        height: 6%;
+        font-size: 24px;
+        padding-left: 8px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .text{
+        height: 20%;
+    }
+
+    .actions{
+        
+        height: 70%
+    }
+    .photo{
+        height: 8%;
+    }
+
+    .decision{
+        height:8%;
+    }
+
+}
 
 </style>

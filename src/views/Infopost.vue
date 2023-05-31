@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       headerName : 'Infopost',
-      headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
+      headerText : 'Infoposts from SMPCs',
       infoposts: [],
       background: '#FFF9E5',
       color : '#CCB160'
@@ -97,8 +97,24 @@ export default {
     width: 84.98%;
     margin-top: 16px;
     margin-bottom: 16px;
-    color: black;
     /* border: 5px solid red; */
   }
+
+@media only screen and (max-width:750px){
+
+.Header{
+  width: 100%;
+  height: 30%;
+}
+
+.Lister::-webkit-scrollbar {
+  width : 4px;
+}
+
+.InfoPostBox{
+  width: 100%;
+}
+
+}
 
   </style>

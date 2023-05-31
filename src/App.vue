@@ -1,16 +1,18 @@
 <template>
-  <div class="container">
-    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover"/></div>
-    <div class="Content">
+  <div class="container" v-if="loggedIn">
+    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
+    <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view @comment="ask"></router-view></div>
-      <div class="popup" @click="ask"><popup :lightText="lightText" /></div>
-      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask"/></div>
+      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView"></router-view></div>
+      <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
+      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
-    <div class="glass" v-if="askQuestion == true" @click="ask"></div>
-     
-        
-    
+    <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
+  </div>
+  <div class="login" v-if="!loggedIn">
+    <DC class="DC"/>
+    <login_background class="login-background" />
+    <div class="login-form"><Login /></div>
   </div>
 </template>
 
@@ -19,6 +21,9 @@ import Navbar from './components/common/Navbar.vue'
 import Sidebar from './components/common/Sidebar.vue'
 import popup from './components/common/popup.vue'
 import askBox from './components/common/askBox.vue'
+import login_background from './components/background_images/Group 9.svg'
+import Login from './components/common/Login.vue'
+import DC from './components/icons/DC.svg'
 
 export default {
   name: 'App',
@@ -27,6 +32,9 @@ export default {
     Sidebar,
     popup,
     askBox,
+    login_background,
+    Login,
+    DC,
   },
   data(){
     return{
@@ -39,7 +47,19 @@ export default {
       lightText : '#52492E',
       background : '#FFF9E5',
       askQuestion : false,
+      askPopup : true,
+      windowWidth : window.innerWidth,
+      showSidebar : false,
+      loggedIn : false,
     }
+  },
+  mounted() {
+      this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+      })
+  },
+  beforeDestroy() { 
+      window.removeEventListener('resize', this.onResize); 
   },
   methods:{
     async ColorInfoPost(){
@@ -51,7 +71,19 @@ export default {
       this.emphasisText = '#211D12';
       this.lightText = '#52492E';
       this.background = '#FFF9E5';
+      this.askPopup = true;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+    async OnSubmit(newPost){
+      const response = await fetch('api/questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newPost)
+      })
+
+      this.askQuestion = false;
     },
     async ColorQuestions(){
       this.sidebar = '#FFE5E5';
@@ -62,6 +94,7 @@ export default {
       this.emphasisText = '#1F1514';
       this.lightText = '#3E2A28';
       this.background = '#FFF3F2';
+      this.askPopup = true;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ColorMyQuestions(){
@@ -73,10 +106,29 @@ export default {
       this.emphasisText = '#201E2F';
       this.lightText = '#3E3C5D';
       this.background = '#F6F5FF';
+      this.askPopup = true;
+      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+    },
+    async ColorQuestionView(){
+      this.sidebar = '#F0F3E8';
+      this.primary = '#D9E7CB';
+      this.grey = '#386A20';
+      this.unselected = '#F0F3E8';  
+      this.hover = '#D9E7CB';
+      this.emphasisText = '#1C1B1F';
+      this.background = '#FDFDF6';
+      this.askPopup = false;
       console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
     },
     async ask(){
       this.askQuestion = !this.askQuestion;
+    },
+    onResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    async Burger(value){
+      this.showSidebar = value;
+      console.log(this.showSidebar);
     }
   },
 }
@@ -90,6 +142,7 @@ export default {
   height: 100vh;
   width: 100vw;
   flex-flow: row wrap;
+  overflow-y: hidden;
   /* border: 5px solid red; */
 }
 
@@ -100,7 +153,6 @@ export default {
 }
 
 .Content{
-  width: 78.55%;
   height: 100vh;
   /* overflow-y: scroll; */
   display: flex;
@@ -141,7 +193,6 @@ export default {
   margin-bottom: 42vh;
   z-index: 1;
   background: white;
-  border: 1px solid black;
   border-radius: 24px;
   padding: 16px 24px;
 }
@@ -150,9 +201,85 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
   
+}
+
+.login{
+  width: 100vw;
+  height: 100vh;
+  background: #FFF9E5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-background{
+  position: fixed;
+}
+
+.DC{
+  left: 10px;
+  top: 0px;
+  z-index: 1;
+  position: fixed;
+}
+
+.login-form{
+  background: #fff;
+  border-radius: 24px;
+  width: 38vw;
+  height: 85vh;
+  box-shadow:  20px 20px 60px #d9d4c3,
+             -20px -20px 60px #FFF9E5;
+  z-index: 1;
+  padding: 24px 24px; 
+}
+
+
+@media only screen and (max-width:750px){
+
+.Sidebar{
+  height: 100vh;
+  z-index: 2;
+  position: fixed;
+  justify-content: start;
+}
+
+.Content{
+  margin-top: 64px;
+  height: 92vh;
+}
+
+.Navbar{
+  width: 95vw;
+}
+
+.RouterView{
+  width: 95vw;
+}
+
+.Sidebar{
+  width: 0px;
+}
+
+.popup{
+  width: 40%;
+  height: 5%;
+}
+
+.ask{
+  width: 100vw;
+  height: 90vh;
+  margin-top: 47vh;
+  padding: 16px 24px;
+}
+
+.login-form{
+  width: 95vw;
+  height: 95vh;
+}
+
 }
 
 

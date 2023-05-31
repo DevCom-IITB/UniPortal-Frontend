@@ -24,16 +24,13 @@ export default {
 </script>
 
 <style scoped>
-    .add-form {
-                margin-right: 10%;
-        display: flex;
-        position: absolute;
-        flex-grow: 1;
-    }
+.add-form {
+    margin-right: 10%;
+    display: flex;
+    position: absolute;
+    flex-grow: 1;
+}
     
-
-
-
 .form-control input {
 
   width: 450%;
@@ -46,12 +43,7 @@ export default {
   display: flex;
   flex-grow: 1;
   border-width: 2.5px;
-  border-color: black;
- 
-  
- 
-  
-  
+  border-color: black; 
 }
 
 .fas {
@@ -60,8 +52,6 @@ export default {
     margin-top: -3vh;
     margin-left: 5820%;
     position: absolute;
-    
-    
 }
 
 </style>

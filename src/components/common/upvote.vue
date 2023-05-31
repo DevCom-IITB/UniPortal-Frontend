@@ -2,6 +2,7 @@
     <div class="upvotebox">
         <button class="btn" :style="{ color : primaryColor, background: background }">
             <div class="icon"><Upvote/></div>
+            <p v-if="windowWidth<=750">&nbsp;Upvotes&nbsp;</p>
             <p>{{ upvotes }}</p>
         </button>
     </div>
@@ -9,10 +10,12 @@
 
 <script>
  import Upvote from "../icons/expand_more.svg"
+ import arrow from "../icons/arrow_circle_up.svg"
  export default {
      name: 'upvote',
      components: {
-         Upvote
+        Upvote,
+        arrow
      },
      props: {
          primaryColor: {
@@ -24,6 +27,10 @@
              required: true
          },
          upvotes: {
+             type: Number,
+             required: true
+         },
+         windowWidth: {
              type: Number,
              required: true
          }
@@ -41,7 +48,7 @@
     align-items: center;
     flex-direction: column;
     cursor: pointer;
-    padding: 5px 10px 5px 10px;; 
+    padding: 5px 7px 5px 7px; 
 }
 
 
@@ -55,6 +62,49 @@ p{
     margin-top: 2px;
 }
 
+.icon{
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+@media only screen and (max-width: 1150px) {
+    .btn{
+        padding: 5px 5px 5px 5px;
+        margin-left: 1px;
+    }
+    p{
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .btn{
+        padding: 5px 3px 5px 3px;
+        margin-left: 1px;
+    }
+    p{
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+
+
+    .btn{
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        padding: 5px 10px 5px 10px; 
+    }
+    p{
+        font-size: 10px;
+    }
+}
 
 
 </style>

@@ -2,13 +2,13 @@
     
     <div class="main-container">
         <div class="container">
-            <div class="Upvote" @click="test">
+            <div class="Upvote" @click="test" v-if="windowWidth > 750">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
-                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute"  >                                            
+                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute" @click="$emit('askView')" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">
@@ -22,7 +22,8 @@
                     </router-link>
                 </div>
                 <div class="box-footer">
-                    <div v-if="showAnswerBox" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
+                    <div v-if="showAnswerBox && (windowWidth > 750)" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                         <button class="comment" @click="$emit('comment')" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
@@ -31,7 +32,7 @@
             </div>
             
         
-            <div class="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
@@ -79,7 +80,8 @@ export default {
             secondaryColor : this.secondaryColor,
             primaryAccent : this.primaryAccent,
             comments : [],
-            upvotes : 0
+            upvotes : 0,
+            windowWidth: window.innerWidth,
         }
     },
     methods: {
@@ -91,11 +93,20 @@ export default {
         test(){
             console.log(this.question);
             console.log(this.comments);
-        }
+        },
+        onResize() {
+            this.windowWidth = window.innerWidth;
+        },
     },
-    async mounted(){
+    mounted(){
         this.comments = this.question.comments;
         this.upvotes = this.question.upvotes;
+        this.$nextTick(() => {
+            window.addEventListener('resize', this.onResize);
+        })
+    },
+    beforeDestroy() { 
+        window.removeEventListener('resize', this.onResize); 
     },
     props: {    
         question: {
@@ -265,7 +276,7 @@ export default {
     margin-top: 1.56%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -328,7 +339,6 @@ p{
 
 .Hide{
     width: 2vw;
-    
     cursor: pointer;
 }
 
@@ -400,6 +410,74 @@ p{
   .inputComment{
     display: flex;
     
+  }
+
+
+  @media only screen and (max-width: 1150px){
+
+    .name{
+        font-size: 14px;
+    }
+
+    .timestamp{
+        font-size: 8px;
+    }
+
+    .verified{
+        font-size: 8px;
+    }   
+
+    .text{
+        font-size: 10px;
+    }
+
+    .view-comments{
+        font-size: 14px;
+    }
+
+    p{
+        font-size: 14px;
+    }
+
+  }
+
+  @media only screen and (max-width:750px){
+
+    .main-container{
+        width: 100%;
+    }
+    
+    .QuestionBox{
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .name{
+        font-size: 12px;
+    }
+
+    .timestamp{
+        font-size: 8px;
+    }
+
+    .verified{
+        font-size: 6px;
+    } 
+
+    .view-comments{
+        font-size: 10px;
+    }
+
+    p{
+        font-size: 10px;
+    }
+
+    .Upvote{
+        margin-left: 36px;
+        flex-direction: row;
+    }
+
   }
 
 </style>

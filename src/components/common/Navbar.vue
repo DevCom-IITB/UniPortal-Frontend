@@ -78,15 +78,29 @@ export default {
 }
 
 
-/* #info{
-    background: #FFDF80;
-    color : #211d12
-} */
-
 
 .route{
     font-weight: 500;
 }
+
+
+@media only screen and (max-width : 1150px){
+
+    .navbar{
+        font-size: 16px;
+        height: 45%;
+    }
+
+}
+
+@media only screen and (max-width : 750px){
+
+.navbar{
+    font-size: 14px;
+}
+
+}
+
 
 
 </style>

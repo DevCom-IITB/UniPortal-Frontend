@@ -5,7 +5,7 @@
      <div class="Lister">
        <div :key="question['id']" v-for="question in questions" class="QuestionBox">
         
-         <Question :showAnswerBox="this.true" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
+         <Question :showAnswerBox="this.true" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @askView="$emit('askView')"/>
          
         </div>
         
@@ -23,7 +23,7 @@
 
   
   export default {
-    name: 'MyQuestions',
+    name: 'Questions',
     data() {
       return {
         headerName : 'Questions',
@@ -109,5 +109,17 @@
     align-items: center;
    }
 
+   @media only screen and (max-width:750px){
+
+    .Header{
+      width: 100%;
+      height: 30%;
+    }
+
+    .Lister::-webkit-scrollbar {
+      width : 4px;
+    }
+
+   }
 
   </style>

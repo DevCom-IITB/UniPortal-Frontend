@@ -4,6 +4,7 @@
             <div class="HeaderTitle" :style="{ color : primaryColor }">{{ headerName }}</div>
             <div class="HeaderText" :style="{ color : primaryColor }">{{ headerText }}</div>
         </div>
+        <!-- <div class="HeaderImage"><img src="..\background_images\yellow_illustration.jpg" alt=""></div> -->
     </div> 
     
 
@@ -32,9 +33,10 @@
     width: 100%;
     border-radius: 24px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .Header{
@@ -48,18 +50,63 @@
 .HeaderTitle{
     font-size: 54px;
     font-weight: 500;
+    z-index: 1;
 }
 
 .HeaderText{
     font-size: 16px;
     font-weight: 500;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    z-index: 1;
 }
 
+
 .HeaderText::-webkit-scrollbar {
-    display: none;
+    width : 8px;
+}
+
+.HeaderText::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.HeaderText::-webkit-scrollbar-thumb:hover {
+    background: #000;
+}
+
+/* .HeaderImage{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+img{
+    width: 100%;
+    filter: saturate(80%);
+} */
+
+@media only screen and (max-width: 1150px){
+
+    .HeaderTitle{
+        font-size: 48px;
+    }
+
+    .HeaderText{
+        font-size: 14px;
+    }
+
+
+}
+
+@media only screen and (max-width: 950px){
+
+    .HeaderTitle{
+        font-size: 42px;
+    }
+
+    .HeaderText{
+        font-size: 12px;
+    }
 }
 
  </style>
