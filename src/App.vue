@@ -7,7 +7,7 @@
       <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
-    <div class="glass" v-if="askQuestion == true" @click="ask"></div>
+    <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
      
         
     
@@ -192,7 +192,6 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
   cursor: pointer;
   
 }
@@ -226,6 +225,13 @@ export default {
 .popup{
   width: 40%;
   height: 5%;
+}
+
+.ask{
+  width: 100vw;
+  height: 90vh;
+  margin-top: 47vh;
+  padding: 16px 24px;
 }
 
 }

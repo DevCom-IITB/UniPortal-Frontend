@@ -87,6 +87,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: end;
 }
 
 .photo{
@@ -140,5 +141,38 @@ p{
     cursor: pointer;
 }
 
+@media only screen and (max-width:750px){
+
+    .asker{
+        justify-content: start;
+    }
+
+    .name{
+        height: 6%;
+        font-size: 24px;
+        padding-left: 8px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .text{
+        height: 20%;
+    }
+
+    .actions{
+        
+        height: 70%
+    }
+    .photo{
+        height: 8%;
+    }
+
+    .decision{
+        height:8%;
+    }
+
+}
 
 </style>

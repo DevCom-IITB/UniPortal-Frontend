@@ -101,6 +101,9 @@ p{
         width: 100%;
         padding: 5px 10px 5px 10px; 
     }
+    p{
+        font-size: 10px;
+    }
 }
 
 
