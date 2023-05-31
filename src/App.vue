@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="loggedIn">
     <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
@@ -8,9 +8,10 @@
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
     <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
-     
-        
-    
+  </div>
+  <div class="login" v-if="!loggedIn">
+    <login_background class="login-background" />
+    <div class="login-form"><Login /></div>
   </div>
 </template>
 
@@ -19,6 +20,8 @@ import Navbar from './components/common/Navbar.vue'
 import Sidebar from './components/common/Sidebar.vue'
 import popup from './components/common/popup.vue'
 import askBox from './components/common/askBox.vue'
+import login_background from './components/background_images/Group 9.svg'
+import Login from './components/common/Login.vue'
 
 export default {
   name: 'App',
@@ -27,6 +30,8 @@ export default {
     Sidebar,
     popup,
     askBox,
+    login_background,
+    Login,
   },
   data(){
     return{
@@ -42,6 +47,7 @@ export default {
       askPopup : true,
       windowWidth : window.innerWidth,
       showSidebar : false,
+      loggedIn : false,
     }
   },
   mounted() {
@@ -195,6 +201,31 @@ export default {
   cursor: pointer;
   
 }
+
+.login{
+  width: 100vw;
+  height: 100vh;
+  background: #FFF9E5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-background{
+  position: fixed;
+}
+
+.login-form{
+  background: #fff;
+  border-radius: 24px;
+  width: 38vw;
+  height: 85vh;
+  box-shadow:  20px 20px 60px #d9d4c3,
+             -20px -20px 60px #FFF9E5;
+  z-index: 1;
+  padding: 24px 24px; 
+}
+
 
 @media only screen and (max-width:750px){
 
