@@ -275,6 +275,11 @@ export default {
   padding: 16px 24px;
 }
 
+.login-form{
+  width: 95vw;
+  height: 95vh;
+}
+
 }
 
 

@@ -92,4 +92,49 @@ export default{
     padding: 12px;
 }
 
+@media only screen and (max-width : 1150px){
+    
+    
+    .headers{
+        font-size: small;
+    }
+
+    .login .button{
+        font-size: small;
+    }
+    
+    .sso{
+        font-size: small;
+    }
+    
+}
+
+@media only screen and (max-width:750px){
+
+    .login .input{
+        width: 80vw;
+    }    
+
+    .login .button{
+        width: 20vw;
+        font-size: medium;
+    }
+
+    .sso{
+        width: 40vw;
+        font-size: medium;
+    }
+
+    .logo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 24px;
+        background: #FFEDB2;
+    }
+
+}
+
 </style>
