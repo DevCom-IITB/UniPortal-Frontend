@@ -12,8 +12,8 @@
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">
-                                    <div class="name" :style="{ color : primaryColor }">{{ question["User_name"] }}</div>
-                                    <div class="timestamp" :style="{ color : secondaryColor }">{{ question["timestamp"] }}</div>
+                                    <div class="name" :style="{ color : primaryColor }">{{ question["user_Name"] }}</div>
+                                    <div class="timestamp" :style="{ color : secondaryColor }">{{ question["asked_At"].split('T')[1].split(':')[0] }}:{{ question["asked_At"].split('T')[1].split(':')[1] }}&nbsp;&nbsp;{{ question["asked_At"].split('T')[0] }}</div>
                                 </div>
                                 <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                             </div>
