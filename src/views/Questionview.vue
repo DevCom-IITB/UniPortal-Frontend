@@ -19,8 +19,14 @@
 import Question from '../components/common/questionBoxMax.vue'
 import axios from 'axios'
 
+import { useQuestionStore } from '@/stores/question'
+
 export default {
   name: 'Questionview',
+  setup(){
+    const questionStore = useQuestionStore()
+    return { questionStore }
+  },
   data() {
     return {
       sidebar : '#F0F3E8',
@@ -55,16 +61,18 @@ export default {
     },
     async mounted() {
       console.log('we have enterd the question view');
-      const id = decodeURIComponent(window.location.pathname).split('/')[2];
-      console.log(id);
-      this.question = await this.fetchQuestions(id)
-      this.answers = this.question.answers;
-      this.comments = this.question.comments;
-      this.upvotes = this.question.upvotes;
-      console.log(this.question);
+      // const id = decodeURIComponent(window.location.pathname).split('/')[2];
+      // console.log(id);
+      // this.question = await this.fetchQuestions(id)
+      // this.answers = this.question.answers;
+      // this.comments = this.question.comments;
+      // this.upvotes = this.question.upvotes;
+      // console.log(this.question);
       //console.log(this.question.answers.length?"yes":"no");
-      console.log(this.question.verified);
-      console.log("upvotes : ",this.upvotes);
+      // console.log(this.question.verified);
+      // console.log("upvotes : ",this.upvotes);
+      console.log('state question', this.questionStore.question);
+      this.question = this.questionStore.question
     }
 }
 </script>
