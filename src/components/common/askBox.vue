@@ -7,7 +7,7 @@
             <div class="photo" :style="{ background : background }"><add />&nbsp;&nbsp;<p>Add photo</p></div>
             <div class="decision">
                 <div class="discard" :style="{ color : grey }" @click="$emit('discard')">Discard</div>
-                <input class="post" :style="{ background : primary }" value="Post" type="submit" />
+                <input class="post" :style="{ background : primary }" value="Post" type="submit" @click="questionStore.AddAnswer(text)" />
             </div>
         </div>
 
@@ -18,17 +18,17 @@
 
 <script>
 import add from '../icons/add_circle.svg'
+import { useQuestionStore } from '@/stores/question'
 export default {
     name: 'askBox',
+    setup(){
+        const questionStore = useQuestionStore()
+        return { questionStore }
+    },
     props: {
         grey : String,
         background : String,
         primary : String,
-    },
-    data(){
-        return {
-            text : '',
-        }
     },
     methods : {
         async OnSubmit(e){

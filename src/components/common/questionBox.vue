@@ -23,7 +23,7 @@
                 </div>
                 <div class="box-footer">
                     <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
-                    <div v-if="showAnswerBox && (windowWidth > 750)" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div v-if="showAnswerBox && (windowWidth > 750)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                         <button class="comment" @click="$emit('comment')" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
@@ -106,6 +106,10 @@ export default {
         onResize() {
             this.windowWidth = window.innerWidth;
         },
+        AnswerClick(){
+            this.QuestionStore.SetQuestion(this.question);
+            this.$emit('comment');
+        }
     },
     mounted(){
         this.comments = this.question.comments;

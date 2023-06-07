@@ -54,7 +54,7 @@
 
         console.log('bearer : ', bearer);
 
-        const res = await fetch('api/question/unansweredQ',{
+        const res = await fetch('api/question/answeredQ',{
           method : 'GET',
           headers : {
             'Content-Type' : 'application/json',
@@ -79,7 +79,7 @@
               console.log('refreshed token');
               const bearer = `Bearer ${this.authStore.accessToken}`
               console.log('new bearer : ', bearer);
-              const res = await fetch('api/question/unansweredQ',{
+              const res = await fetch('api/question/answeredQ',{
                 method : 'GET',
                 headers : {
                   'Content-Type' : 'application/json',

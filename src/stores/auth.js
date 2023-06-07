@@ -5,6 +5,8 @@ export const useAuthStore = defineStore('auth', {
     state: () => ({
         accessToken: '',
         loggedIn: true,
+        user_ID : 0,
+        role : 0
     }),
     actions: {
         async Login(uid, password){
@@ -27,6 +29,8 @@ export const useAuthStore = defineStore('auth', {
                 this.accessToken = data['accessToken']
                 console.log('access token: ' + this.accessToken);
                 this.loggedIn = true
+                this.user_ID = uid
+                this.role = data['role']
             }
             else{
                 this.loggedIn = false
@@ -46,6 +50,8 @@ export const useAuthStore = defineStore('auth', {
                 this.accessToken = data['accessToken']
                 console.log('new access token: ' + this.accessToken);
                 this.loggedIn = true
+                this.user_ID = data['user_ID']
+                this.role = data['role']
             }
             else{
                 this.loggedIn = false
