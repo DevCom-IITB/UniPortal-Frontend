@@ -54,6 +54,7 @@ export default {
       }
     },
     async mounted() {
+      console.log('we have enterd the question view');
       const id = decodeURIComponent(window.location.pathname).split('/')[2];
       console.log(id);
       this.question = await this.fetchQuestions(id)

@@ -8,7 +8,7 @@
             
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
-                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute" @click="$emit('askView')" >                                            
+                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute" @click="QuestionStore.SetQuestion(question)" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">
@@ -59,6 +59,8 @@ import Uparrow from '../icons/arrow_circle_up.svg'
 import eye from '../icons/visibility.svg'
 import forum from '../icons/forum.svg'
 
+import { useQuestionStore } from '@/stores/question'
+
 export default {
     name: 'Question',
     components: {
@@ -70,6 +72,13 @@ export default {
         eye,
         viewcomments,
         forum
+    },
+    setup(){
+        const QuestionStore = useQuestionStore();
+
+        return {
+            QuestionStore
+        }
     },
     data () {
         return {

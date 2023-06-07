@@ -4,7 +4,7 @@ export const useAuthStore = defineStore('auth', {
     id: 'auth',
     state: () => ({
         accessToken: '',
-        loggedIn: false,
+        loggedIn: true,
     }),
     actions: {
         async Login(uid, password){
