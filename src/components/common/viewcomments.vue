@@ -2,10 +2,10 @@
     <div class="question">
         <div class="top">
             <div class="name"> 
-                {{ comment['User_name'] }}                
+                {{ comment['user_Name'] }}                
             </div>
 
-            <div class="timestamp" :style="{ color : secondaryColor }">{{ comment['timestamp'] }}</div>
+            <div class="timestamp" :style="{ color : secondaryColor }">{{ comment['asked_At'] }}</div>
               
         </div>
         <div class="qtext">

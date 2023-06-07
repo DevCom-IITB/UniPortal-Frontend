@@ -11,8 +11,8 @@
                     <div class="inner-container">
                         <div class="stamps">
                             <div class="info">
-                                <div class="name" :style="{ color : primaryColor }">{{ question["User_name"] }}</div>
-                                <div class="timestamp" :style="{ color : secondaryColor }">{{ question['timestamp'] }}</div>
+                                <div class="name" :style="{ color : primaryColor }">{{ question["user_Name"] }}</div>
+                                <!-- <div class="timestamp" :style="{ color : secondaryColor }">{{ question['asked_At'] }}</div> -->
                             </div>
                             <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                         </div>
@@ -78,6 +78,7 @@ export default {
             secondaryColor : this.secondaryColor,
             primaryAccent : this.primaryAccent,
             windowWidth: window.innerWidth,
+            // timestamp : this.question['asked_At'],
         }
     },
     methods: {
@@ -96,6 +97,9 @@ export default {
     },
     async mounted(){
         this.upvotes = this.question.upvotes;
+        console.log('question content:', this.question.body);
+        console.log('comments in questionBoxMax', this.comments);
+        // this.timestamp = this.question['asked_At']
         this.$nextTick(() => {
             window.addEventListener('resize', this.onResize);
         })

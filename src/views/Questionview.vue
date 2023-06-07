@@ -1,7 +1,7 @@
 <template>
   <div class="container">
    
-    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :upvotes="upvotes" :showAnswerBox="this.true" :comments="comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
         <Question :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
@@ -48,31 +48,18 @@ export default {
     Question,
   },
   methods:{
-      async fetchQuestions(id) {
-        const res = await fetch(`http://localhost:7000/questions/${id}`)
-        console.log("we got the response : ",res);
-        const data = await res.json()
-        console.log("we get the data : ",data);
-        return data
-      },
       test(){
         console.log(this.question.comments);
       }
     },
     async mounted() {
       console.log('we have enterd the question view');
-      // const id = decodeURIComponent(window.location.pathname).split('/')[2];
-      // console.log(id);
-      // this.question = await this.fetchQuestions(id)
-      // this.answers = this.question.answers;
-      // this.comments = this.question.comments;
-      // this.upvotes = this.question.upvotes;
-      // console.log(this.question);
-      //console.log(this.question.answers.length?"yes":"no");
-      // console.log(this.question.verified);
-      // console.log("upvotes : ",this.upvotes);
       console.log('state question', this.questionStore.question);
       this.question = this.questionStore.question
+      this.answers = this.questionStore.answers
+      this.comments = this.questionStore.comments
+      console.log('comments in question view :', this.comments);
+      this.$emit('askView')
     }
 }
 </script>
@@ -83,6 +70,7 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: start;
   align-items: center;
   overflow-y: scroll;
