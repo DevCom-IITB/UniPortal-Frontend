@@ -1,18 +1,18 @@
 <template>
-  <div class="container" v-if="loggedIn">
+  <div class="container" v-if="Auth.loggedIn">
     <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView"></router-view></div>
+      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" ></router-view></div>
       <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
     <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
   </div>
-  <div class="login" v-if="!loggedIn">
+  <div class="login" v-if="!Auth.loggedIn">
     <DC class="DC"/>
     <login_background class="login-background" />
-    <div class="login-form"><Login /></div>
+    <div class="login-form"><Login :loggedIn="loggedIn" @loggedIn="Login" /></div>
   </div>
 </template>
 
@@ -24,6 +24,8 @@ import askBox from './components/common/askBox.vue'
 import login_background from './components/background_images/Group 9.svg'
 import Login from './components/common/Login.vue'
 import DC from './components/icons/DC.svg'
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   name: 'App',
@@ -50,13 +52,13 @@ export default {
       askPopup : true,
       windowWidth : window.innerWidth,
       showSidebar : false,
-      loggedIn : false,
+      accessToken : '',
     }
   },
   mounted() {
       this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
-      })
+      });
   },
   beforeDestroy() { 
       window.removeEventListener('resize', this.onResize); 
@@ -129,8 +131,28 @@ export default {
     async Burger(value){
       this.showSidebar = value;
       console.log(this.showSidebar);
+    },
+    async Refresh(){
+      console.log("refreshing");
+      const res = await fetch('api/user/refresh', {
+        method : 'PUT',
+        headers : {
+          'Content-Type' : 'application/json',
+        }
+      })
+
+      const data = await res.json();
+
+      console.log(data);
     }
   },
+  setup() {
+    const Auth= useAuthStore();
+
+    return {
+      Auth
+    }
+  }
 }
 </script>
 

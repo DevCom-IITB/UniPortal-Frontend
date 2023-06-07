@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-
+import mkcert from 'vite-plugin-mkcert'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import svgLoader from 'vite-svg-loader'
@@ -11,7 +11,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:7000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/')
       },
@@ -21,7 +21,7 @@ export default defineConfig({
     svgoConfig: {
       multipass: true
     }
-  })],
+  }), mkcert()],
   resolve: { 
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

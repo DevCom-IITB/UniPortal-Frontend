@@ -7,9 +7,9 @@
             <h3>Your companion to help you sail smooth the admission process</h3>
         </div>
         <div class="login">
-            <input type="text" class="input" placeholder="Enter your id">
-            <input type="text" class="input" placeholder="Enter your password">
-            <input type="button" value="Login" class="button">
+            <input type="text" class="input" v-model="uid" placeholder="Enter your id">
+            <input type="text" class="input" v-model="password" placeholder="Enter your password">
+            <input type="button" value="Login" class="button" @click="Auth.Login(uid, password)">
         </div>
         <h2>Or</h2>
         <div class="sso">Login via SSO</div>
@@ -17,13 +17,25 @@
 
 </template>
 
-<script>
+<script >
 import Logo from '../icons/logo.svg'
+import { useAuthStore  } from '@/stores/auth';
+
 
 export default{
     name: 'Login',
     components: {
         Logo,
+    },
+    props: {
+        loggedIn: Boolean,
+    },
+    setup() {
+        const Auth = useAuthStore();
+
+        return{
+            Auth,
+        }
     },
 }
 
@@ -79,6 +91,7 @@ export default{
     color: white;
     font-size: large;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .sso{
