@@ -26,7 +26,7 @@
                     <div v-if="showAnswerBox && (windowWidth > 750)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
-                        <button class="comment" @click="$emit('comment')" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
+                        <button class="comment" @click="CommentClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
                     </div> 
                 </div>
             </div>
@@ -107,7 +107,15 @@ export default {
             this.windowWidth = window.innerWidth;
         },
         AnswerClick(){
+            console.log("we will be answering a question");
             this.QuestionStore.SetQuestion(this.question);
+            this.QuestionStore.SetAction(1);
+            this.$emit('comment');
+        },
+        CommentClick(){
+            console.log("we will be commenting on a question");
+            this.QuestionStore.SetQuestion(this.question);
+            this.QuestionStore.SetAction(2);
             this.$emit('comment');
         }
     },

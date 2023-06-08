@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', {
                 this.role = data['role']
             }
             else{
-                this.loggedIn = false
+                await this.Logout()
             }
         },
         async Refresh(){
@@ -70,7 +70,7 @@ export const useAuthStore = defineStore('auth', {
                 this.accessToken = ''
                 this.loggedIn = false
             }
-
-        },
+            return res;
+        },  
     }
 })

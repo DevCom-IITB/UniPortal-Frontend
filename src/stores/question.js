@@ -7,6 +7,7 @@ export const useQuestionStore = defineStore("question", {
         question: {},
         answers: [],
         comments: [],
+        action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
     }),
     actions: {
         async SetQuestion(question){
@@ -15,6 +16,10 @@ export const useQuestionStore = defineStore("question", {
             this.answers = question['answers'];   
             this.comments = question['comments'];
             console.log("state variables :", this.question, this.answers, this.comments);
+        },
+        async SetAction(action){
+            this.action = action;
+            console.log("action : ", this.action);
         },
         async AddAnswer(body){
             const authStore = useAuthStore();
@@ -58,12 +63,13 @@ export const useQuestionStore = defineStore("question", {
                         console.log('refreshed token');
                         const bearer = `Bearer ${this.authStore.accessToken}`
                         console.log('new bearer : ', bearer);
-                        const res = await fetch('api/question/answeredQ',{
-                        method : 'GET',
-                        headers : {
-                            'Content-Type' : 'application/json',
-                            'Authorization' : bearer
-                        }
+                        const res = await fetch(`api/question/answerQ/${this.question['_id']}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                            body : JSON.stringify(answerObj)
                         })
                         console.log('new request sent');
                         const data = await res.json()
@@ -80,20 +86,72 @@ export const useQuestionStore = defineStore("question", {
                     await this.authStore.Logout() 
                 }
             }
-        }
-    },
-    getters:{
-        async getAccessToken(){
-            console.log('we are in the get access token function in question.js');
-            const authStore = useAuthStore();
-            console.log('access token : ', authStore.accessToken);
-            return authStore.accessToken;
         },
-        async getUserID(){
-            console.log('we are in the get user id function in question.js');
+        async AddCommentQuestion(body){
             const authStore = useAuthStore();
-            console.log('user id : ', authStore.user_ID);
-            return authStore.user_ID;
+            console.log('we have entered the add comment on a question function in question.js');
+            const uid = authStore.user_ID;
+            console.log('user id  parent function: ', uid);
+            const commentObj = {
+                comments : {
+                    user_ID : uid,
+                    body : body,
+                }
+            }
+            console.log('comment object : ', commentObj);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question['_id']);
+            console.log('Sending request');
+            const res = await fetch(`api/question/commentQ/${this.question['_id']}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+                body : JSON.stringify(commentObj)
+            })
+
+            if(res.status == 200){
+                console.log('successfully added comment on question');
+                this.answers.push(commentObj['comment']);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/commentQ/${this.question['_id']}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                            body : JSON.stringify(commentObj)
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
         }
     }
 })

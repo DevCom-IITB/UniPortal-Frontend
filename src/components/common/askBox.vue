@@ -7,7 +7,7 @@
             <div class="photo" :style="{ background : background }"><add />&nbsp;&nbsp;<p>Add photo</p></div>
             <div class="decision">
                 <div class="discard" :style="{ color : grey }" @click="$emit('discard')">Discard</div>
-                <input class="post" :style="{ background : primary }" value="Post" type="submit" @click="questionStore.AddAnswer(text)" />
+                <input class="post" :style="{ background : primary }" value="Post" type="submit" @click="decide" />
             </div>
         </div>
 
@@ -44,6 +44,16 @@ export default {
 
             this.$emit('post',newPost);
             this.text = '';
+        },
+        decide(){
+            const decision = this.questionStore.action
+            if(decision == 1){
+                this.questionStore.AddAnswer(this.text)
+            }
+            else if(decision == 2){
+                console.log('we will be commenting on the question with id:', this.questionStore.question['_id']);
+                this.questionStore.AddCommentQuestion(this.text)
+            }
         }
     },
     components : {
