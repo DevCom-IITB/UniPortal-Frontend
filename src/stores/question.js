@@ -207,13 +207,75 @@ export const useQuestionStore = defineStore("question", {
                         console.log('refreshed token');
                         const bearer = `Bearer ${this.authStore.accessToken}`
                         console.log('new bearer : ', bearer);
-                        const res = await fetch(`api/question/commentQ/${this.question_ID}/${this.answer_ID}`,{
+                        const res = await fetch(`api/question/commentA/${this.question_ID}/${this.answer_ID}`,{
                             method : 'PATCH',
                             headers : {
                                 'Content-Type' : 'application/json',
                                 'Authorization' : bearer
                             },
                             body : JSON.stringify(commentObj)
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
+        async UpvoteQuestion(){
+            const authStore = useAuthStore();
+            console.log('we have entered the upvote a question function in question.js', this.question['_id']);
+            const uid = authStore.user_ID;
+            console.log('user id  parent function: ', uid);
+            const upvoteObj = {
+                user_ID : uid,
+            }
+            console.log('upvote object : ', upvoteObj);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question['_id']);
+            console.log('Sending request');
+            const res = await fetch(`api/question/upvoteQ/${this.question['_id']}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+                body : JSON.stringify(upvoteObj)
+            })
+
+            if(res.status == 200){
+                console.log('successfully upvotes on question :', this.question['_id']);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/upvoteQ/${this.question['_id']}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                            body : JSON.stringify(upvoteObj)
                         })
                         console.log('new request sent');
                         const data = await res.json()

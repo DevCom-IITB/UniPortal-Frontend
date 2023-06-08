@@ -2,7 +2,7 @@
     
     <div class="main-container">
         <div class="container">
-            <div class="Upvote" @click="test" v-if="windowWidth > 750">
+            <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
@@ -99,24 +99,25 @@ export default {
             this.showComments = !this.showComments,
             this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
         },
-        test(){
-            console.log(this.question);
-            console.log(this.comments);
-        },
         onResize() {
             this.windowWidth = window.innerWidth;
         },
-        AnswerClick(){
+        async AnswerClick(){
             console.log("we will be answering a question");
-            this.QuestionStore.SetQuestion(this.question);
-            this.QuestionStore.SetAction(1);
+            await this.QuestionStore.SetQuestion(this.question);
+            await this.QuestionStore.SetAction(1);
             this.$emit('comment');
         },
-        CommentClick(){
+        async CommentClick(){
             console.log("we will be commenting on a question");
-            this.QuestionStore.SetQuestion(this.question);
-            this.QuestionStore.SetAction(2);
+            await this.QuestionStore.SetQuestion(this.question);
+            await this.QuestionStore.SetAction(2);
             this.$emit('comment');
+        },
+        async Upvote(){
+            console.log("we will be upvoting a question");
+            await this.QuestionStore.SetQuestion(this.question);
+            await this.QuestionStore.UpvoteQuestion();
         }
     },
     mounted(){

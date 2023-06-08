@@ -1,5 +1,5 @@
 <template> 
-    <div class="upvotebox">
+    <div class="upvotebox" >
         <button class="btn" :style="{ color : primaryColor, background: background }">
             <div class="icon"><Upvote/></div>
             <p v-if="windowWidth<=750">&nbsp;Upvotes&nbsp;</p>
@@ -33,6 +33,11 @@
          windowWidth: {
              type: Number,
              required: true
+         }
+     },
+     methods: {
+         Upvote(){
+            console.log('upvoted');
          }
      }
  }
