@@ -61,6 +61,11 @@ export default {
                 console.log('we will be commenting on the answer with id:', this.questionStore.answer_ID, "with question id : ", this.questionStore.question_ID);
                 await this.questionStore.AddCommentAnswer(this.text)
             }
+            else if(decision == 4){
+                console.log('we will be posting a new question');
+                await this.questionStore.PostQuestion(this.text)
+                // await this.questionStore.AddCommentComment(this.text)
+            }
 
             this.$emit('discard')
         }

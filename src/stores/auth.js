@@ -70,7 +70,6 @@ export const useAuthStore = defineStore('auth', {
                 this.accessToken = ''
                 this.loggedIn = false
             }
-            return res;
         },  
     }
 })

@@ -4,7 +4,7 @@
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" ></router-view></div>
-      <div class="popup" @click="ask" v-if="askPopup"><popup :lightText="lightText" /></div>
+      <div class="popup" @click="postQuestion" v-if="askPopup"><popup :lightText="lightText" /></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
     <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
@@ -26,6 +26,7 @@ import Login from './components/common/Login.vue'
 import DC from './components/icons/DC.svg'
 
 import { useAuthStore } from '@/stores/auth';
+import { useQuestionStore } from '@/stores/question';
 
 export default {
   name: 'App',
@@ -132,25 +133,18 @@ export default {
       this.showSidebar = value;
       console.log(this.showSidebar);
     },
-    async Refresh(){
-      console.log("refreshing");
-      const res = await fetch('api/user/refresh', {
-        method : 'PUT',
-        headers : {
-          'Content-Type' : 'application/json',
-        }
-      })
-
-      const data = await res.json();
-
-      console.log(data);
+    async postQuestion(){
+      await this.ask();
+      await this.QuestionStore.SetAction(4);
     }
   },
   setup() {
     const Auth= useAuthStore();
+    const QuestionStore = useQuestionStore();
 
     return {
-      Auth
+      Auth,
+      QuestionStore,
     }
   }
 }
