@@ -2,7 +2,7 @@
     
     <div class="main-container">
         <div class="container">
-            <div class="Upvote" @click="test" v-if="windowWidth > 750">
+            <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
                 <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
@@ -95,10 +95,6 @@ export default {
             this.showComments = !this.showComments,
             this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
         },
-        test(){
-            console.log(this.question);
-            console.log(this.comments);
-        },
         onResize() {
             this.windowWidth = window.innerWidth;
         },
@@ -121,6 +117,18 @@ export default {
                 await this.questionStore.SetAnswerID(this.question['_id'])
                 this.$emit('comment');
                 this.$emit('answer_id', this.question['_id']);
+            }
+        },
+        async Upvote(){
+            if(!this.isAnswer){
+                console.log("we will be upvoting a question from inside a question view");
+                await this.questionStore.SetQuestion(this.question);
+                await this.questionStore.UpvoteQuestion();
+            }
+            else{
+                console.log("we will be upvoting an answer from inside a question view");
+                await this.questionStore.SetAnswerID(this.question['_id'])
+                this.$emit('upvote');
             }
         }
     },
