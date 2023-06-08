@@ -19,6 +19,9 @@
 <script>
 import add from '../icons/add_circle.svg'
 import { useQuestionStore } from '@/stores/question'
+
+let posted = false;
+
 export default {
     name: 'askBox',
     setup(){
@@ -33,7 +36,7 @@ export default {
     methods : {
         async OnSubmit(e){
             e.preventDefault();
-            if(!this.text){
+            if(!this.text && !posted){
                 alert('Please enter some text')
                 return;
             }
@@ -43,17 +46,23 @@ export default {
             }
 
             this.$emit('post',newPost);
-            this.text = '';
         },
-        decide(){
+        async decide(){
             const decision = this.questionStore.action
             if(decision == 1){
-                this.questionStore.AddAnswer(this.text)
+                console.log('we will be answering the question with id:', this.questionStore.question['_id']);
+                await this.questionStore.AddAnswer(this.text)
             }
             else if(decision == 2){
                 console.log('we will be commenting on the question with id:', this.questionStore.question['_id']);
-                this.questionStore.AddCommentQuestion(this.text)
+                await this.questionStore.AddCommentQuestion(this.text)
             }
+            else if(decision == 3){
+                console.log('we will be commenting on the answer with id:', this.questionStore.answer_ID, "with question id : ", this.questionStore.question_ID);
+                await this.questionStore.AddCommentAnswer(this.text)
+            }
+
+            this.$emit('discard')
         }
     },
     components : {

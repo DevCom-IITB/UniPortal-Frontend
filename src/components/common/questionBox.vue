@@ -8,7 +8,7 @@
             
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
-                    <router-link :to="{ path: '/question/' + question['id'] }" class="questionRoute" @click="QuestionStore.SetQuestion(question)" >                                            
+                    <router-link to="/question" class="questionRoute" @click="QuestionStore.SetQuestion(question)" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">

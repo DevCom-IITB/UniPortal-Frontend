@@ -43,7 +43,7 @@ const routes = [
     },
 
     {
-        path: '/question/:id',
+        path: '/question',
         name: 'Questionview',
         component: Questionview,
         props : true,

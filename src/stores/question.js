@@ -7,6 +7,8 @@ export const useQuestionStore = defineStore("question", {
         question: {},
         answers: [],
         comments: [],
+        question_ID : '',
+        answer_ID : '',
         action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
     }),
     actions: {
@@ -20,6 +22,14 @@ export const useQuestionStore = defineStore("question", {
         async SetAction(action){
             this.action = action;
             console.log("action : ", this.action);
+        },
+        async SetQuestionID(question_ID){
+            this.question_ID = question_ID;
+            console.log("question_ID : ", this.question_ID);
+        },
+        async SetAnswerID(answer_ID){
+            this.answer_ID = answer_ID;
+            console.log("answer_ID : ", this.answer_ID);
         },
         async AddAnswer(body){
             const authStore = useAuthStore();
@@ -130,6 +140,74 @@ export const useQuestionStore = defineStore("question", {
                         const bearer = `Bearer ${this.authStore.accessToken}`
                         console.log('new bearer : ', bearer);
                         const res = await fetch(`api/question/commentQ/${this.question['_id']}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                            body : JSON.stringify(commentObj)
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
+        async AddCommentAnswer(body){
+            const authStore = useAuthStore();
+            console.log('we have entered the add comment on an answer function in question.js');
+            const uid = authStore.user_ID;
+            console.log('user id  parent function: ', uid);
+            const commentObj = {
+                answers : {
+                    comments : {
+                        user_ID : uid,
+                        body : body,
+                    }
+                }
+            }
+            console.log('comment object : ', commentObj);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question['_id']);
+            console.log('Sending request');
+            const res = await fetch(`api/question/commentA/${this.question_ID}/${this.answer_ID}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+                body : JSON.stringify(commentObj)
+            })
+
+            if(res.status == 200){
+                console.log('successfully added comment on answer :', this.answer_ID);
+                this.answers.push(commentObj['answers']['comments']);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/commentQ/${this.question_ID}/${this.answer_ID}`,{
                             method : 'PATCH',
                             headers : {
                                 'Content-Type' : 'application/json',

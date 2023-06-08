@@ -1,10 +1,10 @@
 <template>
   <div class="container">
    
-    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
-        <Question :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/>
+        <Question :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer"/>
       </div>
       
     </div>
@@ -50,6 +50,13 @@ export default {
   methods:{
       test(){
         console.log(this.question.comments);
+      },
+      async CommentAnswer(answer_id){
+        console.log('answer_id : ', answer_id);
+        console.log('we will be commenting on this answer');
+        console.log('question id : ', this.question['_id']);
+        console.log('we will be commenting on this answer with question id : ', this.question['_id']);
+        await this.questionStore.SetQuestionID(this.question['_id'])
       }
     },
     async mounted() {

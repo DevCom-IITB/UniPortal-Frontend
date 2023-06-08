@@ -21,10 +21,10 @@
                 </div>
                 <div class="box-footer">
                     <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
-                    <div v-if="showAnswerBox && windowWidth > 750" @click="$emit('comment')" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div v-if="showAnswerBox && windowWidth > 750" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
-                        <button class="comment" @click="AnswerClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp;<p>Comment</p></button>
+                        <button class="comment" @click="CommentClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp;<p>Comment</p></button>
                     </div> 
                 </div>
             </div>
@@ -57,8 +57,16 @@ import Uparrow from '../icons/arrow_circle_up.svg'
 import eye from '../icons/visibility.svg'
 import forum from '../icons/forum.svg'
 
+import { useQuestionStore } from '@/stores/question'
+
 export default {
     name: 'Question',
+    setup(){
+        const questionStore = useQuestionStore()
+        return {
+            questionStore
+        }
+    },
     components: {
         upvote,
         Delete,
@@ -94,9 +102,26 @@ export default {
         onResize() {
             this.windowWidth = window.innerWidth;
         },
-        AnswerClick(){
-            this.QuestionStore.SetQuestion(this.question);
+        async AnswerClick(){
+            console.log("we we will be answering a question from inside a question view");
+            this.questionStore.SetQuestion(this.question);
+            this.questionStore.SetAction(1)
             this.$emit('comment');
+        },
+        async CommentClick(){
+            if(!this.isAnswer){
+                console.log("we will be commenting on a question from inside a question view");
+                await this.questionStore.SetQuestion(this.question);
+                await this.questionStore.SetAction(2)
+                this.$emit('comment');
+            }
+            else{
+                console.log("we will be commenting on an answer from inside a question view");
+                await this.questionStore.SetAction(3);
+                await this.questionStore.SetAnswerID(this.question['_id'])
+                this.$emit('comment');
+                this.$emit('answer_id', this.question['_id']);
+            }
         }
     },
     async mounted(){
@@ -141,6 +166,10 @@ export default {
             required: true
         },
         showAnswerBox: {
+            type: Boolean,
+            required: true
+        },
+        isAnswer:{
             type: Boolean,
             required: true
         }
