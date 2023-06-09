@@ -53,7 +53,7 @@
     align-items: center;
     flex-direction: column;
     cursor: pointer;
-    padding: 5px 7px 5px 7px; 
+    padding: 7px 7px 7px 7px; 
 }
 
 

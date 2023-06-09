@@ -24,10 +24,6 @@ const routes = [
         path: '/questions',
         name: 'Questions',
         component: Questions,
-        meta: {
-            requiresAuth: true,
-            accessToken: 'your-access-token'
-        }
     },
 
     {

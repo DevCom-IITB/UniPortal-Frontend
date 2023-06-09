@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <div class="Images" v-if="infopost.imgs">
-            <div v-for="img in infopost.imgs" class="img"><img :src=img></div>
+        <div class="Images" v-if="infopost.images">
+            <div v-for="image in images" class="img"><img :src=image></div>
         </div>
         <p>{{ infopost.body }}</p>
     </div>
@@ -13,6 +13,27 @@ export default {
     name: 'InfoBox',
     props:{
         infopost: Object,
+    },
+    data(){
+        return{
+            images: []
+        }
+    },
+    mounted(){
+        console.log("we will be loggin the images");
+        this.images = this.infopost.images
+        if(this.images.length>0){
+            for(let i=0; i<this.images.length; i++){
+                //D:\SMP\SMP-Portal-Backend\uploads
+                console.log(this.images[i]);
+                const temp = 'D:/SMP/SMP-Portal-Backend/uploads/' + this.images[i];
+                this.images[i] = temp;
+                console.log(this.images[i]);
+            }
+        }
+        else{
+            console.log("no images");
+        }
     }
 }
 
@@ -43,7 +64,6 @@ p{
 
 .Images{
     width: 100%;
-    height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -52,7 +72,7 @@ p{
 
 .img{
     width: 80%;
-}
+} 
 
 img{
     max-width: 100%;

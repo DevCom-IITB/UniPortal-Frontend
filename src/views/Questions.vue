@@ -18,7 +18,7 @@
 </template>
   
 <script>
-  import { mapStores } from 'pinia'
+
   import Question from '../components/common/questionBox.vue'
   import Header from '../components/common/Header.vue'
 
@@ -28,8 +28,9 @@
   
   export default {
     name: 'Questions',
-    computed: {
-      ...mapStores(useAuthStore, ['accessToken']),
+    setup(){
+      const authStore = useAuthStore()
+      return { authStore }
     },
     data() {
       return {
@@ -50,18 +51,24 @@
     },
     methods:{
       async fetchQuestions() {
+
+        const user_id = this.authStore.user_ID
+        const request = {
+          user_ID : user_id
+        }
         const bearer = `Bearer ${this.authStore.accessToken}`
 
         console.log('bearer : ', bearer);
 
-        const res = await fetch('api/question/answeredQ',{
-          method : 'GET',
+        const res = await fetch('api/question/otherQ',{
+          method : 'PUT',
           headers : {
             'Content-Type' : 'application/json',
             'Authorization' : bearer
-          }
+          },
+          body : JSON.stringify(request)
         })
-
+ 
         console.log('request sent');
 
         if(res.status === 200){
@@ -79,12 +86,13 @@
               console.log('refreshed token');
               const bearer = `Bearer ${this.authStore.accessToken}`
               console.log('new bearer : ', bearer);
-              const res = await fetch('api/question/answeredQ',{
-                method : 'GET',
+              const res = await fetch('api/question/otherQ',{
+                method : 'PUT',
                 headers : {
                   'Content-Type' : 'application/json',
                   'Authorization' : bearer
-                }
+                },
+                body : JSON.stringify(request)
               })
               console.log('new request sent');
               const data = await res.json()
