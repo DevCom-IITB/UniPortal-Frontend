@@ -66,6 +66,10 @@ export default {
                 await this.questionStore.PostQuestion(this.text)
                 // await this.questionStore.AddCommentComment(this.text)
             }
+            else if(decision == 5){
+                console.log('we will be posting info post');
+                await this.questionStore.PostInfoPost(this.text)
+            }
 
             this.$emit('discard')
         }

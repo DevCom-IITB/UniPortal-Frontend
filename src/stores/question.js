@@ -93,6 +93,65 @@ export const useQuestionStore = defineStore("question", {
                 }
             }
         },
+        async PostInfoPost(body){
+            console.log('we have entered the post infopost function in question.js');
+            const authStore = useAuthStore();
+            const infoPostObj = {
+                body : body,
+            }
+            console.log('infopost object : ', infoPostObj);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('Sending request');
+            const res = await fetch(`api/info/post`, {
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+                body : JSON.stringify(infoPostObj)
+            })
+
+            if(res.status == 200){
+                console.log('successfully added InfoPost');
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/info/post`,{
+                            method : 'POST',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                            body : JSON.stringify(infoPostObj)
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
         async AddAnswer(body){
             const authStore = useAuthStore();
             console.log('we have entered the add answer function in question.js');

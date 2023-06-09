@@ -24,8 +24,11 @@
             </div>
         </div>
         <div class="Creds" v-if="windowWidth>750 || (showSidebar && windowWidth<750)" >
-            <button class="btn-1" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
-                Credentials 
+            <button class="credentials" :style="{ background : sidebar }">
+                <DC class="DevComLogo" /><SMP /> 
+            </button>
+            <button class="logout" :style="{ background : sidebar, borderColor : grey, color : grey }" @click="Logout">
+                Log out 
             </button>
         </div>
 
@@ -42,15 +45,24 @@ import Globe from '../icons/globe.svg'
 import email from '../icons/email.svg'
 import contact from '../icons/contact.svg'
 import burger from '../icons/menu.svg'
+import DC from '../icons/DC_White.svg'
+import SMP from '../icons/SMP.svg'
+
+import { useAuthStore } from '@/stores/auth';
 
 export default {
     name: 'Sidebar',
+    setup() {
+        const authStore = useAuthStore();
+        return { authStore };
+    },
     props: {
         sidebar : String,
         emphasisText : String,
         hover : String,
         background : String,
         primary : String,
+        grey : String,
     },
     components : {
         Logo,
@@ -58,6 +70,8 @@ export default {
         email,
         contact,
         burger,
+        DC,
+        SMP,
     },
     data () {
         return {
@@ -83,6 +97,9 @@ export default {
         async Burger(){
             this.showSidebar = !this.showSidebar
             this.$emit('Burger', this.showSidebar)
+        },
+        async Logout(){
+            await this.authStore.Logout();
         }
     }
 }
@@ -94,6 +111,8 @@ export default {
     margin-top: 4.12%;
     margin-left: 4.12%;
     margin-bottom: 4.12%;
+    padding-top: 5%;
+    padding-bottom: 5%;
     border-radius: 24px;
     display: flex;
     flex-direction: column;
@@ -109,8 +128,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 20%;
-
 }
 
 .burger{
@@ -131,8 +148,9 @@ export default {
     width: 87.63%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    padding: 16px 0px;
 }
 
 .InfoText{
@@ -142,7 +160,7 @@ export default {
     padding-left: 15px;
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 80px;
+    margin-bottom: 15%;
 }
 
 .InfoLinks{
@@ -151,7 +169,6 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 80px;
 }
 
 .btn{
@@ -173,27 +190,39 @@ export default {
 
 
 .Creds{
+    width: 87.63%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.btn-1{
+.credentials{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: none;
+}
+
+
+.logout{
     width: 100%;
     height: 48px;
     border : none;
     border-radius: 100px;
     display: flex;
     flex-direction: row;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: bold;
     padding-left: 7%;
     margin: 8px 0px;
     cursor: pointer;
+    border: 1px solid ;
 }
-
 
 @media only screen and (max-width : 1150px){
 

@@ -1,27 +1,45 @@
 <template>
 
   <div class="askQuestion" :style="{ background : lightText } ">
-    <ask />&nbsp;&nbsp;Ask a Question
+    <ask />&nbsp;&nbsp;{{ PopAction }}
   </div>
 
 </template>
  
 <script>
 
+import { useAuthStore } from '@/stores/auth';
+
 import ask from '../icons/question.svg'
 import email from '../icons/email.svg'
 
   export default {
       name: 'popup',
-      clearTextBox() {
-        document.getElementById("myTextBox").value = "";
-      },
       props : {
         lightText : String,
+      },
+      data(){
+        return{
+          PopAction : 'Ask a Question',
+        }
       },
       components : {
         ask,
       },
+      mounted(){
+        if(this.authStore.role == 5980 || this.authStore.role == 6311){
+          this.PopAction = 'Post Infopost';
+        }
+        else{
+          this.PopAction = 'Ask Question';
+        }
+      },
+      setup(){
+        const authStore = useAuthStore();
+        return{
+          authStore,
+        }
+      }
  }
 </script>
  

@@ -21,7 +21,7 @@
                 </div>
                 <div class="box-footer">
                     <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
-                    <div v-if="showAnswerBox && windowWidth > 750" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div v-if="showAnswerBox && windowWidth > 750 && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                         <button class="comment" @click="CommentClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp;<p>Comment</p></button>
@@ -30,7 +30,7 @@
             </div>
             
         
-            <div class="Hide" v-if="windowWidth > 750" @click="Hide" ><eye class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" @click="Hide" ><eye v-if="(AuthStore.role == 5980 || AuthStore.role ==6311) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980 || AuthStore.role ==6311) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
@@ -55,16 +55,20 @@ import comment from '../common/comment.vue'
 import verified from '../icons/new_releases.svg'
 import Uparrow from '../icons/arrow_circle_up.svg'
 import eye from '../icons/visibility.svg'
+import closed_eye from '../icons/visibility_off.svg'
 import forum from '../icons/forum.svg'
 
 import { useQuestionStore } from '@/stores/question'
+import { useAuthStore } from '@/stores/auth'
 
 export default {
     name: 'Question',
     setup(){
         const questionStore = useQuestionStore()
+        const AuthStore = useAuthStore()
         return {
-            questionStore
+            questionStore,
+            AuthStore
         }
     },
     components: {
@@ -74,6 +78,7 @@ export default {
         verified,
         Uparrow,
         eye,
+        closed_eye,
         viewcomments,
         forum
     },

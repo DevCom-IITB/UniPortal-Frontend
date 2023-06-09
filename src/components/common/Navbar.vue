@@ -3,16 +3,23 @@
     <div class="navbar" :style="{ background : unselected }">
         
         <router-link to="/" class="btn" id="info" @click="selected1" @hover="hover1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
-        <router-link to="/questions" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
-        <router-link to="/myquestions" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
-        
+        <router-link v-if="authStore.role == 1980 || authStore.role ==7669" to="/questions" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
+        <router-link v-if="authStore.role == 1980 || authStore.role ==7669" to="/myquestions" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
+        <router-link v-if="authStore.role == 5980 || authStore.role ==6311" to="/unanswered" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">UnAnswered</div></router-link>
+        <router-link v-if="authStore.role == 5980 || authStore.role ==6311" to="/answered" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Answered</div></router-link>
     </div>   
     
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/auth';
+
 export default {
     name: 'Navbar',
+    setup() {
+        const authStore = useAuthStore();
+        return { authStore };
+    },
     emits: ['selected1', 'selected2', 'selected3'],
     props : {
         primary : String,

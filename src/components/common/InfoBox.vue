@@ -49,15 +49,16 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    align-items: start;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     border-radius: 24px;
 }
 
 p{
+    width: 100%;
     font-size: 14px;
     font-weight: 400;
 }

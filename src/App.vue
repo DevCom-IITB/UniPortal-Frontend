@@ -1,10 +1,10 @@
 <template>
   <div class="container" v-if="Auth.loggedIn">
-    <div class="Sidebar"><Sidebar :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
+    <div class="Sidebar"><Sidebar :grey="grey" :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" ></router-view></div>
-      <div class="popup" @click="postQuestion" v-if="askPopup"><popup :lightText="lightText" /></div>
+      <div class="popup" @click="postInfoQues" v-if="askPopup"><popup :lightText="lightText"/></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
     </div>
     <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
@@ -133,9 +133,15 @@ export default {
       this.showSidebar = value;
       console.log(this.showSidebar);
     },
-    async postQuestion(){
-      await this.ask();
-      await this.QuestionStore.SetAction(4);
+    async postInfoQues(){
+      if(this.Auth.role == 5980 ||this.Auth.role == 6311){
+        await this.ask();
+        await this.QuestionStore.SetAction(5);
+      }
+      else{
+        await this.ask();
+        await this.QuestionStore.SetAction(4);
+      }
     }
   },
   setup() {
