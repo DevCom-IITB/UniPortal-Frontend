@@ -321,6 +321,8 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully upvotes on question :', this.question['_id']);
+                this.question['upvotes'] +=1;
+                console.log(this.question['upvotes']);
             }
             else{
                 if(res.status === 403){
@@ -339,6 +341,7 @@ export const useQuestionStore = defineStore("question", {
                             },
                             body : JSON.stringify(upvoteObj)
                         })
+                        this.question['upvotes']++;
                         console.log('new request sent');
                         const data = await res.json()
                         console.log(data);
@@ -423,6 +426,112 @@ export const useQuestionStore = defineStore("question", {
                 }
             }
         },
-        
+        async HideQuestion(){
+            const authStore = useAuthStore();
+            console.log('we have entered the hide a question function in question.js', this.question['_id']);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question['_id']);
+            console.log('Sending request');
+            const res = await fetch(`api/question/hideQ/${this.question['_id']}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+            })
+
+            if(res.status == 200){
+                console.log('successfully hid the question :', this.question['_id']);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/hideQ/${this.question['_id']}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
+        async HideAnswer(){
+            const authStore = useAuthStore();
+            console.log('we have entered the hide an answer function in question.js');
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question_ID);
+            console.log('Sending request');
+            const res = await fetch(`api/question/hideA/${this.question_ID}/${this.answer_ID}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+            })
+
+            if(res.status == 200){
+                console.log('successfully hid answer :', this.answer_ID);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/hideA/${this.question_ID}/${this.answer_ID}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
     }
 })

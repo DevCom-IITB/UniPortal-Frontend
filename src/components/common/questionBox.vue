@@ -32,7 +32,7 @@
             </div>
             
         
-            <div class="Hide" v-if="windowWidth > 750"><eye class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" @click="Hide"><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
@@ -118,6 +118,11 @@ export default {
             console.log("we will be upvoting a question");
             await this.QuestionStore.SetQuestion(this.question);
             await this.QuestionStore.UpvoteQuestion();
+        },
+        async Hide(){
+            console.log("we will be hiding a question");
+            await this.QuestionStore.SetQuestion(this.question);
+            await this.QuestionStore.HideQuestion();
         }
     },
     mounted(){

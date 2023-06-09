@@ -30,7 +30,7 @@
             </div>
             
         
-            <div class="Hide" v-if="windowWidth > 750" ><eye class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" @click="Hide" ><eye class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
@@ -129,6 +129,18 @@ export default {
                 console.log("we will be upvoting an answer from inside a question view");
                 await this.questionStore.SetAnswerID(this.question['_id'])
                 this.$emit('upvote');
+            }
+        },
+        async Hide(){
+            if(!this.isAnswer){
+                console.log("we will be hiding a question from inside a question view");
+                await this.questionStore.SetQuestion(this.question);
+                await this.questionStore.HideQuestion();
+            }
+            else{
+                console.log("we will be hiding an answer from inside a question view");
+                await this.questionStore.SetAnswerID(this.question['_id'])
+                this.$emit('hide');
             }
         }
     },

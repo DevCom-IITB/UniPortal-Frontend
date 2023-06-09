@@ -92,6 +92,8 @@ export default {
 .sidebar{
     width : 92.38%;
     margin-top: 4.12%;
+    margin-left: 4.12%;
+    margin-bottom: 4.12%;
     border-radius: 24px;
     display: flex;
     flex-direction: column;

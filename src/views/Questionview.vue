@@ -4,7 +4,7 @@
     <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
-        <Question :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer"/>
+        <Question :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
       </div>
       
     </div>
@@ -64,6 +64,12 @@ export default {
         console.log('we will be upvoting this answer with question id : ', this.question['_id']);
         await this.questionStore.SetQuestionID(this.question['_id'])
         await this.questionStore.UpvoteAnswer()
+      },
+      async HideAnswer(){
+        console.log('we will be hiding this answer');
+        console.log('we will be hiding this answer with question id : ', this.question['_id']);
+        await this.questionStore.SetQuestionID(this.question['_id'])
+        await this.questionStore.HideAnswer()
       }
     },
     async mounted() {
