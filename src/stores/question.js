@@ -9,6 +9,7 @@ export const useQuestionStore = defineStore("question", {
         comments: [],
         question_ID : '',
         answer_ID : '',
+        addImage : false,
         action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
     }),
     actions: {
@@ -23,6 +24,10 @@ export const useQuestionStore = defineStore("question", {
             this.action = action;
             console.log("action : ", this.action);
         },
+        async SetAddImage(addImage){
+            this.addImage = addImage;
+            console.log("addImage : ", this.addImage);
+        },
         async SetQuestionID(question_ID){
             this.question_ID = question_ID;
             console.log("question_ID : ", this.question_ID);
@@ -31,16 +36,19 @@ export const useQuestionStore = defineStore("question", {
             this.answer_ID = answer_ID;
             console.log("answer_ID : ", this.answer_ID);
         },
-        async PostQuestion(body){
+        async PostQuestion(body, images){
             const authStore = useAuthStore();
             console.log('we have entered the post question function in question.js');
+            console.log('images : ', images);
             const uid = authStore.user_ID;
             console.log('user id  parent function: ', uid);
-            const questionObj = {
-                user_ID : uid,
-                body : body,
+            const questionObj = new FormData();
+            questionObj.append('user_ID', uid);
+            questionObj.append('body', body);
+            for(let i = 0; i < images.length; i++){
+                questionObj.append('images', images[i]);
+                console.log(`image ${i} : `, images[i]);
             }
-            console.log('question object : ', questionObj);
 
             const accessToken = authStore.accessToken;
 
@@ -51,10 +59,9 @@ export const useQuestionStore = defineStore("question", {
             const res = await fetch(`api/question/post`, {
                 method : 'POST',
                 headers : {
-                    'Content-Type' : 'application/json',
                     'Authorization' : bearer
                 },
-                body : JSON.stringify(questionObj)
+                body : questionObj
             })
 
             if(res.status == 200){
@@ -72,10 +79,9 @@ export const useQuestionStore = defineStore("question", {
                         const res = await fetch(`api/question/post`,{
                             method : 'POST',
                             headers : {
-                                'Content-Type' : 'application/json',
                                 'Authorization' : bearer
                             },
-                            body : JSON.stringify(questionObj)
+                            body : questionObj
                         })
                         console.log('new request sent');
                         const data = await res.json()
@@ -93,12 +99,19 @@ export const useQuestionStore = defineStore("question", {
                 }
             }
         },
-        async PostInfoPost(body){
+        async PostInfoPost(body, images){
             console.log('we have entered the post infopost function in question.js');
             const authStore = useAuthStore();
-            const infoPostObj = {
-                body : body,
+            console.log('images : ', images);
+            const infoPostObj = new FormData();
+            infoPostObj.append('body', body);
+            for(let i = 0; i < images.length; i++){
+                infoPostObj.append('images', images[i]);
+                console.log(`image ${i} : `, images[i]);
             }
+            // const infoPostObj = {
+            //     body : body,
+            // }
             console.log('infopost object : ', infoPostObj);
 
             const accessToken = authStore.accessToken;
@@ -110,10 +123,9 @@ export const useQuestionStore = defineStore("question", {
             const res = await fetch(`api/info/post`, {
                 method : 'POST',
                 headers : {
-                    'Content-Type' : 'application/json',
                     'Authorization' : bearer
                 },
-                body : JSON.stringify(infoPostObj)
+                body : infoPostObj
             })
 
             if(res.status == 200){
@@ -131,10 +143,9 @@ export const useQuestionStore = defineStore("question", {
                         const res = await fetch(`api/info/post`,{
                             method : 'POST',
                             headers : {
-                                'Content-Type' : 'application/json',
                                 'Authorization' : bearer
                             },
-                            body : JSON.stringify(infoPostObj)
+                            body : infoPostObj
                         })
                         console.log('new request sent');
                         const data = await res.json()
@@ -152,17 +163,22 @@ export const useQuestionStore = defineStore("question", {
                 }
             }
         },
-        async AddAnswer(body){
+        async AddAnswer(body, images){
             const authStore = useAuthStore();
             console.log('we have entered the add answer function in question.js');
+
+            console.log('images : ', images);
             const uid = authStore.user_ID;
             console.log('user id  parent function: ', uid);
-            const answerObj = {
-                answers : {
-                    user_ID : uid,
-                    body : body,
-                }
+            const answerObj = new FormData();
+            answerObj.append('answers[user_ID]', uid);
+            answerObj.append('answers[body]', body);
+
+            for(let i = 0; i < images.length; i++){
+                answerObj.append('images', images[i]);
+                console.log(`image ${i} : `, images[i]);
             }
+
             console.log('answer object : ', answerObj);
 
             const accessToken = authStore.accessToken;
@@ -175,11 +191,13 @@ export const useQuestionStore = defineStore("question", {
             const res = await fetch(`api/question/answerQ/${this.question['_id']}`, {
                 method : 'PATCH',
                 headers : {
-                    'Content-Type' : 'application/json',
                     'Authorization' : bearer
                 },
-                body : JSON.stringify(answerObj)
+                body : answerObj
             })
+
+            console.log(res.status);
+            console.log(res.json());
 
             if(res.status == 200){
                 console.log('successfully added answer');
@@ -197,10 +215,9 @@ export const useQuestionStore = defineStore("question", {
                         const res = await fetch(`api/question/answerQ/${this.question['_id']}`,{
                             method : 'PATCH',
                             headers : {
-                                'Content-Type' : 'application/json',
                                 'Authorization' : bearer
                             },
-                            body : JSON.stringify(answerObj)
+                            body : answerObj
                         })
                         console.log('new request sent');
                         const data = await res.json()

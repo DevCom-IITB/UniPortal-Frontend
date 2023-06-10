@@ -134,6 +134,7 @@ export default {
       console.log(this.showSidebar);
     },
     async postInfoQues(){
+      this.QuestionStore.SetAddImage(true);
       if(this.Auth.role == 5980 ||this.Auth.role == 6311){
         await this.ask();
         await this.QuestionStore.SetAction(5);
@@ -202,7 +203,7 @@ export default {
 
 .popup{
   position: fixed;
-  margin-top: 85vh;
+  bottom: 18px;
   width : 15.79%;
   height: 10%;
   cursor: pointer;
@@ -211,8 +212,7 @@ export default {
 .ask{
   position: fixed;
   width: 52.33vw;
-  height: 30vh;
-  margin-bottom: 42vh;
+  top: 100px;
   z-index: 1;
   background: white;
   border-radius: 24px;
@@ -293,7 +293,7 @@ export default {
 .ask{
   width: 100vw;
   height: 90vh;
-  margin-top: 47vh;
+  top: 100px;
   padding: 16px 24px;
 }
 

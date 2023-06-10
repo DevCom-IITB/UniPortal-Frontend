@@ -1,14 +1,20 @@
 <template>
 
-    <form class="asker" @submit="OnSubmit" >
+    <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
         <div class="name">Sanskar Gosavi</div>
         <textarea class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
+        <div class="preview" v-if="selectedImages.length > 0">
+            <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
+                <div class="cancel" @click="RemoveImage(index)" />
+                <img :src="image" alt="Preview Image">
+            </div>
+        </div>
         <div class="actions">
-            <div class="photo" :style="{ background : background }"><add />&nbsp;&nbsp;<p>Add photo</p></div>
             <div class="decision">
                 <div class="discard" :style="{ color : grey }" @click="$emit('discard')">Discard</div>
                 <input class="post" :style="{ background : primary }" value="Post" type="submit" @click="decide" />
             </div>
+            <div v-if="questionStore.addImage" class="photo" :style="{ background : background }" @click="AddImages" ><input type="file" id="fileInput" @change="SelectingFiles" multiple /><add />&nbsp;&nbsp;<p>Add photo</p></div>
         </div>
 
 
@@ -33,6 +39,13 @@ export default {
         background : String,
         primary : String,
     },
+    data(){
+        return{
+            text : '',
+            selectedImages : [],
+            previewImages : [],
+        }
+    },
     methods : {
         async OnSubmit(e){
             e.preventDefault();
@@ -47,11 +60,13 @@ export default {
 
             this.$emit('post',newPost);
         },
-        async decide(){
+        async decide(event){
+            console.log(event);
             const decision = this.questionStore.action
             if(decision == 1){
                 console.log('we will be answering the question with id:', this.questionStore.question['_id']);
-                await this.questionStore.AddAnswer(this.text)
+                console.log('selected images are : ', this.selectedImages);
+                await this.questionStore.AddAnswer(this.text, this.selectedImages)
             }
             else if(decision == 2){
                 console.log('we will be commenting on the question with id:', this.questionStore.question['_id']);
@@ -63,15 +78,40 @@ export default {
             }
             else if(decision == 4){
                 console.log('we will be posting a new question');
-                await this.questionStore.PostQuestion(this.text)
+                console.log('selected images are : ', this.selectedImages);
+                await this.questionStore.PostQuestion(this.text, this.selectedImages)
                 // await this.questionStore.AddCommentComment(this.text)
             }
             else if(decision == 5){
                 console.log('we will be posting info post');
-                await this.questionStore.PostInfoPost(this.text)
+                await this.questionStore.PostInfoPost(this.text, this.selectedImages)
             }
 
             this.$emit('discard')
+        },
+        AddImages(){
+            document.getElementById('fileInput').click();
+        },
+        SelectingFiles(e){
+            this.selectedImages = Array.from(e.target.files); //Array.from() converts the filelist to an array
+            console.log(this.selectedImages);
+            this.previewImages = [];
+
+            this.selectedImages.forEach((image) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    if(reader.readyState === 2){
+                        this.previewImages.push(reader.result);
+                    }
+                }
+                reader.readAsDataURL(image);
+            })
+            console.log(this.previewImages);
+            // this.questionStore.AddImages(this.selectedImages);
+        },
+        RemoveImage(index){
+            this.previewImages.splice(index,1);
+            this.selectedImages.splice(index,1);
         }
     },
     components : {
@@ -86,36 +126,84 @@ export default {
 
 .asker{
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: start;
 }
 
 .name{
     width: 100%;
-    height: 16%;
+    height: 20px;
     font-size: 16px;
     font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* border: 1px solid; */
 }
 
 .text{
     width: 100%;
-    height: 56%;
+    height: 100px;
     border: 1px solid;
     border-radius: 10px;
     padding: 8px 8px ;
     resize: none;
 }
 
-.actions{
+.preview{
     width: 100%;
-    height: 16%;
+    height: 100px;
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.PreImage{
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    margin-right: 8px;
+    background : #F0F2F5;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.cancel{
+    position: fixed;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    border-radius: 50px;
+    background: #F0F2F5;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.cancel:hover{
+    background: #ff7c7c;
+}
+
+.PreImage img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.actions{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction : row-reverse;
     justify-content: space-between;
     align-items: end;
+    /* border: 1px solid; */
 }
 
 .photo{
@@ -132,6 +220,10 @@ export default {
 p{
     font-size: 16px;
     font-weight: 600;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .decision{
@@ -172,12 +264,13 @@ p{
 @media only screen and (max-width:750px){
 
     .asker{
-        justify-content: start;
+        justify-content: space-around;
+        height: fit-content;
     }
 
     .name{
         height: 6%;
-        font-size: 24px;
+        font-size: 16px;
         padding-left: 8px;
         margin-bottom: 16px;
         display: flex;
@@ -186,19 +279,11 @@ p{
     }
 
     .text{
-        height: 20%;
+        height: 100px;
     }
 
     .actions{
-        
-        height: 70%
-    }
-    .photo{
-        height: 8%;
-    }
-
-    .decision{
-        height:8%;
+        height: 30px
     }
 
 }

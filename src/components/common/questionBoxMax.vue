@@ -107,6 +107,7 @@ export default {
             console.log("we we will be answering a question from inside a question view");
             this.questionStore.SetQuestion(this.question);
             this.questionStore.SetAction(1)
+            this.questionStore.SetAddImage(true);
             this.$emit('comment');
         },
         async CommentClick(){
@@ -123,6 +124,7 @@ export default {
                 this.$emit('comment');
                 this.$emit('answer_id', this.question['_id']);
             }
+            await this.questionStore.SetAddImage(false);
         },
         async Upvote(){
             if(!this.isAnswer){

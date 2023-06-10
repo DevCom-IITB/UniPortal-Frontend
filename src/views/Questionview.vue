@@ -117,16 +117,14 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content:start;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
-.Lister::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 8px;
 }
 
 
-.Lister::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #386A20;
   border-radius: 24px;
 }

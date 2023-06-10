@@ -111,12 +111,14 @@ export default {
             console.log("we will be answering a question");
             await this.QuestionStore.SetQuestion(this.question);
             await this.QuestionStore.SetAction(1);
+            await this.QuestionStore.SetAddImage(true);
             this.$emit('comment');
         },
         async CommentClick(){
             console.log("we will be commenting on a question");
             await this.QuestionStore.SetQuestion(this.question);
             await this.QuestionStore.SetAction(2);
+            await this.QuestionStore.SetAddImage(false);
             this.$emit('comment');
         },
         async Upvote(){
