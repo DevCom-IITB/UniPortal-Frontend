@@ -15,6 +15,12 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/')
       },
+      // '/profiles/oauth/token': {
+      //   target: 'https://gymkhana.iitb.ac.in',
+      //   changeOrigin: true,
+      //   secure: false,
+      //   rewrite: (path) => path.replace(/^\/profiles\/oauth\/token/, '/profiles/oauth/token')
+      // },
     },
   },
   plugins: [vue(), svgLoader({

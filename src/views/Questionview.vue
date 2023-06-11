@@ -1,10 +1,10 @@
 <template>
   <div class="container">
    
-    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
-        <Question :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
+        <Question @expand="$emit('expand')"  :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
       </div>
       
     </div>
@@ -75,11 +75,13 @@ export default {
     async mounted() {
       console.log('we have enterd the question view');
       console.log('state question', this.questionStore.question);
-      this.question = this.questionStore.question
-      this.answers = this.questionStore.answers
-      this.comments = this.questionStore.comments
-      this.upvotes = this.questionStore.question['upvotes']
+      this.question = await this.questionStore.question;
+      console.log('question in question view :', this.question);
+      this.answers = await this.questionStore.answers;
+      this.comments = await this.questionStore.comments;
+      this.upvotes = await this.questionStore.question['upvotes'];
       console.log('comments in question view :', this.comments);
+      console.log('upvotes in question view :', this.upvotes);
       this.$emit('askView')
     }
 }

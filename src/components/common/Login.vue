@@ -4,15 +4,15 @@
         <div class="logo"><Logo /></div>
         <div class="headers">
             <h2>Welcome NewBee</h2>
-            <h3>Your companion to help you sail smooth the admission process</h3>
+            <h3>Your companion to help you sail smooth through the admission process</h3>
         </div>
         <div class="login">
             <input type="text" class="input" v-model="uid" placeholder="Enter your id">
-            <input type="text" class="input" v-model="password" placeholder="Enter your password">
-            <input type="button" value="Login" class="button" @click="Auth.Login(uid, password)">
+            <input type="password" class="input" v-model="password" placeholder="Enter your password">
+            <input type="submit" value="Login" class="button" @click="Auth.Login(uid, password, false)">
         </div>
         <h2>Or</h2>
-        <div class="sso">Login via SSO</div>
+        <input type="button" class="sso" @click="redirectToExternalRoute" value='Login via SSO' />
     </div>
 
 </template>
@@ -29,6 +29,18 @@ export default{
     },
     props: {
         loggedIn: Boolean,
+    },
+    methods: {
+        redirectToExternalRoute() {
+            window.location.href = 'https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=pGEtn6mR5wZL0gObHW1VmIWI9wxqjBJVfEArR9iy&response_type=code&scope=program';
+        },
+    },
+    mounted() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const authorizationCode = urlParams.get('code');
+        if (authorizationCode) {
+            this.Auth.Login('', '', true);
+        }
     },
     setup() {
         const Auth = useAuthStore();
@@ -103,6 +115,8 @@ export default{
     font-weight: 500;
     text-align: center;
     padding: 12px;
+    border: none;
+    cursor: pointer;
 }
 
 @media only screen and (max-width : 1150px){

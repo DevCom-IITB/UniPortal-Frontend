@@ -5,7 +5,7 @@
      <div class="Lister">
        <div :key="question['id']" v-for="question in questions" class="QuestionBox">
         
-         <Question :showAnswerBox="this.true" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @askView="$emit('askView')"/>
+         <Question @expand="$emit('expand')" :showAnswerBox="this.true" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @askView="$emit('askView')"/>
          
         </div>
         

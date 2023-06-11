@@ -1,5 +1,7 @@
 <template>
     <div class="cont" :style="{ color : primaryColor, background : background}">
+        <!-- <InfoPost class="background" /> -->
+        <!-- <div class="background"><img :src="image" alt=""></div> -->
         <div class="Header">
             <div class="HeaderTitle" :style="{ color : primaryColor }">{{ headerName }}</div>
             <div class="HeaderText" :style="{ color : primaryColor }">{{ headerText }}</div>
@@ -18,7 +20,12 @@
             headerText: String,
             background: String,
             primaryColor: String
-     }
+     },
+    //  data(){
+    //      return{
+    //          image: '',
+    //      }
+    //  },
     //  props: {
     //     headerName: string, 
     //  },
@@ -39,6 +46,18 @@
     overflow: hidden;
 }
 
+.background{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.background img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .Header{
     width: 92.19%;
     height: 74.36%;
@@ -50,14 +69,12 @@
 .HeaderTitle{
     font-size: 54px;
     font-weight: 500;
-    z-index: 1;
 }
 
 .HeaderText{
     font-size: 16px;
     font-weight: 500;
     overflow-y: scroll;
-    z-index: 1;
 }
 
 

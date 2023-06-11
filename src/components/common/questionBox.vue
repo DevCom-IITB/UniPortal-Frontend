@@ -8,7 +8,7 @@
             
             <div class="QuestionBox">
                 <div class="content" :style="{ background : background}">
-                    <router-link to="/question" class="questionRoute" @click="QuestionStore.SetQuestion(question)" >                                            
+                    <router-link to="/question" class="questionRoute" @click="SetQuestionView" @expand="$emit('expand')" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">
@@ -130,6 +130,9 @@ export default {
             console.log("we will be hiding a question");
             await this.QuestionStore.SetQuestion(this.question);
             await this.QuestionStore.HideQuestion();
+        },
+        async SetQuestionView(){
+            await this.QuestionStore.SetQuestion(this.question);
         }
     },
     mounted(){

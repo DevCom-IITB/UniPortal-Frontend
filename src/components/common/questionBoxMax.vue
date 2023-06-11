@@ -16,6 +16,9 @@
                             </div>
                             <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                         </div>
+                        <div class="images" v-if="question.images">
+                            <div v-for="image in images" class="img" @click="Expand(image)"><img :src=image></div>
+                        </div>
                         <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
                     </div>
                 </div>
@@ -91,6 +94,7 @@ export default {
             secondaryColor : this.secondaryColor,
             primaryAccent : this.primaryAccent,
             windowWidth: window.innerWidth,
+            images : [],
             // timestamp : this.question['asked_At'],
         }
     },
@@ -149,13 +153,19 @@ export default {
                 await this.questionStore.SetAnswerID(this.question['_id'])
                 this.$emit('hide');
             }
+        },
+        Expand(image){
+            console.log('link is : ', image);
+            this.questionStore.SetImageLink(image)
+            console.log("expanding");
+            this.$emit('expand');
         }
     },
     async mounted(){
-        this.upvotes = this.question.upvotes;
+        console.log('question in questionBoxMax', this.question);
         console.log('question content:', this.question.body);
-        console.log('comments in questionBoxMax', this.comments);
-        // this.timestamp = this.question['asked_At']
+        this.images = this.question.images;
+        console.log('images in questionBoxMax', this.images);
         this.$nextTick(() => {
             window.addEventListener('resize', this.onResize);
         })
@@ -326,6 +336,31 @@ export default {
     
 }
 
+.images{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+}
+
+.img{
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: 1px solid ;
+    margin-right: 8px;
+    background : #F0F2F5;
+    overflow: hidden;
+    /* box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3); */
+} 
+
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .text{
     width: fit-content;
     height: fit-content;
@@ -334,7 +369,6 @@ export default {
     font-weight: 500;
     line-height: 16px;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .box-footer{

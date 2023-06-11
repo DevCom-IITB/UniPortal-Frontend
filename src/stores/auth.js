@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+const SMP_KEY = import.meta.env.VITE_SMP_ACCESS_KEY
 
 export const useAuthStore = defineStore('auth', {
     id: 'auth',
@@ -9,11 +10,42 @@ export const useAuthStore = defineStore('auth', {
         role : 0
     }),
     actions: {
-        async Login(uid, password){
-            const info = {
-                user_ID : uid,
-                password : password,
+        async Login(uid, password, sso){
+            let info = {}
+            if(sso){
+                console.log('login with sso');
+                const urlParams = new URLSearchParams(window.location.search);
+                const authorizationCode = urlParams.get('code');
+                console.log(authorizationCode);
+
+                const res = await fetch('api/user/smplogin',{
+                    method : 'POST',
+                    headers : {
+                        'Content-Type' : 'application/json'
+                    },
+                    body : JSON.stringify({authCode : authorizationCode})
+                })
+
+                const rollNumber = await res.json()
+                console.log('roll number :',rollNumber);
+                console.log('SMP KEY :',SMP_KEY);
+                info = {
+                    user_ID : rollNumber.rollNumber,
+                    password : SMP_KEY 
+                }
+
             }
+            else{
+
+                console.log('normal login');
+
+                info = {
+                    user_ID : uid,
+                    password : password,
+                }
+            }
+            
+            console.log('sending login request with info :',info);
 
             const res = await fetch('api/user/login', {
                 method : 'POST',
@@ -21,16 +53,18 @@ export const useAuthStore = defineStore('auth', {
                     'Content-Type' : 'application/json'
                 },
                 body : JSON.stringify(info)
-            })        
-            
-
+            })    
+                
             if(res.status == 200){
                 const data = await res.json()
-                this.accessToken = data['accessToken']
+                    this.accessToken = data['accessToken']
                 console.log('access token: ' + this.accessToken);
                 this.loggedIn = true
                 this.user_ID = uid
                 this.role = data['role']
+                console.log('logged in as :',this.loggedIn);
+                console.log('user id :',this.user_ID);
+                console.log('role :',this.role);
             }
             else{
                 await this.Logout()

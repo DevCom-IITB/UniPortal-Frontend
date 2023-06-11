@@ -1,22 +1,35 @@
 <template>
     <div class="container">
         <div class="Images" v-if="infopost.images">
-            <div v-for="image in images" class="img"><img :src=image></div>
+            <div v-for="image in images" class="img" @click="Expand(image)"><img :src=image></div>
         </div>
         <p>{{ infopost.body }}</p>
     </div>
 </template>
 
 <script>
+import { useQuestionStore } from '@/stores/question';
 
 export default {
     name: 'InfoBox',
+    setup(){
+        const questionStore = useQuestionStore();
+        return { questionStore };
+    },
     props:{
         infopost: Object,
     },
     data(){
         return{
-            images: []
+            images: [],
+        }
+    },
+    methods:{
+        Expand(image){
+            console.log('link is : ', image);
+            this.questionStore.SetImageLink(image)
+            console.log("expanding");
+            this.$emit('expand');
         }
     },
     mounted(){
@@ -66,17 +79,37 @@ p{
 .Images{
     width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: start;
     align-items: center;
 }
 
 .img{
-    width: 80%;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: 1px solid ;
+    margin-right: 8px;
+    background : #F0F2F5;
+    overflow: hidden;
+    /* box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3); */
 } 
 
 img{
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+.expandImg{
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    background: #FFF9E5;
+    z-index: 3;
+    
 }
 
 @media only screen and (max-width: 1150px) {

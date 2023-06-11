@@ -3,14 +3,16 @@
     <div class="Sidebar"><Sidebar :grey="grey" :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" ></router-view></div>
+      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" @expand="ExpandImage" ></router-view></div>
       <div class="popup" @click="postInfoQues" v-if="askPopup"><popup :lightText="lightText"/></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
+      <div class="ExpandedImg" v-if="expanded" ><div class="cancel" @click="CloseImg"></div><img :src="QuestionStore.ImageLink" alt=""></div>
     </div>
-    <div class="glass" v-if="askQuestion == true" @click="ask" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
+    <div class="glass" v-if="askQuestion == true || glass == true" @click="glassClick" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
   </div>
   <div class="login" v-if="!Auth.loggedIn">
     <DC class="DC"/>
+    <SMP class="SMP"/>
     <login_background class="login-background" />
     <div class="login-form"><Login :loggedIn="loggedIn" @loggedIn="Login" /></div>
   </div>
@@ -24,6 +26,7 @@ import askBox from './components/common/askBox.vue'
 import login_background from './components/background_images/Group 9.svg'
 import Login from './components/common/Login.vue'
 import DC from './components/icons/DC.svg'
+import SMP from './components/icons/SMP_black.svg'
 
 import { useAuthStore } from '@/stores/auth';
 import { useQuestionStore } from '@/stores/question';
@@ -38,6 +41,7 @@ export default {
     login_background,
     Login,
     DC,
+    SMP,
   },
   data(){
     return{
@@ -54,6 +58,8 @@ export default {
       windowWidth : window.innerWidth,
       showSidebar : false,
       accessToken : '',
+      glass : false,
+      expanded : false,
     }
   },
   mounted() {
@@ -143,7 +149,21 @@ export default {
         await this.ask();
         await this.QuestionStore.SetAction(4);
       }
-    }
+    },
+    async ExpandImage(){
+      this.glass = true;
+      this.expanded = true;
+      this.QuestionStore.SetImageLink('https://images.unsplash.com/photo-1574169208507-84376144848b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=579&q=80')
+    },
+    async CloseImg(){
+      this.glass = false;
+      this.expanded = false;
+    },
+    async glassClick(){
+      this.glass = false;
+      this.askQuestion = false;
+      this.expanded = false;
+    },
   },
   setup() {
     const Auth= useAuthStore();
@@ -224,7 +244,41 @@ export default {
   width: 100vw;
   height: 100vh;
   cursor: pointer;
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ExpandedImg{
+  position: fixed;
+  background: white;
+  height: 400px;
+  z-index: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.cancel{
+    position: fixed;
+    z-index: 1;
+    width: 15px;
+    height: 15px;
+    border-radius: 50px;
+    background: #F0F2F5;
+    margin-top: 15px;
+    margin-right: 15px;
+}
+
+.cancel:hover{
+    background: #ff7c7c;
+}
+
+.ExpandedImg img{
+  height: 100%;
+  object-fit: cover;
 }
 
 .login{
@@ -247,6 +301,13 @@ export default {
   position: fixed;
 }
 
+.SMP{
+  right: 30px;
+  top: 20px;
+  z-index: 1;
+  position: fixed;
+}
+
 .login-form{
   background: #fff;
   border-radius: 24px;
@@ -258,6 +319,14 @@ export default {
   padding: 24px 24px; 
 }
 
+
+@media only screen and (max-width:950px){
+
+  .ExpandedImg{
+    height: 300px;
+  }
+
+}
 
 @media only screen and (max-width:750px){
 
@@ -295,6 +364,10 @@ export default {
   height: 90vh;
   top: 100px;
   padding: 16px 24px;
+}
+
+.ExpandedImg{
+  height: 200px;
 }
 
 .login-form{

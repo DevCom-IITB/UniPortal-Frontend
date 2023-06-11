@@ -4,8 +4,8 @@
       <div class="Header"><Header :headerName="headerName" :headerText="headerText" :background="background" :color="color"/></div>
       <div class="Lister">
         <!-- <InfoBox :infoPosts="infoposts" /> -->
-        <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
-          <InfoBox :infopost="infopost"/>
+        <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox" >
+          <InfoBox :infopost="infopost" @expand="$emit('expand')"/>
         </div>
       </div>
       

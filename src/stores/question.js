@@ -10,6 +10,7 @@ export const useQuestionStore = defineStore("question", {
         question_ID : '',
         answer_ID : '',
         addImage : false,
+        ImageLink : '',
         action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
     }),
     actions: {
@@ -35,6 +36,10 @@ export const useQuestionStore = defineStore("question", {
         async SetAnswerID(answer_ID){
             this.answer_ID = answer_ID;
             console.log("answer_ID : ", this.answer_ID);
+        },
+        async SetImageLink(ImageLink){
+            this.ImageLink = ImageLink;
+            console.log("ImageLink : ", this.ImageLink);
         },
         async PostQuestion(body, images){
             const authStore = useAuthStore();
