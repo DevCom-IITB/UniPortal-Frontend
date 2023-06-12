@@ -12,7 +12,7 @@
             <input type="submit" value="Login" class="button" @click="Auth.Login(uid, password, false)">
         </div>
         <h2>Or</h2>
-        <input type="button" class="sso" @click="redirectToExternalRoute" value='Login via SSO' />
+        <input type="button" class="sso" @click="redirectToExternalRoute" value='Mentor Login' />
     </div>
 
 </template>

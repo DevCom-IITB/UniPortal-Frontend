@@ -99,6 +99,7 @@ export default {
             this.$emit('Burger', this.showSidebar)
         },
         async Logout(){
+            console.log('logout');
             await this.authStore.Logout();
         }
     }

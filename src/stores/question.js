@@ -579,6 +579,10 @@ export const useQuestionStore = defineStore("question", {
                 },
             })
 
+            const answer = this.question['answers'].find(answer => answer['_id'] === this.answer_ID);
+
+            console.log('answer : ', answer);
+
             if(res.status == 200){
                 console.log('successfully hid answer :', this.answer_ID);
             }

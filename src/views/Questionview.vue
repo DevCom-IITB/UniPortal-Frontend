@@ -1,7 +1,7 @@
 <template>
   <div class="container">
    
-    <div class="Question" @click="test" :style="{ borderBlockColor : grey }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Question" @click="test" :style="{ borderBlockColor : secondaryColor }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
         <Question @expand="$emit('expand')"  :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
@@ -96,9 +96,7 @@ export default {
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+ 
 }
 
 .container::-webkit-scrollbar {
@@ -118,15 +116,19 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content:start;
+  justify-content:start; 
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-::-webkit-scrollbar {
+.Lister::-webkit-scrollbar {
   width: 8px;
 }
 
 
-::-webkit-scrollbar-thumb {
+.Lister::-webkit-scrollbar-thumb {
   background: #386A20;
   border-radius: 24px;
 }

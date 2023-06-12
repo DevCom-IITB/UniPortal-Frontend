@@ -2,7 +2,7 @@
 
     <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
         <div class="name">Sanskar Gosavi</div>
-        <textarea class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
+        <textarea maxlength="1000" class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
         <div class="preview" v-if="selectedImages.length > 0">
             <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
                 <div class="cancel" @click="RemoveImage(index)" />

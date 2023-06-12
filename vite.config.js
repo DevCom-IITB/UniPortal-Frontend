@@ -11,16 +11,11 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        // target: 'http://localhost:5000', //whenever in development uncomment this url
+        target: 'http://10.198.49.120:5000', //whenever in production or testing uncomment this 
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/')
       },
-      // '/profiles/oauth/token': {
-      //   target: 'https://gymkhana.iitb.ac.in',
-      //   changeOrigin: true,
-      //   secure: false,
-      //   rewrite: (path) => path.replace(/^\/profiles\/oauth\/token/, '/profiles/oauth/token')
-      // },
     },
   },
   plugins: [vue(), svgLoader({

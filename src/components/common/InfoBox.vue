@@ -39,7 +39,7 @@ export default {
             for(let i=0; i<this.images.length; i++){
                 //D:\SMP\SMP-Portal-Backend\uploads
                 console.log(this.images[i]);
-                const temp = 'D:/SMP/SMP-Portal-Backend/uploads/' + this.images[i];
+                const temp = 'http://10.198.49.120/uploads/' + this.images[i];
                 this.images[i] = temp;
                 console.log(this.images[i]);
             }

@@ -368,7 +368,9 @@ img{
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
-    overflow: hidden;
+    /* display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;  */
 }
 
 .box-footer{

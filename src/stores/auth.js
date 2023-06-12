@@ -65,8 +65,10 @@ export const useAuthStore = defineStore('auth', {
                 console.log('logged in as :',this.loggedIn);
                 console.log('user id :',this.user_ID);
                 console.log('role :',this.role);
+                window.location.href = '/'
             }
             else{
+                console.log('logging out from login');
                 await this.Logout()
             }
         },
@@ -93,6 +95,7 @@ export const useAuthStore = defineStore('auth', {
             return res;
         },
         async Logout(){
+            console.log('logging out');
             const res = await fetch('api/user/logout', {
               method : 'POST',
               headers : {
@@ -101,6 +104,7 @@ export const useAuthStore = defineStore('auth', {
             })
 
             if(res.status == 200){
+                console.log('logged out');
                 this.accessToken = ''
                 this.loggedIn = false
             }
