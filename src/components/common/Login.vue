@@ -18,7 +18,7 @@
 </template>
 
 <script >
-import Logo from '../icons/logo.svg'
+import Logo from '../icons/Logo.svg'
 import { useAuthStore  } from '@/stores/auth';
 
 
