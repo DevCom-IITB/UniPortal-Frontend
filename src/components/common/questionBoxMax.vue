@@ -164,8 +164,19 @@ export default {
     async mounted(){
         console.log('question in questionBoxMax', this.question);
         console.log('question content:', this.question.body);
-        this.images = this.question.images;
-        console.log('images in questionBoxMax', this.images);
+        this.images = this.question.images
+        if(this.images.length>0){
+            for(let i=0; i<this.images.length; i++){
+                //D:\SMP\SMP-Portal-Backend\uploads
+                console.log(this.images[i]);
+                const temp = 'http://10.198.49.120/uploads/' + this.images[i];
+                this.images[i] = temp;
+                console.log(this.images[i]);
+            }
+        }
+        else{
+            console.log("no images");
+        }
         this.$nextTick(() => {
             window.addEventListener('resize', this.onResize);
         })

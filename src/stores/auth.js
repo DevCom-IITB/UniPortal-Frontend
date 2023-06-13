@@ -46,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
             }
             
             console.log('sending login request with info :',info);
-
+            console.log('url','api/user/login');
             const res = await fetch('api/user/login', {
                 method : 'POST',
                 headers : {
@@ -105,6 +105,11 @@ export const useAuthStore = defineStore('auth', {
 
             if(res.status == 200){
                 console.log('logged out');
+                this.accessToken = ''
+                this.loggedIn = false
+            }
+            else{
+                console.log('error logging out');
                 this.accessToken = ''
                 this.loggedIn = false
             }

@@ -11,8 +11,7 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        // target: 'http://localhost:5000', //whenever in development uncomment this url
-        target: 'http://10.198.49.120:5000', //whenever in production or testing uncomment this 
+        target: 'http://localhost:5000', //whenever in development uncomment this url 
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/')
       },
