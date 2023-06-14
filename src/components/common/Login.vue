@@ -20,7 +20,9 @@
 <script >
 import Logo from '../icons/Logo.svg'
 import { useAuthStore  } from '@/stores/auth';
-
+const sso_client_id = import.meta.env.VITE_SSO_CLIENT_ID;
+const redirect_uri = import.meta.env.VITE_SSO_REDIRECT_URI_DEV;
+// const redirect_uri = import.meta.env.VITE_SSO_REDIRECT_URI_TEST;
 
 export default{
     name: 'Login',
@@ -32,10 +34,11 @@ export default{
     },
     methods: {
         redirectToExternalRoute() {
-            window.location.href = 'https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=pGEtn6mR5wZL0gObHW1VmIWI9wxqjBJVfEArR9iy&response_type=code&scope=program';
+            window.location.href = `https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=${sso_client_id}&response_type=code&scope=program&redirect_uri=${redirect_uri}`;
         },
     },
     mounted() {
+        console.log(`https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=${sso_client_id}&response_type=code&scope=program&redirect_uri=${redirect_uri}`);
         const urlParams = new URLSearchParams(window.location.search);
         const authorizationCode = urlParams.get('code');
         if (authorizationCode) {
