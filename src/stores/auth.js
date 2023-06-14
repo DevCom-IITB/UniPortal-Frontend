@@ -26,7 +26,8 @@ export const useAuthStore = defineStore('auth', {
                     body : JSON.stringify({authCode : authorizationCode})
                 })
 
-                const rollNumber = await res.json()
+                const rollNumber = await res.json();
+                uid = rollNumber.rollNumber;
                 console.log('roll number :',rollNumber);
                 console.log('SMP KEY :',SMP_KEY);
                 info = {
