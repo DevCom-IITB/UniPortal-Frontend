@@ -113,6 +113,7 @@ export const useAuthStore = defineStore('auth', {
                 console.log('error logging out');
                 this.accessToken = ''
                 this.loggedIn = false
+                console.log('logged in as :',this.loggedIn);
             }
         },  
     }

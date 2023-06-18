@@ -3,7 +3,7 @@
     <div class="main-container">
         <div class="container">
             <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
-                <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
+                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
             <div class="QuestionBox">
@@ -22,8 +22,9 @@
                     </router-link>
                 </div>
                 <div class="box-footer">
-                    <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
-                    <div v-if="showAnswerBox && (windowWidth > 750) && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div class="Upvote" @click="test" v-if="windowWidth <= 750 && (AuthStore.role == 7669 || AuthStore.role == 1980)"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
+                    <div v-if="showAnswerBox && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div class="Hide" v-if="windowWidth <= 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                         <button class="comment" @click="CommentClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
@@ -32,7 +33,7 @@
             </div>
             
         
-            <div class="Hide" v-if="windowWidth > 750" @click="Hide"><eye v-if="(AuthStore.role == 5980 || AuthStore.role ==6311) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980 || AuthStore.role ==6311) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
@@ -513,6 +514,11 @@ p{
     .Upvote{
         margin-left: 36px;
         flex-direction: row;
+    }
+
+    .Hide{
+        width:8vw;
+        margin-left: 8px;
     }
 
   }

@@ -33,7 +33,7 @@
             </div>
             
         
-            <div class="Hide" v-if="windowWidth > 750" @click="Hide" ><eye v-if="(AuthStore.role == 5980 || AuthStore.role ==6311) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980 || AuthStore.role ==6311) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" @click="Hide" ><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">

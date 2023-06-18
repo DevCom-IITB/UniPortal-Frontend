@@ -4,7 +4,7 @@
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" @expand="ExpandImage" ></router-view></div>
-      <div class="popup" @click="postInfoQues" v-if="askPopup"><popup :lightText="lightText"/></div>
+      <div class="popup" @click="postInfoQues" v-if="askPopup && Auth.role != 6311"><popup :lightText="lightText"/></div>
       <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
       <div class="ExpandedImg" v-if="expanded" ><div class="cancel" @click="CloseImg"></div><img :src="QuestionStore.ImageLink" alt=""></div>
     </div>
@@ -28,8 +28,8 @@ import Login from './components/common/Login.vue'
 import DC from './components/icons/DC.svg'
 import SMP from './components/icons/SMP_black.svg'
 
-import { useAuthStore } from '@/stores/auth';
-import { useQuestionStore } from '@/stores/question';
+import { useAuthStore } from './stores/auth';
+import { useQuestionStore } from './stores/question';
 
 export default {
   name: 'App',
@@ -266,7 +266,7 @@ export default {
     width: 15px;
     height: 15px;
     border-radius: 50px;
-    background: #F0F2F5;
+    background: #60b926;
     margin-top: 15px;
     margin-right: 15px;
 }

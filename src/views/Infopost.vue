@@ -18,7 +18,7 @@
   import Header from '../components/common/Header.vue'
   import InfoBox from '../components/common/InfoBox.vue'
 
-  import { useAuthStore } from '@/stores/auth'
+  import { useAuthStore } from '../stores/auth'
 
 export default {
   name: 'Infopost',

@@ -19,7 +19,7 @@
 import Question from '../components/common/questionBoxMax.vue'
 import axios from 'axios'
 
-import { useQuestionStore } from '@/stores/question'
+import { useQuestionStore } from '../stores/question'
 
 export default {
   name: 'Questionview',

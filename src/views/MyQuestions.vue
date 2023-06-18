@@ -22,7 +22,7 @@ import { mapStores } from 'pinia'
 import Question from '../components/common/questionBox.vue'
 import Header from '../components/common/Header.vue'
 
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '../stores/auth';
 
 
 
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       headerName : 'My Questions',
-      headerText : 'A design system isn’t only a collection of the assets and components you use to build a digital product. According to Emmet Connolly, director of product design at Intercom, “… most Design Systems are really just Pattern Libraries: a big box of UI Lego pieces that can be assembled in near-infinite ways. All the pieces may ',
+      headerText : 'Where all your questions reside',
       questions : [],
       background: '#F6F5FF',
       primaryColor : '#201E2F',

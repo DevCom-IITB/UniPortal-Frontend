@@ -62,6 +62,10 @@ export default {
         },
         async decide(event){
             console.log(event);
+            if(!this.text && !posted){
+                alert('Please enter some text')
+                return;
+            }
             const decision = this.questionStore.action
             if(decision == 1){
                 console.log('we will be answering the question with id:', this.questionStore.question['_id']);
@@ -93,11 +97,10 @@ export default {
             document.getElementById('fileInput').click();
         },
         SelectingFiles(e){
-            this.selectedImages = Array.from(e.target.files); //Array.from() converts the filelist to an array
+            this.selectedImages.push(...Array.from(e.target.files)); //Array.from() converts the filelist to an array
             console.log(this.selectedImages);
-            this.previewImages = [];
 
-            this.selectedImages.forEach((image) => {
+            Array.from(e.target.files).forEach((image) => {
                 const reader = new FileReader();
                 reader.onload = () => {
                     if(reader.readyState === 2){
@@ -203,7 +206,6 @@ export default {
     flex-direction : row-reverse;
     justify-content: space-between;
     align-items: end;
-    /* border: 1px solid; */
 }
 
 .photo{
@@ -283,7 +285,7 @@ input[type="file"] {
     }
 
     .actions{
-        height: 30px
+        height: 30px;
     }
 
 }

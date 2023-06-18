@@ -45,8 +45,8 @@ import Globe from '../icons/globe.svg'
 import email from '../icons/email.svg'
 import contact from '../icons/contact.svg'
 import burger from '../icons/menu.svg'
-import DC from '../icons/DC_White.svg'
-import SMP from '../icons/SMP.svg'
+import DC from '../icons/DC.svg'
+import SMP from '../icons/SMP_black.svg'
 
 import { useAuthStore } from '@/stores/auth';
 
