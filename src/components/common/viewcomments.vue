@@ -5,7 +5,7 @@
                 {{ comment['user_Name'] }}                
             </div>
 
-            <div class="timestamp" :style="{ color : secondaryColor }">{{ comment['asked_At'] }}</div>
+            <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
               
         </div>
         <div class="qtext">
@@ -25,7 +25,24 @@
         props: {
          comment : Object,
          secondaryColor : String,
-        }        
+        },
+        data(){
+            return{
+                timestamp: '',
+            }
+        },
+        mounted(){
+            const date = new Date(this.comment['asked_At']);
+            const options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric'
+            };
+            this.timestamp = date.toLocaleString(undefined, options);
+        },        
     }
     </script>
 

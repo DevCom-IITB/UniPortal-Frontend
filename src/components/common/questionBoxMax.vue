@@ -12,7 +12,7 @@
                         <div class="stamps">
                             <div class="info">
                                 <div class="name" :style="{ color : primaryColor }">{{ question["user_Name"] }}</div>
-                                <div class="timestamp" :style="{ color : secondaryColor }">{{ question['asked_At'] }}</div>
+                                <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
                             </div>
                             <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                         </div>
@@ -96,7 +96,7 @@ export default {
             primaryAccent : this.primaryAccent,
             windowWidth: window.innerWidth,
             images : [],
-            // timestamp : this.question['asked_At'],
+            timestamp : '',
         }
     },
     methods: {
@@ -165,6 +165,17 @@ export default {
     async mounted(){
         console.log('question in questionBoxMax', this.question);
         console.log('question content:', this.question.body);
+        const date = new Date(this.question['asked_At']);
+        const options = {
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            day: 'numeric',
+            month: 'numeric',
+            year: 'numeric',
+            hour12: true
+        };
+        this.timestamp = date.toLocaleString(undefined, options);
         this.images = this.question.images
         if(this.images.length>0){
             for(let i=0; i<this.images.length; i++){

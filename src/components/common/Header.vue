@@ -13,7 +13,9 @@
  </template>
  
  <script>
- import InfoPost from '../background_images/InfoPot.svg'
+ import InfoPost from '../background_images/InfoPot.png'
+ import Questions from '../background_images/Questions.png'
+ import MyQuestions from '../background_images/MyQuestions.png'
  export default {
      name: 'Header',
      props: {
@@ -31,16 +33,17 @@
          }
      },
      mounted(){
+
         if(this.background == '#FFF9E5'){
-            this.image = 'src/components/background_images/InfoPot.png';
+            this.image = InfoPost;
             console.log(this.image);
         }
         else if(this.background == '#FFF3F2'){
-            this.image = 'src/components/background_images/Questions.png';
+            this.image = Questions;
             console.log(this.image);
         }
         else if(this.background == '#F6F5FF'){
-            this.image = 'src/components/background_images/MyQuestions.png';
+            this.image = MyQuestions;
             console.log(this.image);
 
         }
