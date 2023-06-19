@@ -1,7 +1,7 @@
 <template>
 
     <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
-        <div class="name">Sanskar Gosavi</div>
+        <div class="name">{{ authStore.name }}</div>
         <textarea maxlength="1000" class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
         <div class="preview" v-if="selectedImages.length > 0">
             <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
@@ -25,6 +25,7 @@
 <script>
 import add from '../icons/add_circle.svg'
 import { useQuestionStore } from '@/stores/question'
+import { useAuthStore } from '@/stores/auth';
 
 let posted = false;
 
@@ -32,7 +33,8 @@ export default {
     name: 'askBox',
     setup(){
         const questionStore = useQuestionStore()
-        return { questionStore }
+        const authStore = useAuthStore()
+        return { questionStore, authStore }
     },
     props: {
         grey : String,

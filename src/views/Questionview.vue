@@ -1,7 +1,7 @@
 <template>
   <div class="container">
    
-    <div class="Question" @click="test" :style="{ borderBlockColor : secondaryColor }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="upvotes" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="Question" @click="test" :style="{ borderBlockColor : secondaryColor }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="question['upvotes']" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
     <div class="Lister">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
         <Question @expand="$emit('expand')"  :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
@@ -19,13 +19,15 @@
 import Question from '../components/common/questionBoxMax.vue'
 import axios from 'axios'
 
-import { useQuestionStore } from '../stores/question'
+import { useQuestionStore } from '../stores/question';
+import { useListStore } from '../stores/list';
 
 export default {
   name: 'Questionview',
   setup(){
-    const questionStore = useQuestionStore()
-    return { questionStore }
+    const questionStore = useQuestionStore();
+    const listStore = useListStore();
+    return { questionStore, listStore }
   },
   data() {
     return {
@@ -75,13 +77,12 @@ export default {
     async mounted() {
       console.log('we have enterd the question view');
       console.log('state question', this.questionStore.question);
-      this.question = await this.questionStore.question;
+      this.question = this.listStore.list.filter((question) => question['_id'] === this.questionStore.question_ID)[0];
       console.log('question in question view :', this.question);
-      this.answers = await this.questionStore.answers;
-      this.comments = await this.questionStore.comments;
-      this.upvotes = await this.questionStore.question['upvotes'];
+      this.answers = this.listStore.list.filter((question) => question['_id'] === this.questionStore.question_ID)[0]['answers'];
+      console.log('answers in question view :', this.answers);
+      this.comments = this.listStore.list.filter((question) => question['_id'] === this.questionStore.question_ID)[0]['comments'];
       console.log('comments in question view :', this.comments);
-      console.log('upvotes in question view :', this.upvotes);
       this.$emit('askView')
     }
 }

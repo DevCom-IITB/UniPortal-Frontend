@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
+import { useListStore } from "./list";
 
 export const useQuestionStore = defineStore("question", {
     id: "question",
@@ -13,6 +14,7 @@ export const useQuestionStore = defineStore("question", {
         ImageLink : '',
         action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
     }),
+    persist: true,
     actions: {
         async SetQuestion(question){
             console.log('we have entered the set question function in question.js');
@@ -206,7 +208,7 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully added answer');
-                this.answers.push(answerObj['answers']);
+                window.location.href = '/answered';
             }
             else{
                 if(res.status === 403){
@@ -227,6 +229,10 @@ export const useQuestionStore = defineStore("question", {
                         console.log('new request sent');
                         const data = await res.json()
                         console.log(data);
+                        window.location.href = '/answered';
+                        window.onload = function(){
+                            window.location.href = '/question';
+                        }
                         return data
                     }
                     else{
@@ -242,6 +248,7 @@ export const useQuestionStore = defineStore("question", {
         },
         async AddCommentQuestion(body){
             const authStore = useAuthStore();
+            const listStore = useListStore();
             console.log('we have entered the add comment on a question function in question.js');
             const uid = authStore.user_ID;
             console.log('user id  parent function: ', uid);
@@ -271,7 +278,14 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully added comment on question');
-                this.answers.push(commentObj['comment']);
+                const comment = {
+                    asked_At : new Date(),
+                    hidden : false,
+                    body : body,
+                    user_Name : authStore.name,
+                    _id : "0",
+                }
+                await listStore.AddCommentQuestion(this.question['_id'], comment);
             }
             else{
                 if(res.status === 403){
@@ -293,6 +307,14 @@ export const useQuestionStore = defineStore("question", {
                         console.log('new request sent');
                         const data = await res.json()
                         console.log(data);
+                        const comment = {
+                            asked_At : new Date(),
+                            hidden : false,
+                            body : body,
+                            user_Name : authStore.name,
+                            _id : "0",
+                        }
+                        await listStore.AddCommentQuestion(this.question['_id'], comment);
                         return data
                     }
                     else{
@@ -308,6 +330,7 @@ export const useQuestionStore = defineStore("question", {
         },
         async AddCommentAnswer(body){
             const authStore = useAuthStore();
+            const listStore = useListStore();
             console.log('we have entered the add comment on an answer function in question.js');
             const uid = authStore.user_ID;
             console.log('user id  parent function: ', uid);
@@ -339,7 +362,14 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully added comment on answer :', this.answer_ID);
-                this.answers.push(commentObj['answers']['comments']);
+                const comment = {
+                    asked_At : new Date(),
+                    hidden : false,
+                    body : body,
+                    user_Name : authStore.name,
+                    _id : "0",
+                }
+                await listStore.AddCommentAnswer(this.question_ID, this.answer_ID, comment);
             }
             else{
                 if(res.status === 403){
@@ -361,6 +391,14 @@ export const useQuestionStore = defineStore("question", {
                         console.log('new request sent');
                         const data = await res.json()
                         console.log(data);
+                        const comment = {
+                            asked_At : new Date(),
+                            hidden : false,
+                            body : body,
+                            user_Name : authStore.name,
+                            _id : "0",
+                        }
+                        await listStore.AddCommentAnswer(this.question_ID, this.answer_ID, comment);
                         return data
                     }
                     else{
@@ -376,6 +414,7 @@ export const useQuestionStore = defineStore("question", {
         },
         async UpvoteQuestion(){
             const authStore = useAuthStore();
+            const listStore = useListStore();
             console.log('we have entered the upvote a question function in question.js', this.question['_id']);
             const uid = authStore.user_ID;
             console.log('user id  parent function: ', uid);
@@ -402,8 +441,10 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully upvotes on question :', this.question['_id']);
-                this.question['upvotes'] +=1;
-                console.log(this.question['upvotes']);
+                const data = await res.json();
+                console.log('data : ', data);
+                const val  = data['val'];
+                listStore.UpvoteQuestion(this.question['_id'], val);
             }
             else{
                 if(res.status === 403){
@@ -444,6 +485,7 @@ export const useQuestionStore = defineStore("question", {
         },
         async UpvoteAnswer(){
             const authStore = useAuthStore();
+            const listStore = useListStore();
             console.log('we have entered the upvote on an answer function in question.js');
             const uid = authStore.user_ID;
             console.log('user id  parent function: ', uid);
@@ -470,6 +512,10 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully added upvote on answer :', this.answer_ID);
+                const data = await res.json();
+                console.log('data : ', data);
+                const val  = data['val'];
+                listStore.UpvoteAnswer(this.question_ID, this.answer_ID, val);
             }
             else{
                 if(res.status === 403){
@@ -509,6 +555,7 @@ export const useQuestionStore = defineStore("question", {
         },
         async HideQuestion(){
             const authStore = useAuthStore();
+            const listStore = useListStore();
             console.log('we have entered the hide a question function in question.js', this.question['_id']);
 
             const accessToken = authStore.accessToken;
@@ -528,6 +575,7 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully hid the question :', this.question['_id']);
+                await listStore.SetHideQuestion(this.question['_id']);
             }
             else{
                 if(res.status === 403){
@@ -548,6 +596,7 @@ export const useQuestionStore = defineStore("question", {
                         console.log('new request sent');
                         const data = await res.json()
                         console.log(data);
+                        await listStore.SetHideQuestion(this.question['_id']);
                         return data
                     }
                     else{
@@ -563,6 +612,7 @@ export const useQuestionStore = defineStore("question", {
         },
         async HideAnswer(){
             const authStore = useAuthStore();
+            const listStore = useListStore();
             console.log('we have entered the hide an answer function in question.js');
             const accessToken = authStore.accessToken;
 
@@ -585,6 +635,7 @@ export const useQuestionStore = defineStore("question", {
 
             if(res.status == 200){
                 console.log('successfully hid answer :', this.answer_ID);
+                await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
             }
             else{
                 if(res.status === 403){
@@ -605,6 +656,7 @@ export const useQuestionStore = defineStore("question", {
                         console.log('new request sent');
                         const data = await res.json()
                         console.log(data);
+                        await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
                         return data
                     }
                     else{

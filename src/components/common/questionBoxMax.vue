@@ -3,7 +3,7 @@
     <div class="main-container">
         <div class="container">
             <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
-                <upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
+                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
             </div>
             
             <div class="QuestionBox">
@@ -23,8 +23,9 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <div class="Upvote" @click="test" v-if="windowWidth <= 750"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
-                    <div v-if="showAnswerBox && windowWidth > 750 && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div class="Upvote" @click="test" v-if="windowWidth <= 750 && (AuthStore.role == 7669 || AuthStore.role == 1980)"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
+                    <div v-if="showAnswerBox && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div class="Hide" v-if="windowWidth <= 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
                         <button class="comment" @click="CommentClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp;<p>Comment</p></button>
@@ -379,6 +380,7 @@ img{
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
+    white-space: pre-wrap;
     /* display: -webkit-box;
     -webkit-line-clamp: 8;
     -webkit-box-orient: vertical;  */
@@ -590,6 +592,12 @@ p{
     margin-left: 48px;
     flex-direction: row;
 }
+
+.Hide{
+        width:8vw;
+        margin-left: 8px;
+    }
+
 
 }
 

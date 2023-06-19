@@ -19,12 +19,14 @@
   import InfoBox from '../components/common/InfoBox.vue'
 
   import { useAuthStore } from '../stores/auth'
+  import { useListStore } from '../stores/list'
 
 export default {
   name: 'Infopost',
   setup(){
-    const authStore = useAuthStore()
-    return { authStore }
+    const authStore = useAuthStore();
+    const listStore = useListStore();
+    return { authStore, listStore }
   },
   data() {
     return {
@@ -63,6 +65,7 @@ export default {
         console.log('received response');
         const data = await res.json()
         console.log(data);
+        this.listStore.SetList(data);
         return data
       }
       else{
@@ -84,6 +87,7 @@ export default {
             console.log('new request sent');
             const data = await res.json()
             console.log(data);
+            this.listStore.SetList(data);
             return data
           }
           else{
@@ -99,8 +103,12 @@ export default {
     },
   },
   async mounted() {
-    this.infoposts = await this.fetchInfoPosts()
+    await this.fetchInfoPosts();
+    this.infoposts = this.listStore.list;
     console.log(this.infoposts);
+    console.log('name : ',this.authStore.name);
+    console.log('role : ',this.authStore.role);
+    console.log('user_ID : ',this.authStore.user_ID);
   }
 }
   </script>

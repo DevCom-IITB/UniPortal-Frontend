@@ -40,6 +40,8 @@ export default{
         // console.log(`https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=${sso_client_id}&response_type=code&scope=program&redirect_uri=${redirect_uri}`);
         const urlParams = new URLSearchParams(window.location.search);
         console.log(redirect_uri);
+        console.log('name :', this.Auth.name);
+        console.log('user_id :', this.Auth.user_ID);
         const authorizationCode = urlParams.get('code');
         if (authorizationCode) {
             this.Auth.Login('', '', true);

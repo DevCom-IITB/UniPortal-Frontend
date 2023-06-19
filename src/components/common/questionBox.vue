@@ -3,7 +3,7 @@
     <div class="main-container">
         <div class="container">
             <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
-                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
+                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="question.upvotes"/>
             </div>
             
             <div class="QuestionBox">
@@ -37,7 +37,7 @@
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
-                <div :key="comment['id']" v-for="comment in comments" class="comment-box">
+                <div :key="comment['id']" v-for="comment in question.comments" class="comment-box">
                     <viewcomments :comment="comment" :secondaryColor="secondaryColor"/>
                 </div>
             </div>
@@ -94,8 +94,6 @@ export default {
             primaryColor1 : this.primaryColor,
             secondaryColor : this.secondaryColor,
             primaryAccent : this.primaryAccent,
-            comments : [],
-            upvotes : 0,
             windowWidth: window.innerWidth,
         }
     },
@@ -124,8 +122,10 @@ export default {
         },
         async Upvote(){
             console.log("we will be upvoting a question");
+            console.log('upvotes: ' + this.upvotes);
             await this.QuestionStore.SetQuestion(this.question);
             await this.QuestionStore.UpvoteQuestion();
+            console.log('upvotes: ' + this.upvotes);
         },
         async Hide(){
             console.log("we will be hiding a question");
@@ -134,11 +134,10 @@ export default {
         },
         async SetQuestionView(){
             await this.QuestionStore.SetQuestion(this.question);
+            await this.QuestionStore.SetQuestionID(this.question['_id']);
         }
     },
     mounted(){
-        this.comments = this.question.comments;
-        this.upvotes = this.question.upvotes;
         this.$nextTick(() => {
             window.addEventListener('resize', this.onResize);
         })
@@ -308,6 +307,7 @@ export default {
     -webkit-box-orient: vertical; 
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: pre-wrap;
 }
 
 .box-footer{

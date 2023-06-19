@@ -74,6 +74,7 @@ p{
     width: 100%;
     font-size: 14px;
     font-weight: 400;
+    white-space: pre-wrap;
 }
 
 .Images{

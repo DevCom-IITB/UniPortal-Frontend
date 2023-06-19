@@ -23,14 +23,16 @@
   import Header from '../components/common/Header.vue'
 
   import { useAuthStore } from '../stores/auth';
+  import { useListStore } from '../stores/list';
   
 
   
   export default {
     name: 'Questions',
     setup(){
-      const authStore = useAuthStore()
-      return { authStore }
+      const authStore = useAuthStore();
+      const listStore = useListStore();
+      return { authStore, listStore }
     },
     data() {
       return {
@@ -75,6 +77,7 @@
           console.log('received response');
           const data = await res.json()
           console.log(data);
+          this.listStore.SetList(data)
           return data
         }
         else{
@@ -97,6 +100,7 @@
               console.log('new request sent');
               const data = await res.json()
               console.log(data);
+              this.listStore.SetList(data)
               return data
             }
             else{
@@ -113,7 +117,8 @@
       },
     },
     async mounted() {
-      this.questions = await this.fetchQuestions()
+      await this.fetchQuestions();
+      this.questions = this.listStore.list
       console.log(this.questions);
     },
   }

@@ -7,8 +7,10 @@ export const useAuthStore = defineStore('auth', {
         accessToken: '',
         loggedIn: true,
         user_ID : 0,
-        role : 0
+        role : 0,
+        name : ''
     }),
+    persist : true,
     actions: {
         async Login(uid, password, sso){
             let info = {}
@@ -58,14 +60,17 @@ export const useAuthStore = defineStore('auth', {
                 
             if(res.status == 200){
                 const data = await res.json()
-                    this.accessToken = data['accessToken']
+                console.log('data :',data);
+                this.accessToken = data['accessToken']
                 console.log('access token: ' + this.accessToken);
                 this.loggedIn = true
                 this.user_ID = uid
+                this.name = data['name']
                 this.role = data['role']
                 console.log('logged in as :',this.loggedIn);
                 console.log('user id :',this.user_ID);
                 console.log('role :',this.role);
+                console.log('name :',this.name);
                 window.location.href = '/'
             }
             else{
@@ -89,6 +94,7 @@ export const useAuthStore = defineStore('auth', {
                 this.loggedIn = true
                 this.user_ID = data['user_ID']
                 this.role = data['role']
+                this.name = data['name']
             }
             else{
                 this.loggedIn = false
