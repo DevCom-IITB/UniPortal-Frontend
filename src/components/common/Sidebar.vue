@@ -25,7 +25,7 @@
         </div>
         <div class="Creds" v-if="windowWidth>750 || (showSidebar && windowWidth<750)" >
             <button class="credentials" :style="{ background : sidebar }">
-                <DC class="DevComLogo" /><SMP /> 
+                <DC class="DevComLogo" @click="toDevCom" /><SMP class="SMPLogo" @click="toSMP" /> 
             </button>
             <button class="logout" :style="{ background : sidebar, borderColor : grey, color : grey }" @click="Logout">
                 Log out 
@@ -101,6 +101,12 @@ export default {
         async Logout(){
             console.log('logout');
             await this.authStore.Logout();
+        },
+        async toDevCom(){
+            window.open('https://devcom-iitb.org/')
+        },
+        async toSMP(){
+            window.open('https://smp.gymkhana.iitb.ac.in/')
         }
     }
 }
@@ -205,6 +211,14 @@ export default {
     justify-content: space-around;
     align-items: center;
     border: none;
+}
+
+.DevComLogo{
+    cursor: pointer;
+}
+
+.SMPLogo{
+    cursor: pointer;
 }
 
 

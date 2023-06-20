@@ -1,17 +1,12 @@
 <template>
   <div class="container">
-   
-    <div class="Question" @click="test" :style="{ borderBlockColor : secondaryColor }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="question['upvotes']" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
-    <div class="Lister">
+    <div class="MainQuestion" @click="test" :style="{ borderBlockColor : secondaryColor }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="question['upvotes']" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
+    <div class="List">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
         <Question @expand="$emit('expand')"  :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
       </div>
-      
     </div>
-
- 
-   
- </div>
+  </div>
     
 </template>
 
@@ -94,60 +89,36 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: start;
-  align-items: center;
- 
+  align-items: start;
+  overflow-y: scroll;
 }
 
 .container::-webkit-scrollbar {
     display: none;
-  }
+}
 
-.Question{
+.MainQuestion{
   width: 100%;
   padding-bottom: 16px;
   border-bottom: 2px solid;
 }
 
-.Lister{
-  max-height: 64.04%;
+.List{
   width: 100%;
-  /* border: 5px solid green; */
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   justify-content:start; 
-  overflow-y: scroll;
-  overflow-x: hidden;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 }
 
-.Lister::-webkit-scrollbar {
-  width: 8px;
-}
-
-
-.Lister::-webkit-scrollbar-thumb {
-  background: #386A20;
-  border-radius: 24px;
-}
-
-.Lister::-webkit-scrollbar-thumb:hover {
-  background: #3E3C5D;
-}
 .QuestionBox{
-    height: fit-content;
-    width: 100%;
-    margin-top: 16px;
-    margin-bottom: 16px;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-   }
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 16px; 
+}
 
 
 

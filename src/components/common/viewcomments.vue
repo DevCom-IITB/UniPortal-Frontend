@@ -1,12 +1,14 @@
 <template>
     <div class="question">
         <div class="top">
-            <div class="name"> 
-                {{ comment['user_Name'] }}                
-            </div>
+            <div class="stamps">
+                <div class="name"> 
+                    {{ comment['user_Name'] }}                
+                </div>
 
-            <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
-              
+                <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
+            </div>
+            <div class="Hide"><eye v-if="(AuthStore.role == 5980) && !comment['hidden']" class="icon"/><closed_eye v-if="(AuthStore.role == 5980) && comment['hidden']" class="icon" /></div>
         </div>
         <div class="qtext">
             {{ comment['body']  }}  
@@ -19,12 +21,23 @@
 
 
 <script>
+import eye from '../icons/visibility.svg'
+import closed_eye from '../icons/visibility_off.svg'
+import { useAuthStore } from '@/stores/auth';
 
     export default {
         name: 'viewcomments',
         props: {
          comment : Object,
          secondaryColor : String,
+        },
+        setup() {
+            const AuthStore = useAuthStore();
+            return { AuthStore };
+        },
+        components : {
+            eye,
+            closed_eye,
         },
         data(){
             return{
@@ -50,11 +63,18 @@
 
 .question{
    padding: 6px 12px;    
-   width: 100%;
-   border: 1px solid b;   
+   width: 100%;  
 }
 
 .top {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stamps{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -81,6 +101,11 @@
     align-items: center;
 }
 
+.Hide{
+    width: 2vw;
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 1150px) {
     .name{
         font-size: 12px;
@@ -90,6 +115,12 @@
     }
     .qtext{
         font-size: 10px;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .Hide{
+        width: 4vw;
     }
 }
 

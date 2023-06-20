@@ -424,13 +424,16 @@ p{
     margin-top: 1%;
     height: 87.04%;
     width: 100%;
-    /* border: 5px solid green; */
     display: flex;
     flex-direction: column;
     align-items: start;
     justify-content:start;
     overflow-y: scroll;
     overflow-x: hidden
+  }
+
+  .comment-box {
+    width: 100%;
   }
 
   .Lister::-webkit-scrollbar {

@@ -524,6 +524,10 @@ p{
     background: #555; 
   }
 
+  .comment-box{
+    width: 100%;
+  }
+
   .view{
     display: flex;
     width:100%;
