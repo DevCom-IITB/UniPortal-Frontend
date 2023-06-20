@@ -63,7 +63,7 @@ export default {
 <style scoped>
 .navbar{
     width: 100%;
-    height: 64.7%;
+    
     border-radius: 52px;
     background: #FAF4E1;
     display: flex;
@@ -74,7 +74,7 @@ export default {
 }
 
 .btn{
-    height: 100%;
+    padding: 16px 0px;
     width: 33.33%;
     border-radius: 52px;
     display: flex;

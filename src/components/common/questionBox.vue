@@ -7,17 +7,17 @@
             </div>
             
             <div class="QuestionBox">
-                <div class="content" :style="{ background : background}">
+                <div class="content" :style="{ background : colourStore.background}">
                     <router-link to="/question" class="questionRoute" @click="SetQuestionView" @expand="$emit('expand')" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">
-                                    <div class="name" :style="{ color : primaryColor }">{{ question["user_Name"] }}</div>
-                                    <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
+                                    <div class="name" :style="{ color : colourStore.primary }">{{ question["user_Name"] }}</div>
+                                    <div class="timestamp" :style="{ color : colourStore.grey }">{{ timestamp }}</div>
                                 </div>
-                                <div v-if="question.verified" class="verified" :style="{ color : secondaryColor }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
+                                <div v-if="question.verified" class="verified" :style="{ color : colourStore.grey }"><verified class="icon"/>&nbsp;<p>Verified Answer</p></div>
                             </div>
-                            <div class="text" :style="{ color : primaryColor }">{{ question["body"] }}</div>
+                            <div class="text" :style="{ color : colourStore.primary }">{{ question["body"] }}</div>
                         </div>
                     </router-link>
                 </div>
@@ -26,8 +26,8 @@
                     <div v-if="showAnswerBox && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="Hide" v-if="windowWidth <= 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
                     <div class="comments">
-                        <button class="view-comments" @click="viewComments" :style="{ color : primaryColor }">{{commentbtn_text}}</button>
-                        <button class="comment" @click="CommentClick" :style="{ color : primaryColor, background : background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
+                        <button class="view-comments" @click="viewComments" :style="{ color : colourStore.primary }">{{commentbtn_text}}</button>
+                        <button class="comment" @click="CommentClick" :style="{ color : colourStore.primary, background : colourStore.background}"><Uparrow class="icon" />&nbsp<p>Comment</p></button>
                     </div> 
                 </div>
             </div>
@@ -63,6 +63,7 @@ import forum from '../icons/forum.svg'
 
 import { useQuestionStore } from '@/stores/question'
 import { useAuthStore } from '@/stores/auth'
+import { useColourStore } from '@/stores/colour'
 
 export default {
     name: 'Question',
@@ -80,20 +81,21 @@ export default {
     setup(){
         const QuestionStore = useQuestionStore();
         const AuthStore = useAuthStore();
-
+        const colourStore = useColourStore();
         return {
             QuestionStore,
-            AuthStore
+            AuthStore,
+            colourStore,
         }
     },
     data () {
         return {
             showComments: false,
             commentbtn_text:'View Comments',
-            background : this.background,
-            primaryColor1 : this.primaryColor,
-            secondaryColor : this.secondaryColor,
-            primaryAccent : this.primaryAccent,
+            // background : this.background,
+            // primaryColor1 : this.primaryColor,
+            // secondaryColor : this.secondaryColor,
+            // primaryAccent : this.primaryAccent,
             windowWidth: window.innerWidth,
             timestamp : '',
         }
@@ -162,22 +164,8 @@ export default {
             type: Object,
             required: true
         },
-        background: {
-            type: String,
-            required: true
-        },
-        primaryColor: {
-            type: String,
-            required: true
-        },
-        secondaryColor: {
-            type: String,
-            required: true
-        },
-        primaryAccent: {
-            type: String,
-            required: true
-        },
+        
+        
         showAnswerBox: {
             type: Boolean,
             required: true
