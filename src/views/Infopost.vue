@@ -108,7 +108,7 @@ export default {
     this.infoposts = this.listStore.list;
     console.log(this.infoposts);
     // calling colour infopost
-    this.colourStore.colourInfopost();
+    await this.colourStore.colourInfopost();
     
   }
 }

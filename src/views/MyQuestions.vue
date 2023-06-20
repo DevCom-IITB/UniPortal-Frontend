@@ -24,6 +24,7 @@ import Header from '../components/common/Header.vue'
 
 import { useAuthStore } from '../stores/auth';
 import { useListStore } from '../stores/list';
+import { useColourStore } from '../stores/colour';
 
 
 
@@ -32,7 +33,8 @@ export default {
   setup(){
     const authStore = useAuthStore();
     const listStore = useListStore();
-    return { authStore, listStore }
+    const colourStore = useColourStore();
+    return { authStore, listStore, colourStore }
   },
   data() {
     return {
@@ -123,6 +125,7 @@ export default {
     await this.fetchQuestions();
     this.questions = this.listStore.list
     console.log(this.questions);
+    await this.colourStore.colourMyQuesrtions();
   },
 }
 </script>

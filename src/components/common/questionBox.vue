@@ -383,34 +383,12 @@ p{
 .comment-boxes{
     margin-top: 16px;
     width: 84.98%;
-    height:27vh;
-    
-    
+    max-height:27vh;
 }
-.comment-boxes-input{
-    border: 0px solid #000000;
-    margin-top: 16px;
-    width: 84.98%;
-    height:9vh;
-    
-}
-
-.CommentBox{
-    padding-left: 5px;
-    height: fit-content;
-    width: 100%;
-    margin-top: 16px;
-    margin-bottom: 16px;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items:left;
-   }
 
    .Lister{
     margin-top: 1%;
-    height: 87.04%;
+    max-height: 87.04%;
     width: 100%;
     display: flex;
     flex-direction: column;
