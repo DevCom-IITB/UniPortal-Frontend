@@ -1,7 +1,7 @@
 <template>
-   <div class="sidebar" :style="windowWidth>750 ? { background : sidebar, color : emphasisText } : showSidebar ? { background : sidebar } : { width : '0px'}" >
+   <div class="sidebar" :style="windowWidth>750 ? { background : colourStore.sidebar, color : colourStore.emphasis_text } : showSidebar ? { background : colourStore.sidebar } : { width : '0px'}" >
         
-        <div class="Logo" :style="windowWidth<750 ? { background : primary } : { background : sidebar }">
+        <div class="Logo" :style="windowWidth<750 ? { background : colourStore.primary } : { background : colourStore.sidebar }">
             <div v-if="windowWidth<750" class="burger" @click="Burger"><burger /></div>
             <div class="Logoimg"><Logo /></div>
         </div>
@@ -10,15 +10,15 @@
             <div class="InfoText">Welcome aboard! <br/> With the all new freshers’ portal clear all your doubts regarding the admission process</div>
 
             <div class="InfoLinks" >
-                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
+                <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="( hovering == 1 ) ? { background : colourStore.active_hovering, color : colourStore.emphasis_text } : windowWidth>750 ? { background : colourStore.sidebar, color : colourStore.emphasis_text } : { background : colourStore.sidebar }">
                     <email />&nbsp;&nbsp;Email 
                 </button>
 
-                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
+                <button class="btn" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="( hovering == 2 ) ? { background : colourStore.active_hovering, color : colourStore.emphasis_text } : windowWidth>750 ? { background : colourStore.sidebar, color : colourStore.emphasis_text } : { background : colourStore.sidebar }">
                     <Globe />&nbsp;&nbsp;SMP Website 
                 </button>
 
-                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : hover, color : emphasisText } : windowWidth>750 ? { background : sidebar, color : emphasisText } : { background : sidebar }">
+                <button class="btn" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="( hovering == 3 ) ? { background : colourStore.active_hovering, color : colourStore.emphasis_text } : windowWidth>750 ? { background : colourStore.sidebar, color : colourStore.emphasis_text } : { background : colourStore.sidebar }">
                     <contact />&nbsp;&nbsp;Contact info. 
                 </button>
             </div>
@@ -27,7 +27,7 @@
             <button class="credentials" :style="{ background : sidebar }">
                 <DC class="DevComLogo" @click="toDevCom" /><SMP class="SMPLogo" @click="toSMP" /> 
             </button>
-            <button class="logout" :style="{ background : sidebar, borderColor : grey, color : grey }" @click="Logout">
+            <button class="logout" :style="{ background : colourStore.sidebar, borderColor : colourStore.sidebar, color : colourStore.sidebar }" @click="Logout">
                 Log out 
             </button>
         </div>
@@ -49,20 +49,14 @@ import DC from '../icons/DC.svg'
 import SMP from '../icons/SMP_black.svg'
 
 import { useAuthStore } from '@/stores/auth';
+import { useColourStore } from '@/stores/colour';
 
 export default {
     name: 'Sidebar',
     setup() {
         const authStore = useAuthStore();
-        return { authStore };
-    },
-    props: {
-        sidebar : String,
-        emphasisText : String,
-        hover : String,
-        background : String,
-        primary : String,
-        grey : String,
+        const colourStore= useColourStore();
+        return { authStore, colourStore };
     },
     components : {
         Logo,

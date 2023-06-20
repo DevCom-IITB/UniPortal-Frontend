@@ -20,21 +20,22 @@
 
   import { useAuthStore } from '../stores/auth'
   import { useListStore } from '../stores/list'
+  import { useColourStore } from '../stores/colour'
 
 export default {
   name: 'Infopost',
   setup(){
     const authStore = useAuthStore();
     const listStore = useListStore();
-    return { authStore, listStore }
+    const colourStore = useColourStore();
+    return { authStore, listStore,colourStore }
   },
   data() {
     return {
       headerName : 'Infopost',
       headerText : 'Infoposts from SMPCs',
       infoposts: [],
-      background: '#FFF9E5',
-      color : '#CCB160'
+      
     }
   },
   components: {
@@ -106,9 +107,9 @@ export default {
     await this.fetchInfoPosts();
     this.infoposts = this.listStore.list;
     console.log(this.infoposts);
-    console.log('name : ',this.authStore.name);
-    console.log('role : ',this.authStore.role);
-    console.log('user_ID : ',this.authStore.user_ID);
+    // calling colour infopost
+    this.colourStore.colourInfopost();
+    
   }
 }
   </script>

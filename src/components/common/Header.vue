@@ -1,10 +1,10 @@
 <template>
-    <div class="cont" :style="{ color : primaryColor, background : background}">
+    <div class="cont" :style="{ color : colourStore.primary, background : colourStore.background}">
         <!-- <InfoPost class="background" /> -->
         <div class="background"><img :src="image" alt=""></div>
         <div class="Header">
-            <div class="HeaderTitle" :style="{ color : primaryColor }">{{ headerName }}</div>
-            <div class="HeaderText" :style="{ color : primaryColor }">{{ headerText }}</div>
+            <div class="HeaderTitle" :style="{ color : colourStore.primary }">{{ headerName }}</div>
+            <div class="HeaderText" :style="{ color : colourStore.primary }">{{ headerText }}</div>
         </div>
         <!-- <div class="HeaderImage"><img src="..\background_images\yellow_illustration.jpg" alt=""></div> -->
     </div> 
@@ -16,13 +16,17 @@
  import InfoPost from '../background_images/InfoPot.png'
  import Questions from '../background_images/Questions.png'
  import MyQuestions from '../background_images/MyQuestions.png'
+ import { useColourStore } from '@/stores/colour';
  export default {
      name: 'Header',
+     setup() {
+        const colourStore= useColourStore();
+        return { colourStore };
+    },
      props: {
             headerName: String,
             headerText: String,
-            background: String,
-            primaryColor: String
+            
      },
      components: {
          InfoPost

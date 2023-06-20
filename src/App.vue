@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="Auth.loggedIn">
-    <div class="Sidebar"><Sidebar :grey="grey" :sidebar="sidebar" :emphasisText="emphasisText" :hover="hover" :background="background" :primary="primary" @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
+    <div class="Sidebar"><Sidebar @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
       <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" @expand="ExpandImage" ></router-view></div>
@@ -45,14 +45,6 @@ export default {
   },
   data(){
     return{
-      sidebar : '#FFEDB2',
-      primary : '#FFDF80',
-      grey : '#CCB160',
-      unselected : '#FAF4E1',
-      hover : '#FFD899',
-      emphasisText : '#211D12',
-      lightText : '#52492E',
-      background : '#FFF9E5',
       askQuestion : false,
       askPopup : true,
       windowWidth : window.innerWidth,
@@ -71,18 +63,6 @@ export default {
       window.removeEventListener('resize', this.onResize); 
   },
   methods:{
-    async ColorInfoPost(){
-      this.sidebar = '#FFEDB2';
-      this.primary = '#FFDF80';
-      this.grey = '#CCB160';
-      this.unselected = '#FAF4E1';  
-      this.hover = '#FFD899';
-      this.emphasisText = '#211D12';
-      this.lightText = '#52492E';
-      this.background = '#FFF9E5';
-      this.askPopup = true;
-      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
-    },
     async OnSubmit(newPost){
       const response = await fetch('api/questions', {
         method: 'POST',
@@ -94,41 +74,9 @@ export default {
 
       this.askQuestion = false;
     },
-    async ColorQuestions(){
-      this.sidebar = '#FFE5E5';
-      this.primary = '#FFD2D1';
-      this.grey = '#CC655E';
-      this.unselected = '#FFF4F2';  
-      this.hover = '#FFA599';
-      this.emphasisText = '#1F1514';
-      this.lightText = '#3E2A28';
-      this.background = '#FFF3F2';
-      this.askPopup = true;
-      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
-    },
-    async ColorMyQuestions(){
-      this.sidebar = '#E5D7FF';
-      this.primary = '#D4BDFF';
-      this.grey = '#8D87B3';
-      this.unselected = '#E8E7F5';  
-      this.hover = '#C9B4F2';
-      this.emphasisText = '#201E2F';
-      this.lightText = '#3E3C5D';
-      this.background = '#F6F5FF';
-      this.askPopup = true;
-      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
-    },
-    async ColorQuestionView(){
-      this.sidebar = '#F0F3E8';
-      this.primary = '#D9E7CB';
-      this.grey = '#386A20';
-      this.unselected = '#F0F3E8';  
-      this.hover = '#D9E7CB';
-      this.emphasisText = '#1C1B1F';
-      this.background = '#FDFDF6';
-      this.askPopup = false;
-      console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
-    },
+    
+    
+    
     async ask(){
       this.askQuestion = !this.askQuestion;
     },
