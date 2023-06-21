@@ -8,7 +8,7 @@
 
                 <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
             </div>
-            <div class="Hide"><eye v-if="(AuthStore.role == 5980) && !comment['hidden']" class="icon"/><closed_eye v-if="(AuthStore.role == 5980) && comment['hidden']" class="icon" /></div>
+            <div class="Hide" @click="HideQuestionComment"><eye v-if="(AuthStore.role == 5980) && !comment['hidden']" class="icon"/><closed_eye v-if="(AuthStore.role == 5980) && comment['hidden']" class="icon" /></div>
         </div>
         <div class="qtext">
             {{ comment['body']  }}  
@@ -24,16 +24,20 @@
 import eye from '../icons/visibility.svg'
 import closed_eye from '../icons/visibility_off.svg'
 import { useAuthStore } from '@/stores/auth';
+import { useColourStore } from '../../stores/colour';
+import { useQuestionStore } from '@/stores/question';
 
     export default {
         name: 'viewcomments',
         props: {
          comment : Object,
-         secondaryColor : String,
+        //  secondaryColor : String,
         },
         setup() {
             const AuthStore = useAuthStore();
-            return { AuthStore };
+            const colourStore = useColourStore();
+            const QuestionStore = useQuestionStore();
+            return { AuthStore, colourStore, QuestionStore };
         },
         components : {
             eye,
@@ -43,6 +47,13 @@ import { useAuthStore } from '@/stores/auth';
             return{
                 timestamp: '',
             }
+        },
+        methods: {
+            async HideQuestionComment(){
+                console.log("we will be hiding a comment");
+                await this.QuestionStore.SetCommentID(this.comment['_id']);
+                await this.QuestionStore.HideQuestionComment();
+            },
         },
         mounted(){
             const date = new Date(this.comment['asked_At']);

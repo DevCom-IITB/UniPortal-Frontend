@@ -10,6 +10,7 @@ export const useQuestionStore = defineStore("question", {
         comments: [],
         question_ID : '',
         answer_ID : '',
+        comment_ID : '',
         addImage : false,
         ImageLink : '',
         action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
@@ -38,6 +39,11 @@ export const useQuestionStore = defineStore("question", {
         async SetAnswerID(answer_ID){
             this.answer_ID = answer_ID;
             console.log("answer_ID : ", this.answer_ID);
+        },
+        async SetCommentID(comment_ID){
+            console.log("setting comment id"),
+            this.comment_ID = comment_ID;
+            console.log("comment_ID : ", this.comment_ID);
         },
         async SetImageLink(ImageLink){
             this.ImageLink = ImageLink;
@@ -657,6 +663,67 @@ export const useQuestionStore = defineStore("question", {
                         const data = await res.json()
                         console.log(data);
                         await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
+
+        async HideQuestionComment(){
+            const authStore = useAuthStore();
+            const listStore = useListStore();
+            console.log('we have entered the hide a comment function in question.js');
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question_ID);
+            console.log('Sending request');
+            const res = await fetch(`api/question/hideC/${this.question_ID}/${this.comment_ID}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+            })
+
+            const comment = this.question['comments'].find(comment => comment['_id'] === this.comment_ID);
+
+            console.log('comment : ', comment);
+
+            if(res.status == 200){
+                console.log('successfully hid comment :', this.comment_ID);
+                await listStore.SetHideQuestionComment(this.question_ID, this.comment_ID);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/hideC/${this.question_ID}/${this.comment_ID}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        await listStore.SetHideQuestionComment(this.question_ID, this.comment_ID);
                         return data
                     }
                     else{

@@ -33,12 +33,12 @@
             </div>
             
         
-            <div class="Hide" v-if="windowWidth > 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
+            <div class="Hide" v-if="windowWidth > 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" /><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" /></div>
         </div>
         <div v-if="showComments" class="comment-boxes">
             <div class="Lister">
                 <div :key="comment['id']" v-for="comment in question.comments" class="comment-box">
-                    <viewcomments :comment="comment" :secondaryColor="secondaryColor"/>
+                    <viewcomments :comment="comment"  />
                 </div>
             </div>
         </div>
@@ -97,10 +97,11 @@ export default {
         }
     },
     methods: {
-        viewComments(){
+        async viewComments(){
             console.log(this.comments);
             this.showComments = !this.showComments,
             this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
+            await this.QuestionStore.SetQuestionID(this.question['_id']);
         },
         onResize() {
             this.windowWidth = window.innerWidth;
@@ -134,7 +135,7 @@ export default {
         async SetQuestionView(){
             await this.QuestionStore.SetQuestion(this.question);
             await this.QuestionStore.SetQuestionID(this.question['_id']);
-        }
+        },
     },
     mounted(){
         this.$nextTick(() => {
