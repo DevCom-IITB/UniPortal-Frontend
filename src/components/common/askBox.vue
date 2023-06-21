@@ -2,7 +2,7 @@
 
     <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
         <div class="name">{{ authStore.name }}</div>
-        <textarea maxlength="1000" class="text" :style="{  borderColor : grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
+        <textarea maxlength="1000" class="text" :style="{  borderColor : colourStore.grey }" v-model="text" type="text" placeholder="Lessssgooooo" ></textarea>
         <div class="preview" v-if="selectedImages.length > 0">
             <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
                 <div class="cancel" @click="RemoveImage(index)" />
@@ -11,10 +11,10 @@
         </div>
         <div class="actions">
             <div class="decision">
-                <div class="discard" :style="{ color : grey }" @click="$emit('discard')">Discard</div>
-                <input class="post" :style="{ background : primary }" value="Post" type="submit" @click="decide" />
+                <div class="discard" :style="{ color : colourStore.grey }" @click="$emit('discard')">Discard</div>
+                <input class="post" :style="{ background : colourStore.primary }" value="Post" type="submit" @click="decide" />
             </div>
-            <div v-if="questionStore.addImage" class="photo" :style="{ background : background }" @click="AddImages" ><input type="file" id="fileInput" @change="SelectingFiles" multiple /><add />&nbsp;&nbsp;<p>Add photo</p></div>
+            <div v-if="questionStore.addImage" class="photo" :style="{ background : colourStore.background }" @click="AddImages" ><input type="file" id="fileInput" @change="SelectingFiles" multiple /><add />&nbsp;&nbsp;<p>Add photo</p></div>
         </div>
 
 
@@ -26,7 +26,7 @@
 import add from '../icons/add_circle.svg'
 import { useQuestionStore } from '@/stores/question'
 import { useAuthStore } from '@/stores/auth';
-
+import { useColourStore } from '../../stores/colour';
 let posted = false;
 
 export default {
@@ -34,13 +34,14 @@ export default {
     setup(){
         const questionStore = useQuestionStore()
         const authStore = useAuthStore()
-        return { questionStore, authStore }
+        const colourStore = useColourStore()
+        return { questionStore, authStore, colourStore }
     },
-    props: {
-        grey : String,
-        background : String,
-        primary : String,
-    },
+    // props: {
+    //     grey : String,
+    //     background : String,
+    //     primary : String,
+    // },
     data(){
         return{
             text : '',

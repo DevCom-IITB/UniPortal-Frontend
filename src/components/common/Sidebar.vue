@@ -24,10 +24,10 @@
             </div>
         </div>
         <div class="Creds" v-if="windowWidth>750 || (showSidebar && windowWidth<750)" >
-            <button class="credentials" :style="{ background : sidebar }">
+            <button class="credentials" :style="{ background : colourStore.sidebar }">
                 <DC class="DevComLogo" @click="toDevCom" /><SMP class="SMPLogo" @click="toSMP" /> 
             </button>
-            <button class="logout" :style="{ background : colourStore.sidebar, borderColor : colourStore.sidebar, color : colourStore.sidebar }" @click="Logout">
+            <button class="logout" :style="{ background : colourStore.sidebar, borderColor : colourStore.grey, color : colourStore.grey }" @click="Logout">
                 Log out 
             </button>
         </div>

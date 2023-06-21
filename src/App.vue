@@ -31,6 +31,7 @@ import SMP from './components/icons/SMP_black.svg'
 import { useAuthStore } from './stores/auth';
 import { useQuestionStore } from './stores/question';
 
+
 export default {
   name: 'App',
   components: {
@@ -115,10 +116,11 @@ export default {
   setup() {
     const Auth= useAuthStore();
     const QuestionStore = useQuestionStore();
-
+    
     return {
       Auth,
       QuestionStore,
+     
     }
   }
 }

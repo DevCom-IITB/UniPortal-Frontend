@@ -35,7 +35,7 @@ export const useColourStore = defineStore ('colour', {
             this.light_text = '#3E2A28';
             this.background = '#FFF3F2';
             
-            console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+            console.log('colour set for questions');
           },
           async colourMyQuestions(){
             this.sidebar = '#E5D7FF';
@@ -47,7 +47,7 @@ export const useColourStore = defineStore ('colour', {
             this.light_text = '#3E3C5D';
             this.background = '#F6F5FF';
             
-            console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+            console.log('colour set for my questions');
           },
           async colourQuestionView(){
             this.sidebar = '#F0F3E8';
@@ -58,7 +58,7 @@ export const useColourStore = defineStore ('colour', {
             this.emphasis_text = '#1C1B1F';
             this.background = '#FDFDF6';
             this.askPopup = false;
-            console.log(this.sidebar, this.primary, this.grey, this.unselected, this.hover);
+            console.log('colour set for question view');
           },
     }
 }

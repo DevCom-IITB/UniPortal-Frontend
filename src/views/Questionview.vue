@@ -16,22 +16,24 @@ import axios from 'axios'
 
 import { useQuestionStore } from '../stores/question';
 import { useListStore } from '../stores/list';
+import { useColourStore } from '../stores/colour';
 
 export default {
   name: 'Questionview',
   setup(){
     const questionStore = useQuestionStore();
     const listStore = useListStore();
-    return { questionStore, listStore }
+    const colourStore = useColourStore();
+    return { questionStore, listStore, colourStore }
   },
   data() {
     return {
-      sidebar : '#F0F3E8',
-      background: '#FDFDF6',
-      primaryColor : '#3E3C5D',
-      secondaryColor : '#386A20',
-      primaryAccent : '#D9E7CB',
-      unselected : '#F0F3E8',
+      // sidebar : '#F0F3E8',
+      // background: '#FDFDF6',
+      // primaryColor : '#3E3C5D',
+      // secondaryColor : '#386A20',
+      // primaryAccent : '#D9E7CB',
+      // unselected : '#F0F3E8',
 
       question : {},
       answers : [],
@@ -78,7 +80,8 @@ export default {
       console.log('answers in question view :', this.answers);
       this.comments = this.listStore.list.filter((question) => question['_id'] === this.questionStore.question_ID)[0]['comments'];
       console.log('comments in question view :', this.comments);
-      this.$emit('askView')
+      this.$emit('askView');
+      this.colourStore.colourQuestionView()
     }
 }
 </script>

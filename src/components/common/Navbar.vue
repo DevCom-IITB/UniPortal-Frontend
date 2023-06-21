@@ -1,33 +1,35 @@
 <template>
     
-    <div class="navbar" :style="{ background : unselected }">
+    <div class="navbar" :style="{ background : colourStore.unselected }">
         
-        <router-link to="/" class="btn" id="info" @click="selected1" @hover="hover1" :style=" (currentPage == 1) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Infopost</div></router-link>
-        <router-link v-if="authStore.role == 1980 || authStore.role ==7669" to="/questions" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Questions</div></router-link>
-        <router-link v-if="authStore.role == 1980 || authStore.role ==7669" to="/myquestions" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">My Questions</div></router-link>
-        <router-link v-if="authStore.role == 5980 || authStore.role ==6311" to="/unanswered" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">UnAnswered</div></router-link>
-        <router-link v-if="authStore.role == 5980 || authStore.role ==6311" to="/answered" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : primary, color : emphasisText } : { color : grey } " ><div class="route">Answered</div></router-link>
+        <router-link to="/" class="btn" id="info" @click="selected1" @hover="hover1" :style=" (currentPage == 1) ? { background : colourStore.primary, color : colourStore.emphasis_text } : { color : colourStore.grey } " ><div class="route">Infopost</div></router-link>
+        <router-link v-if="authStore.role == 1980 || authStore.role ==7669" to="/questions" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : colourStore.primary, color : colourStore.emphasis_text } : { color : colourStore.grey } " ><div class="route">Questions</div></router-link>
+        <router-link v-if="authStore.role == 1980 || authStore.role ==7669" to="/myquestions" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : colourStore.primary, color : colourStore.emphasis_text } : { color : colourStore.grey } " ><div class="route">My Questions</div></router-link>
+        <router-link v-if="authStore.role == 5980 || authStore.role ==6311" to="/unanswered" class="btn" @click="selected2" @hover="hover2" :style=" (currentPage == 2) ? { background : colourStore.primary, color : colourStore.emphasis_text } : { color : colourStore.grey } " ><div class="route">UnAnswered</div></router-link>
+        <router-link v-if="authStore.role == 5980 || authStore.role ==6311" to="/answered" class="btn" @click="selected3" @hover="hover3" :style=" (currentPage == 3) ? { background : colourStore.primary, color : colourStore.emphasis_text } : { color : colourStore.grey } " ><div class="route">Answered</div></router-link>
     </div>   
     
 </template>
 
 <script>
 import { useAuthStore } from '@/stores/auth';
+import { useColourStore } from '../../stores/colour';
 
 export default {
     name: 'Navbar',
     setup() {
         const authStore = useAuthStore();
-        return { authStore };
+        const colourStore = useColourStore();
+        return { authStore, colourStore };
     },
     emits: ['selected1', 'selected2', 'selected3'],
-    props : {
-        primary : String,
-        grey : String,
-        unselected : String,
-        hover : String,
-        emphasisText : String,
-    },
+    // props : {
+    //     primary : String,
+    //     grey : String,
+    //     unselected : String,
+    //     hover : String,
+    //     emphasisText : String,
+    // },
     data () {
         return {
             currentPage : 1,

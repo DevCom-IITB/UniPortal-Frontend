@@ -3,8 +3,8 @@
         <!-- <InfoPost class="background" /> -->
         <div class="background"><img :src="image" alt=""></div>
         <div class="Header">
-            <div class="HeaderTitle" :style="{ color : colourStore.primary }">{{ headerName }}</div>
-            <div class="HeaderText" :style="{ color : colourStore.primary }">{{ headerText }}</div>
+            <div class="HeaderTitle" :style="{ color : colourStore.emphasis_text }">{{ headerName }}</div>
+            <div class="HeaderText" :style="{ color : colourStore.emphasis_text }">{{ headerText }}</div>
         </div>
         <!-- <div class="HeaderImage"><img src="..\background_images\yellow_illustration.jpg" alt=""></div> -->
     </div> 

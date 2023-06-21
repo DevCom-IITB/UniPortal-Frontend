@@ -23,7 +23,7 @@
                 </div>
                 <div class="box-footer">
                     <div class="Upvote" @click="test" v-if="windowWidth <= 750 && (AuthStore.role == 7669 || AuthStore.role == 1980)"><upvote :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes" :windowWidth="windowWidth"/></div>
-                    <div v-if="showAnswerBox && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : primaryColor, background : background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
+                    <div v-if="showAnswerBox && (AuthStore.role == 5980 || AuthStore.role ==6311)" @click="AnswerClick" class="answer" :style="{ color : colourStore.primary, background : colourStore.background}"><forum class="icon"/>&nbsp;<p>Answer</p></div>
                     <div class="Hide" v-if="windowWidth <= 750" @click="Hide"><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
                     <div class="comments">
                         <button class="view-comments" @click="viewComments" :style="{ color : colourStore.primary }">{{commentbtn_text}}</button>

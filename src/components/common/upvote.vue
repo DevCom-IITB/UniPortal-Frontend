@@ -1,6 +1,6 @@
 <template> 
     <div class="upvotebox" >
-        <button class="btn" :style="{ color : primaryColor, background: background }">
+        <button class="btn" :style="{ color : colourStore.primary, background: colourStore.background }">
             <div class="icon"><Upvote/></div>
             <p v-if="windowWidth<=750">&nbsp;Upvotes&nbsp;</p>
             <p>{{ upvotes }}</p>
@@ -11,21 +11,26 @@
 <script>
  import Upvote from "../icons/expand_more.svg"
  import arrow from "../icons/arrow_circle_up.svg"
+ import { useColourStore } from "../../stores/colour";
  export default {
      name: 'upvote',
      components: {
         Upvote,
         arrow
      },
+     setup() {
+        const colourStore= useColourStore();
+        return { colourStore };
+    },
      props: {
-         primaryColor: {
-             type: String,
-             required: true
-         },
-         background: {
-             type: String,
-             required: true
-         },
+        //  primaryColor: {
+        //      type: String,
+        //      required: true
+        //  },
+        //  background: {
+        //      type: String,
+        //      required: true
+        //  },
          upvotes: {
              type: Number,
              required: true

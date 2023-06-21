@@ -24,7 +24,7 @@
 
   import { useAuthStore } from '../stores/auth';
   import { useListStore } from '../stores/list';
-  
+  import { useColourStore } from '../stores/colour';
 
   
   export default {
@@ -32,17 +32,14 @@
     setup(){
       const authStore = useAuthStore();
       const listStore = useListStore();
-      return { authStore, listStore }
+      const colourStore = useColourStore();
+      return { authStore, listStore, colourStore }
     },
     data() {
       return {
         headerName : 'Questions',
         headerText : "Where all your friend's questions reside",
         questions : [],
-        background: '#FFF3F2',
-        primaryColor : '#1F1514',
-        secondaryColor : '#CC655E',
-        primaryAccent : '#FFD2D1',
         true : true,
         false : false,
       }
@@ -120,6 +117,7 @@
       await this.fetchQuestions();
       this.questions = this.listStore.list
       console.log(this.questions);
+      this.colourStore.colourQuestions();
     },
   }
   </script>

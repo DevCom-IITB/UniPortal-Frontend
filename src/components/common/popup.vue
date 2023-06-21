@@ -1,6 +1,6 @@
 <template>
 
-  <div class="askQuestion" :style="{ background : lightText } ">
+  <div class="askQuestion" :style="{ background : colourStore.light_text } ">
     <ask />&nbsp;&nbsp;{{ PopAction }}
   </div>
 
@@ -9,15 +9,16 @@
 <script>
 
 import { useAuthStore } from '@/stores/auth';
+import { useColourStore } from '../../stores/colour';
 
 import ask from '../icons/question.svg'
 import email from '../icons/email.svg'
 
   export default {
       name: 'popup',
-      props : {
-        lightText : String,
-      },
+      // props : {
+      //   lightText : String,
+      // },
       data(){
         return{
           PopAction : 'Ask a Question',
@@ -36,8 +37,10 @@ import email from '../icons/email.svg'
       },
       setup(){
         const authStore = useAuthStore();
+        const colourStore = useColourStore();
         return{
           authStore,
+          colourStore,
         }
       }
  }
