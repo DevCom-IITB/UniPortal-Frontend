@@ -23,6 +23,7 @@ import Header from '../components/common/Header.vue'
 
 import { useAuthStore } from '../stores/auth';
 import { useListStore } from '../stores/list';
+import { useColourStore } from '../stores/colour';
 
 
 
@@ -31,17 +32,18 @@ export default {
   setup(){
     const authStore = useAuthStore();
     const listStore = useListStore();
-    return { authStore, listStore }
+    const colourStore = useColourStore();
+    return { authStore, listStore, colourStore }
   },
   data() {
     return {
       headerName : 'Answered',
       headerText : 'Where all the answered questions reside',
       questions : [],
-      background: '#F6F5FF',
-      primaryColor : '#201E2F',
-      secondaryColor : '#8D87B3',
-      primaryAccent : '#D4BDFF',
+      // background: '#F6F5FF',
+      // primaryColor : '#201E2F',
+      // secondaryColor : '#8D87B3',
+      // primaryAccent : '#D4BDFF',
       true : true,
       false : false,
     }
@@ -114,6 +116,7 @@ export default {
     await this.fetchQuestions();
     this.questions = this.listStore.list;
     console.log(this.questions);
+    this.colourStore.colourAnswered();
   },
 }
 </script>

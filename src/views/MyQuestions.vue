@@ -35,8 +35,6 @@ export default {
     const listStore = useListStore();
     const colourStore = useColourStore();
     return { authStore, listStore, colourStore }
-    const colourStore = useColourStore();
-    return { authStore, listStore, colourStore }
   },
   data() {
     return {

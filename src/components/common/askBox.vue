@@ -37,11 +37,7 @@ export default {
         const colourStore = useColourStore()
         return { questionStore, authStore, colourStore }
     },
-    // props: {
-    //     grey : String,
-    //     background : String,
-    //     primary : String,
-    // },
+    
     data(){
         return{
             text : '',

@@ -23,13 +23,7 @@ export default {
         return { authStore, colourStore };
     },
     emits: ['selected1', 'selected2', 'selected3'],
-    // props : {
-    //     primary : String,
-    //     grey : String,
-    //     unselected : String,
-    //     hover : String,
-    //     emphasisText : String,
-    // },
+    
     data () {
         return {
             currentPage : 1,

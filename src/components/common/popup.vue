@@ -16,9 +16,6 @@ import email from '../icons/email.svg'
 
   export default {
       name: 'popup',
-      // props : {
-      //   lightText : String,
-      // },
       data(){
         return{
           PopAction : 'Ask a Question',

@@ -1,6 +1,6 @@
 <template> 
     <div class="upvotebox" >
-        <button class="btn" :style="{ color : colourStore.primary, background: colourStore.background }">
+        <button class="btn" :style="{ color : colourStore.emphasis_text, background: colourStore.background }">
             <div class="icon"><Upvote/></div>
             <p v-if="windowWidth<=750">&nbsp;Upvotes&nbsp;</p>
             <p>{{ upvotes }}</p>
@@ -23,14 +23,6 @@
         return { colourStore };
     },
      props: {
-        //  primaryColor: {
-        //      type: String,
-        //      required: true
-        //  },
-        //  background: {
-        //      type: String,
-        //      required: true
-        //  },
          upvotes: {
              type: Number,
              required: true
