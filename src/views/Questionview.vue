@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="MainQuestion" @click="test" :style="{ borderBlockColor : secondaryColor }"><Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false" :upvotes="question['upvotes']" :showAnswerBox="this.true" :comments="questionStore.comments" :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')"/></div>
-    <div class="List">
+    <div class="List" v-if="answers.length">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
         <Question @expand="$emit('expand')"  :isAnswer="this.true" :upvotes="answer['upvotes']" :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent" @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
       </div>
