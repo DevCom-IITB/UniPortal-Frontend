@@ -38,6 +38,10 @@ export const useListStore = defineStore('list', {
         async SetHideQuestionComment(qid, cid) {
             console.log('hiding comment in list : ', qid, cid);
             this.list.filter((item) => item['_id'] === qid)[0].comments.filter((item) => item['_id'] === cid)[0].hidden = !this.list.filter((item) => item['_id'] === qid)[0].comments.filter((item) => item['_id'] === cid)[0].hidden; 
+        },
+        async SetHideInfoPost(id) {
+            console.log('hiding infopost in list : ', id);
+            this.list.filter((item) => item['_id'] === id)[0].hidden = !this.list.filter((item) => item['_id'] === id)[0].hidden;
         }
     }
 })

@@ -11,6 +11,7 @@ export const useQuestionStore = defineStore("question", {
         question_ID : '',
         answer_ID : '',
         comment_ID : '',
+        info_ID : '',
         addImage : false,
         ImageLink : '',
         action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
@@ -44,6 +45,10 @@ export const useQuestionStore = defineStore("question", {
             console.log("setting comment id"),
             this.comment_ID = comment_ID;
             console.log("comment_ID : ", this.comment_ID);
+        },
+        async SetInfoID(info_ID){
+            this.info_ID = info_ID;
+            console.log("info_ID : ", this.info_ID);
         },
         async SetImageLink(ImageLink){
             this.ImageLink = ImageLink;
@@ -737,5 +742,61 @@ export const useQuestionStore = defineStore("question", {
                 }
             }
         },
+        async HideInfoPost(){
+            const authStore = useAuthStore();
+            const listStore = useListStore();
+            console.log('we have entered the hide a infopost function in question.js', this.info_ID);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('Sending request');
+            const res = await fetch(`api/info/hide/${this.info_ID}`, {
+                method : 'PUT',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+            })
+
+            if(res.status == 200){
+                console.log('successfully hid the info post :', this.info_ID);
+                await listStore.SetHideInfoPost(this.info_ID);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/info/hide/${this.info_ID}`,{
+                            method : 'PUT',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        await listStore.SetHideInfoPost(this.info_ID);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        }
     }
 })

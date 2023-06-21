@@ -7,7 +7,7 @@
             </div>
             <p>{{ infopost.body }}</p>
         </div>
-        <div class="hide" v-if="authStore.role == 5980 || authStore.role == 1980" ><eye /></div>
+        <div class="hide" v-if="authStore.role == 5980 || authStore.role == 1980" @click="Hide" ><eye v-if="!infopost['hidden']" class="icon" /><closed_eye v-if="infopost['hidden']" class="icon" /></div>
     </div>
 </template>
 
@@ -44,6 +44,12 @@ export default {
             this.questionStore.SetImageLink(image)
             console.log("expanding");
             this.$emit('expand');
+        },
+        async Hide(){
+            console.log("hiding");
+            await this.questionStore.SetInfoID(this.infopost['_id']);
+            await this.questionStore.HideInfoPost();
+            this.$emit('hide');
         }
     },
     mounted(){
