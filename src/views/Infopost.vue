@@ -3,14 +3,10 @@
       
       <div class="Header"><Header :headerName="headerName" :headerText="headerText" :background="background" :color="color"/></div>
       <div class="Lister">
-        <!-- <InfoBox :infoPosts="infoposts" /> -->
         <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox" >
           <InfoBox :infopost="infopost" @expand="$emit('expand')"/>
         </div>
       </div>
-      
-      <!-- <InfoBox />
-      <router-view></router-view> --> 
     </div>
   </template>
   
@@ -108,7 +104,7 @@ export default {
     this.infoposts = this.listStore.list;
     console.log(this.infoposts);
     // calling colour infopost
-    this.colourStore.colourInfopost();
+    await this.colourStore.colourInfopost();
     
   }
 }
@@ -160,7 +156,7 @@ export default {
 
   .InfoPostBox{
     height: fit-content;
-    width: 84.98%;
+    width: 100%;
     margin-top: 16px;
     margin-bottom: 16px;
     /* border: 5px solid red; */

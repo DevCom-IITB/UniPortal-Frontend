@@ -1,23 +1,37 @@
 <template>
-    <div class="container">
-        <div class="Images" v-if="infopost.images">
-            <div v-for="image in images" class="img" @click="Expand(image)"><img :src=image></div>
+    <div class="main-container">
+        <div class="edit" v-if="authStore.role == 5980 || authStore.role == 1980" ><edit /></div>
+        <div class="container">
+            <div class="Images" v-if="infopost.images">
+                <div v-for="image in images" class="img" @click="Expand(image)"><img :src=image></div>
+            </div>
+            <p>{{ infopost.body }}</p>
         </div>
-        <p>{{ infopost.body }}</p>
+        <div class="hide" v-if="authStore.role == 5980 || authStore.role == 1980" ><eye /></div>
     </div>
 </template>
 
 <script>
 import { useQuestionStore } from '@/stores/question';
+import { useAuthStore } from '@/stores/auth';
+import eye from '../icons/visibility.svg'
+import closed_eye from '../icons/visibility_off.svg'
+import edit from '../icons/edit2.svg'
 
 export default {
     name: 'InfoBox',
     setup(){
         const questionStore = useQuestionStore();
-        return { questionStore };
+        const authStore = useAuthStore();
+        return { questionStore, authStore };
     },
     props:{
         infopost: Object,
+    },
+    components:{
+        eye,
+        closed_eye,
+        edit,
     },
     data(){
         return{
@@ -53,10 +67,19 @@ export default {
 </script>
 
 <style scoped>
+.main-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
 
+.edit{
+    width: 2vw;
+}
 .container{
     /* border: 5px solid red; */
-    width: 100%;
+    width: 85.98%;
     height: 100%;
     background: #FFF9E5;
     display: flex;
@@ -111,6 +134,10 @@ img{
     background: #FFF9E5;
     z-index: 3;
     
+}
+
+.hide{
+    width: 2vw;
 }
 
 @media only screen and (max-width: 1150px) {

@@ -36,11 +36,9 @@
         
             <div class="Hide" v-if="windowWidth > 750" @click="Hide" ><eye v-if="(AuthStore.role == 5980) && !question['hidden']" class="icon" :svgColor="secondaryColor"/><closed_eye v-if="(AuthStore.role == 5980) && question['hidden']" class="icon" :svgColor="secondaryColor"/></div>
         </div>
-        <div v-if="showComments" class="comment-boxes">
-            <div class="Lister">
-                <div :key="comment['id']" v-for="comment in comments" class="comment-box">
-                    <viewcomments :comment="comment" :secondaryColor="secondaryColor"/>
-                </div>
+        <div class="Lister" v-if="showComments">
+            <div :key="comment['id']" v-for="comment in comments" class="comment-box">
+                <viewcomments :comment="comment" :secondaryColor="secondaryColor"/>
             </div>
         </div>
     </div>
@@ -470,39 +468,11 @@ p{
     cursor: pointer;
 }
 
-.comment-boxes{
-    margin-top: 16px;
-    width: 84.98%;
-    height:27vh;
-    
-    
-}
-.comment-boxes-input{
-    border: 0px solid #000000;
-    margin-top: 16px;
-    width: 84.98%;
-    height:9vh;
-    
-}
-
-.CommentBox{
-    padding-left: 5px;
-    height: fit-content;
-    width: 100%;
-    margin-top: 16px;
-    margin-bottom: 16px;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items:left;
-   }
 
    .Lister{
     margin-top: 1%;
-    height: 87.04%;
-    width: 100%;
-    /* border: 5px solid green; */
+    max-height: 27vh;
+    width: 84.98%;
     display: flex;
     flex-direction: column;
     align-items: start;

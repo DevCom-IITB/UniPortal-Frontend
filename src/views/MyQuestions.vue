@@ -27,11 +27,14 @@ import { useListStore } from '../stores/list';
 import { useColourStore } from '../stores/colour';
 
 
+
 export default {
   name: 'MyQuestions',
   setup(){
     const authStore = useAuthStore();
     const listStore = useListStore();
+    const colourStore = useColourStore();
+    return { authStore, listStore, colourStore }
     const colourStore = useColourStore();
     return { authStore, listStore, colourStore }
   },
