@@ -3,7 +3,7 @@
     <div class="main-container">
         <div class="container">
             <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
-                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="question.upvotes"/>
+                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :upvotes="question.upvotes"/>
             </div>
             
             <div class="QuestionBox">
@@ -158,8 +158,7 @@ export default {
         question: {
             type: Object,
             required: true
-        },
-        
+        },     
         
         showAnswerBox: {
             type: Boolean,

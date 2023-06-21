@@ -742,6 +742,64 @@ export const useQuestionStore = defineStore("question", {
                 }
             }
         },
+
+        async HideAnswerComment(){
+            const authStore = useAuthStore();
+            const listStore = useListStore();
+            console.log('we have entered the hide a comment for answer function in question.js');
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('question id : ', this.question_ID);
+            console.log('Sending request');
+            const res = await fetch(`api/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+            })
+    
+            if(res.status == 200){
+                console.log('successfully hid comment :', this.comment_ID);
+                await listStore.SetHideAnswerComment(this.question_ID, this.answer_ID, this.comment_ID);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        await listStore.SetHideAnswerComment(this.question_ID, this.answer_ID, this.comment_ID);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
+
         async HideInfoPost(){
             const authStore = useAuthStore();
             const listStore = useListStore();

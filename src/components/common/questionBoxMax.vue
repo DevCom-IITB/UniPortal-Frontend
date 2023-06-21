@@ -3,7 +3,7 @@
     <div class="main-container">
         <div class="container">
             <div class="Upvote" @click="Upvote" v-if="windowWidth > 750">
-                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :background="primaryAccent" :primaryColor1="primaryColor" :upvotes="upvotes"/>
+                <upvote v-if="(AuthStore.role == 7669 || AuthStore.role == 1980)" :upvotes="upvotes"/>
             </div>
             
             <div class="QuestionBox">
@@ -38,7 +38,7 @@
         </div>
         <div class="Lister" v-if="showComments">
             <div :key="comment['id']" v-for="comment in comments" class="comment-box">
-                <viewcomments :comment="comment" :secondaryColor="secondaryColor"/>
+                <viewcomments :comment="comment" :isAnswer="isAnswer"/>
             </div>
         </div>
     </div>
@@ -66,11 +66,11 @@ import { useColourStore } from '../../stores/colour'
 export default {
     name: 'Question',
     setup(){
-        const questionStore = useQuestionStore()
+        const QuestionStore = useQuestionStore()
         const AuthStore = useAuthStore()
         const colourStore = useColourStore()
         return {
-            questionStore,
+            QuestionStore,
             AuthStore,
             colourStore,
         }
@@ -95,10 +95,16 @@ export default {
         }
     },
     methods: {
-        viewComments(){
+        async viewComments(){
+            
             console.log(this.comments);
             this.showComments = !this.showComments,
             this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
+            if(this.isAnswer){
+            await this.QuestionStore.SetAnswerID(this.question['_id']);
+            
+            }
+            
         },
         onResize() {
             this.windowWidth = window.innerWidth;
@@ -109,6 +115,7 @@ export default {
             this.questionStore.SetAction(1)
             this.questionStore.SetAddImage(true);
             this.$emit('comment');
+            
         },
         async CommentClick(){
             if(!this.isAnswer){

@@ -6,9 +6,9 @@
                     {{ comment['user_Name'] }}                
                 </div>
 
-                <div class="timestamp" :style="{ color : secondaryColor }">{{ timestamp }}</div>
+                <div class="timestamp">{{ timestamp }}</div>
             </div>
-            <div class="Hide" @click="HideQuestionComment"><eye v-if="(AuthStore.role == 5980) && !comment['hidden']" class="icon"/><closed_eye v-if="(AuthStore.role == 5980) && comment['hidden']" class="icon" /></div>
+            <div class="Hide" @click="HideComment"><eye v-if="(AuthStore.role == 5980) && !comment['hidden']" class="icon"/><closed_eye v-if="(AuthStore.role == 5980) && comment['hidden']" class="icon" /></div>
         </div>
         <div class="qtext">
             {{ comment['body']  }}  
@@ -31,7 +31,7 @@ import { useQuestionStore } from '@/stores/question';
         name: 'viewcomments',
         props: {
          comment : Object,
-        //  secondaryColor : String,
+         isAnswer : Boolean,
         },
         setup() {
             const AuthStore = useAuthStore();
@@ -49,11 +49,19 @@ import { useQuestionStore } from '@/stores/question';
             }
         },
         methods: {
-            async HideQuestionComment(){
-                console.log("we will be hiding a comment");
-                await this.QuestionStore.SetCommentID(this.comment['_id']);
-                await this.QuestionStore.HideQuestionComment();
+            async HideComment(){
+                if(this.isAnswer){
+                        console.log("we will be hiding a comment");
+                        await this.QuestionStore.SetCommentID(this.comment['_id']);
+                        await this.QuestionStore.HideAnswerComment();
+                    }
+                else {
+                        console.log("we will be hiding a comment");
+                        await this.QuestionStore.SetCommentID(this.comment['_id']);
+                        await this.QuestionStore.HideQuestionComment();
+                    }
             },
+            
         },
         mounted(){
             const date = new Date(this.comment['asked_At']);
