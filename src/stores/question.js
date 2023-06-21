@@ -14,7 +14,7 @@ export const useQuestionStore = defineStore("question", {
         info_ID : '',
         addImage : false,
         ImageLink : '',
-        action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost
+        action : 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost, 6 is for editing an infopost
     }),
     persist: true,
     actions: {
@@ -797,6 +797,70 @@ export const useQuestionStore = defineStore("question", {
                     await this.authStore.Logout() 
                 }
             }
-        }
+        },
+        async EditInfoPost(body){
+            console.log('we have entered the post infopost function in question.js');
+            const authStore = useAuthStore();
+            const listStore = useListStore();
+            const infoPostObj = {
+                body : body
+            }
+            console.log('infopost object : ', infoPostObj);
+
+            const accessToken = authStore.accessToken;
+
+            const bearer = `Bearer ${accessToken}`
+
+            console.log('bearer : ', bearer);
+            console.log('Sending request');
+            const res = await fetch(`api/info/edit/${this.info_ID}`, {
+                method : 'PATCH',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : bearer
+                },
+                body : JSON.stringify(infoPostObj)
+            })
+
+            if(res.status == 200){
+                console.log('successfully edited InfoPost');
+                const data = await res.json()
+                console.log(data);
+                listStore.SetEditInfoPost(this.info_ID, body);
+            }
+            else{
+                if(res.status === 403){
+                    console.log('refreshing token');
+                    const res = await this.authStore.Refresh();
+      
+                    if(res.status === 200){
+                        console.log('refreshed token');
+                        const bearer = `Bearer ${this.authStore.accessToken}`
+                        console.log('new bearer : ', bearer);
+                        const res = await fetch(`api/info/edit/${this.info_ID}`,{
+                            method : 'PATCH',
+                            headers : {
+                                'Content-Type' : 'application/json',
+                                'Authorization' : bearer
+                            },
+                            body : JSON.stringify(infoPostObj)
+                        })
+                        console.log('new request sent');
+                        const data = await res.json()
+                        console.log(data);
+                        listStore.SetEditInfoPost(this.info_ID, body);
+                        return data
+                    }
+                    else{
+                        console.log('refresh failed');
+                        await this.authStore.Logout()
+                    }
+                }
+                else{
+                    alert('not enough permissions')
+                    await this.authStore.Logout() 
+                }
+            }
+        },
     }
 })

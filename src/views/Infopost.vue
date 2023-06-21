@@ -4,7 +4,7 @@
       <div class="Header"><Header :headerName="headerName" :headerText="headerText" :background="background" :color="color"/></div>
       <div class="Lister">
         <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox" >
-          <InfoBox :infopost="infopost" @expand="$emit('expand')"/>
+          <InfoBox :infopost="infopost" @expand="$emit('expand')" @edit="EditInfo"/>
         </div>
       </div>
     </div>
@@ -41,12 +41,14 @@ export default {
   methods:{
     async fetchInfoPosts() {
       const bearer = `Bearer ${this.authStore.accessToken}`
+      const role = this.authStore.role
+      const get = role == (5980||1980) ? 'get' : 'getStu'
 
       console.log('bearer : ', bearer);
 
       console.log("fetching info posts");
 
-      const res = await fetch('api/info/get',{
+      const res = await fetch(`api/info/${get}`,{
         method : 'GET',
         headers : {
           'Content-Type' : 'application/json',
@@ -74,7 +76,7 @@ export default {
             console.log('refreshed token');
             const bearer = `Bearer ${this.authStore.accessToken}`
             console.log('new bearer : ', bearer);
-            const res = await fetch('api/info/get',{
+            const res = await fetch(`api/info/${get}`,{
               method : 'GET',
               headers : {
                 'Content-Type' : 'application/json',
@@ -98,6 +100,11 @@ export default {
         }
       }
     },
+    async EditInfo(infopost){
+      console.log('editing info');
+      console.log(infopost);
+      this.$emit('edit',infopost)
+    }
   },
   async mounted() {
     await this.fetchInfoPosts();

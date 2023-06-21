@@ -37,12 +37,22 @@ export default {
         const colourStore = useColourStore()
         return { questionStore, authStore, colourStore }
     },
-    
+    props : {
+        editBody : {
+            type : String,
+            default : ''
+        }
+    },
     data(){
         return{
             text : '',
             selectedImages : [],
             previewImages : [],
+        }
+    },
+    mounted(){
+        if(this.editBody && this.questionStore.action == 6){
+            this.text = this.editBody
         }
     },
     methods : {
@@ -88,6 +98,10 @@ export default {
             else if(decision == 5){
                 console.log('we will be posting info post');
                 await this.questionStore.PostInfoPost(this.text, this.selectedImages)
+            }
+            else if(decision == 6){
+                console.log('we will be editing the infopost with id : ', this.questionStore.info_ID);
+                await this.questionStore.EditInfoPost(this.text)
             }
 
             this.$emit('discard')

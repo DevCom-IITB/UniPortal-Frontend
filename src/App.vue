@@ -3,9 +3,9 @@
     <div class="Sidebar"><Sidebar @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
     <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
       <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" @expand="ExpandImage" ></router-view></div>
+      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" @expand="ExpandImage" @edit="EditInfo" ></router-view></div>
       <div class="popup" @click="postInfoQues" v-if="ColourStore.askPopup && Auth.role != 6311"><popup :lightText="lightText"/></div>
-      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" /></div>
+      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" :editBody="editBody"/></div>
       <div class="ExpandedImg" v-if="expanded" ><div class="cancel" @click="CloseImg"></div><img :src="QuestionStore.ImageLink" alt=""></div>
     </div>
     <div class="glass" v-if="askQuestion == true || glass == true" @click="glassClick" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
@@ -53,6 +53,7 @@ export default {
       accessToken : '',
       glass : false,
       expanded : false,
+      editBody : ''
     }
   },
   mounted() {
@@ -111,6 +112,11 @@ export default {
       this.glass = false;
       this.askQuestion = false;
       this.expanded = false;
+    },
+    async EditInfo(body){
+      this.askQuestion = true;
+      console.log('body:',body);
+      this.editBody = body;
     },
   },
   setup() {

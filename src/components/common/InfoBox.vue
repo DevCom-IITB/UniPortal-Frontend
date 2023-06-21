@@ -1,6 +1,6 @@
 <template>
     <div class="main-container">
-        <div class="edit" v-if="authStore.role == 5980 || authStore.role == 1980" ><edit /></div>
+        <div class="edit" v-if="authStore.role == 5980 || authStore.role == 1980" @click="Edit"><edit /></div>
         <div class="container">
             <div class="Images" v-if="infopost.images">
                 <div v-for="image in images" class="img" @click="Expand(image)"><img :src=image></div>
@@ -50,6 +50,13 @@ export default {
             await this.questionStore.SetInfoID(this.infopost['_id']);
             await this.questionStore.HideInfoPost();
             this.$emit('hide');
+        },
+        async Edit(){
+            console.log("editing");
+            await this.questionStore.SetInfoID(this.infopost['_id']);
+            await this.questionStore.SetAction(6);
+            console.log('emitting edit :', this.infopost['body']);
+            this.$emit('edit', this.infopost['body']);
         }
     },
     mounted(){
@@ -144,6 +151,7 @@ img{
 
 .hide{
     width: 2vw;
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 1150px) {

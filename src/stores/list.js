@@ -42,6 +42,10 @@ export const useListStore = defineStore('list', {
         async SetHideInfoPost(id) {
             console.log('hiding infopost in list : ', id);
             this.list.filter((item) => item['_id'] === id)[0].hidden = !this.list.filter((item) => item['_id'] === id)[0].hidden;
+        },
+        async SetEditInfoPost(id, body){
+            console.log('editing infopost in list : ', id);
+            this.list.filter((item) => item['_id'] === id)[0].body = body;
         }
     }
 })
