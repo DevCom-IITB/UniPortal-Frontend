@@ -69,7 +69,7 @@ export default {
 }
 
 .btn{
-    padding: 16px 0px;
+    padding: 24px 0px;
     width: 33.33%;
     border-radius: 52px;
     display: flex;

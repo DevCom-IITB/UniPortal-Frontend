@@ -39,9 +39,16 @@ export const useListStore = defineStore('list', {
             console.log('hiding comment in list : ', qid, cid);
             this.list.filter((item) => item['_id'] === qid)[0].comments.filter((item) => item['_id'] === cid)[0].hidden = !this.list.filter((item) => item['_id'] === qid)[0].comments.filter((item) => item['_id'] === cid)[0].hidden; 
         },
+<<<<<<< HEAD
         async SetHideAnswerComment(qid, aid, cid) {
             console.log('hiding answer comment in list : ', qid, aid, cid);
             this.list.filter((item) => item['_id'] === qid)[0].answers.filter((item) => item['_id'] === aid)[0].comments.filter((item) => item['_id'] === cid)[0].hidden = !this.list.filter((item) => item['_id'] === qid)[0].answers.filter((item) => item['_id'] === aid)[0].comments.filter((item) => item['_id'] === cid)[0].hidden; 
         },
+=======
+        async SetHideInfoPost(id) {
+            console.log('hiding infopost in list : ', id);
+            this.list.filter((item) => item['_id'] === id)[0].hidden = !this.list.filter((item) => item['_id'] === id)[0].hidden;
+        }
+>>>>>>> 0bbb1562c9208c0bcf54c0963f3a1f4855529596
     }
 })
