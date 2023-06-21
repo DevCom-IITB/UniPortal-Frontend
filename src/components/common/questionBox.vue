@@ -53,7 +53,6 @@
 import upvote from '../common/upvote.vue'
 
 import viewcomments from '../common/viewcomments.vue'
-import Delete from '../common/Delete.vue'
 import comment from '../common/comment.vue'
 import verified from '../icons/new_releases.svg'
 import Uparrow from '../icons/arrow_circle_up.svg'
@@ -69,7 +68,6 @@ export default {
     name: 'Question',
     components: {
         upvote,
-        Delete,
         comment,
         verified,
         Uparrow,

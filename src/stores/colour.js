@@ -12,7 +12,9 @@ export const useColourStore = defineStore ('colour', {
         active_hovering: '',
         sidebar: '',
         askPopup: true,
+        currentPage: 1,
     }),
+    persist: true,
     actions: {
         async colourInfopost() {
             this.background = '#FFF9E5';
@@ -23,6 +25,8 @@ export const useColourStore = defineStore ('colour', {
             this.grey = '#CCB160';
             this.active_hovering = '#FFD899';
             this.sidebar = '#FFEDB2';
+            this.askPopup = true;
+            this.currentPage = 1;
             console.log('colour set for infopost')
         },
         async colourQuestions() {
@@ -34,6 +38,8 @@ export const useColourStore = defineStore ('colour', {
             this.emphasis_text = '#1F1514';
             this.light_text = '#3E2A28';
             this.background = '#FFF3F2';
+            this.askPopup = true;
+            this.currentPage = 2;
             console.log('colour set for questions');
           },
           async colourMyQuestions() {
@@ -44,7 +50,9 @@ export const useColourStore = defineStore ('colour', {
             this.active_hovering = '#C9B4F2';
             this.emphasis_text = '#201E2F';
             this.light_text = '#3E3C5D';
-            this.background = '#F6F5FF';            
+            this.background = '#F6F5FF';  
+            this.askPopup = true;   
+            this.currentPage = 3;       
             console.log('colour set for my questions');
           },
           async colourQuestionView() {
@@ -67,6 +75,8 @@ export const useColourStore = defineStore ('colour', {
             this.emphasis_text = '#1F1514';
             this.light_text = '#3E2A28';
             this.background = '#FFF3F2';
+            this.askPopup = true;
+            this.currentPage = 2;
             console.log('colour set for unanswered questions');
           },
           async colourAnswered() {
@@ -77,7 +87,9 @@ export const useColourStore = defineStore ('colour', {
             this.active_hovering = '#C9B4F2';
             this.emphasis_text = '#201E2F';
             this.light_text = '#3E3C5D';
-            this.background = '#F6F5FF';            
+            this.background = '#F6F5FF'; 
+            this.askPopup = true;   
+            this.currentPage = 3;       
             console.log('colour set for answered questions');
           },
     }
