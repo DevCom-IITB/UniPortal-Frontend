@@ -1,7 +1,7 @@
 <template>
     <div class="cont" :style="{ color : colourStore.primary, background : colourStore.background}">
         <!-- <InfoPost class="background" /> -->
-        <div class="background"><img :src="image" alt=""></div>
+        <div class="background"><img :src="colourStore.headerImage" alt=""></div>
         <div class="Header">
             <div class="HeaderTitle" :style="{ color : colourStore.emphasis_text }">{{ headerName }}</div>
             <div class="HeaderText" :style="{ color : colourStore.emphasis_text }">{{ headerText }}</div>
@@ -25,33 +25,11 @@
     },
      props: {
             headerName: String,
-            headerText: String,
-            
+            headerText: String,    
      },
      components: {
          InfoPost
      },
-     data(){
-         return{
-             image: '',
-         }
-     },
-     mounted(){
-
-        if(this.background == '#FFF9E5'){
-            this.image = InfoPost;
-            console.log(this.image);
-        }
-        else if(this.background == '#FFF3F2'){
-            this.image = Questions;
-            console.log(this.image);
-        }
-        else if(this.background == '#F6F5FF'){
-            this.image = MyQuestions;
-            console.log(this.image);
-
-        }
-     }
  }
  
  </script>

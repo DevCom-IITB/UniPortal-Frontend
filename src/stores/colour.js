@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+import InfoPost from '@/components/background_images/InfoPot.png'
+import Questions from '@/components/background_images/Questions.png'
+import MyQuestions from '@/components/background_images/MyQuestions.png'
 
 export const useColourStore = defineStore ('colour', {
     id: 'colour',
@@ -13,6 +16,7 @@ export const useColourStore = defineStore ('colour', {
         sidebar: '',
         askPopup: true,
         currentPage: 1,
+        headerImage : InfoPost,
     }),
     persist: true,
     actions: {
@@ -27,6 +31,7 @@ export const useColourStore = defineStore ('colour', {
             this.sidebar = '#FFEDB2';
             this.askPopup = true;
             this.currentPage = 1;
+            this.headerImage = InfoPost;
             console.log('colour set for infopost')
         },
         async colourQuestions() {
@@ -40,6 +45,7 @@ export const useColourStore = defineStore ('colour', {
             this.background = '#FFF3F2';
             this.askPopup = true;
             this.currentPage = 2;
+            this.headerImage = Questions;
             console.log('colour set for questions');
           },
           async colourMyQuestions() {
@@ -52,7 +58,8 @@ export const useColourStore = defineStore ('colour', {
             this.light_text = '#3E3C5D';
             this.background = '#F6F5FF';  
             this.askPopup = true;   
-            this.currentPage = 3;       
+            this.currentPage = 3;     
+            this.headerImage = MyQuestions;  
             console.log('colour set for my questions');
           },
           async colourQuestionView() {
@@ -77,6 +84,7 @@ export const useColourStore = defineStore ('colour', {
             this.background = '#FFF3F2';
             this.askPopup = true;
             this.currentPage = 2;
+            this.headerImage = Questions;
             console.log('colour set for unanswered questions');
           },
           async colourAnswered() {
@@ -89,7 +97,8 @@ export const useColourStore = defineStore ('colour', {
             this.light_text = '#3E3C5D';
             this.background = '#F6F5FF'; 
             this.askPopup = true;   
-            this.currentPage = 3;       
+            this.currentPage = 3;      
+            this.headerImage = MyQuestions; 
             console.log('colour set for answered questions');
           },
     }
