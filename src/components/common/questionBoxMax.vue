@@ -66,11 +66,11 @@ import { useColourStore } from '../../stores/colour'
 export default {
     name: 'Question',
     setup(){
-        const QuestionStore = useQuestionStore()
+        const questionStore = useQuestionStore()
         const AuthStore = useAuthStore()
         const colourStore = useColourStore()
         return {
-            QuestionStore,
+            questionStore,
             AuthStore,
             colourStore,
         }
@@ -101,7 +101,7 @@ export default {
             this.showComments = !this.showComments,
             this.commentbtn_text = this.commentbtn_text === 'View Comments' ? 'Hide Comments' : 'View Comments';
             if(this.isAnswer){
-            await this.QuestionStore.SetAnswerID(this.question['_id']);
+            await this.questionStore.SetAnswerID(this.question['_id']);
             
             }
             
@@ -120,6 +120,7 @@ export default {
         async CommentClick(){
             if(!this.isAnswer){
                 console.log("we will be commenting on a question from inside a question view");
+                console.log('question id: ' + this.question['_id']);
                 await this.questionStore.SetQuestion(this.question);
                 await this.questionStore.SetAction(2)
                 this.$emit('comment');

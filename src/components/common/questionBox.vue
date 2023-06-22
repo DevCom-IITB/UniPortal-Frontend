@@ -8,7 +8,7 @@
             
             <div class="QuestionBox">
                 <div class="content" :style="{ background : colourStore.background}">
-                    <router-link to="/question" class="questionRoute" @click="SetQuestionView" @expand="$emit('expand')" >                                            
+                    <router-link to="/question" class="questionRoute" @comment="$emit('comment')" @click="SetQuestionView" @expand="$emit('expand')" >                                            
                         <div class="inner-container">
                             <div class="stamps">
                                 <div class="info">
