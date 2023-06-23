@@ -14,7 +14,7 @@
                 <div class="discard" :style="{ color : colourStore.grey }" @click="$emit('discard')">Discard</div>
                 <input class="post" :style="{ background : colourStore.primary }" value="Post" type="submit" @click="decide" />
             </div>
-            <div v-if="questionStore.addImage" class="photo" :style="{ background : colourStore.background }" @click="AddImages" ><input type="file" id="fileInput" @change="SelectingFiles" multiple /><add />&nbsp;&nbsp;<p>Add photo</p></div>
+            <div v-if="questionStore.addImage" class="photo" :style="{ background : colourStore.background }" @click="AddImages" ><input type="file" id="fileInput" @change="SelectingFiles" multiple accept="image/*" /><add />&nbsp;&nbsp;<p>Add photo</p></div>
         </div>
 
 
