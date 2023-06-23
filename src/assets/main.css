@@ -1,18 +1,11 @@
-@import './base.css';
+@import "./base.css";
 
 #app {
   max-width: 100%;
   min-height: 100vh;
   height: 5px;
   margin: 0 auto;
-  
+
   background: white;
   font-weight: normal;
 }
- 
-
-
-
-
-
-

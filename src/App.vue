@@ -1,40 +1,98 @@
 <template>
   <div class="container" v-if="Auth.loggedIn">
-    <div class="Sidebar"><Sidebar @Burger="Burger" :style=" !showSidebar && windowWidth<750 ? {width:'0vw'} : {width : '70vw'} " /></div>
-    <div class="Content" :style=" windowWidth<750 ? {width:'100vw'} : {width:'78.55vw'}" >
-      <div class="Navbar"><Navbar @selected1="ColorInfoPost" @selected2="ColorQuestions" @selected3="ColorMyQuestions" :grey="grey" :unselected="unselected" :primary="primary" :emphasisText="emphasisText" /></div>
-      <div class="RouterView"><router-view @comment="ask" @askView="ColorQuestionView" @expand="ExpandImage" @edit="EditInfo" ></router-view></div>
-      <div class="popup" @click="postInfoQues" v-if="ColourStore.askPopup && Auth.role != 6311"><popup :lightText="lightText"/></div>
-      <div class="ask" v-if="askQuestion == true"><askBox :grey="grey" :background="background" :primary="primary" :askQuestion="askQuestion" @discard="ask" @OnSubmit="ask" :editBody="editBody"/></div>
-      <div class="ExpandedImg" v-if="expanded" ><div class="cancel" @click="CloseImg"></div><img :src="QuestionStore.ImageLink" alt=""></div>
+    <div class="Sidebar">
+      <Sidebar
+        @Burger="Burger"
+        :style="
+          !showSidebar && windowWidth < 750
+            ? { width: '0vw' }
+            : { width: '70vw' }
+        "
+      />
     </div>
-    <div class="glass" v-if="askQuestion == true || glass == true" @click="glassClick" :style="windowWidth<=750 ? {background : background} : {background : 'rgba(0, 0, 0, 0.5)'}" ></div>
+    <div
+      class="Content"
+      :style="windowWidth < 750 ? { width: '100vw' } : { width: '78.55vw' }"
+    >
+      <div class="Navbar">
+        <Navbar
+          @selected1="ColorInfoPost"
+          @selected2="ColorQuestions"
+          @selected3="ColorMyQuestions"
+          :grey="grey"
+          :unselected="unselected"
+          :primary="primary"
+          :emphasisText="emphasisText"
+        />
+      </div>
+      <div class="RouterView">
+        <router-view
+          @comment="ask"
+          @askView="ColorQuestionView"
+          @expand="ExpandImage"
+          @edit="EditInfo"
+        ></router-view>
+      </div>
+      <div
+        class="popup"
+        @click="postInfoQues"
+        v-if="ColourStore.askPopup && Auth.role != 6311"
+      >
+        <popup :lightText="lightText" />
+      </div>
+      <div class="ask" v-if="askQuestion == true">
+        <askBox
+          :grey="grey"
+          :background="background"
+          :primary="primary"
+          :askQuestion="askQuestion"
+          @discard="ask"
+          @OnSubmit="ask"
+          :editBody="editBody"
+        />
+      </div>
+      <div class="ExpandedImg" v-if="expanded">
+        <div class="cancel" @click="CloseImg"></div>
+        <img :src="QuestionStore.ImageLink" alt="" />
+      </div>
+    </div>
+    <div
+      class="glass"
+      v-if="askQuestion == true || glass == true"
+      @click="glassClick"
+      :style="
+        windowWidth <= 750
+          ? { background: background }
+          : { background: 'rgba(0, 0, 0, 0.5)' }
+      "
+    ></div>
   </div>
   <div class="login" v-if="!Auth.loggedIn">
-    <DC class="DC"/>
-    <SMP class="SMP"/>
+    <DC class="DC" />
+    <SMP class="SMP" />
     <login_background class="login-background" />
-    <div class="login-form"><Login :loggedIn="loggedIn" @loggedIn="Login" /></div>
+    <div class="login-form">
+      <Login :loggedIn="loggedIn" @loggedIn="Login" />
+    </div>
   </div>
 </template>
 
 <script>
-import Navbar from './components/common/Navbar.vue'
-import Sidebar from './components/common/Sidebar.vue'
-import popup from './components/common/popup.vue'
-import askBox from './components/common/askBox.vue'
-import login_background from './components/background_images/Group 9.svg'
-import Login from './components/common/Login.vue'
-import DC from './components/icons/DC.svg'
-import SMP from './components/icons/SMP_black.svg'
+import Navbar from "./components/common/Navbar.vue";
+import Sidebar from "./components/common/Sidebar.vue";
+import popup from "./components/common/popup.vue";
+import askBox from "./components/common/askBox.vue";
+import login_background from "./components/background_images/Group 9.svg";
+import Login from "./components/common/Login.vue";
+import DC from "./components/icons/DC.svg";
+import SMP from "./components/icons/SMP_black.svg";
 
-import { useAuthStore } from './stores/auth';
-import { useQuestionStore } from './stores/question';
-import { useColourStore } from './stores/colour';
-
+import { useAuthStore } from "./stores/auth";
+import { useQuestionStore } from "./stores/question";
+import { useColourStore } from "./stores/colour";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Navbar,
     Sidebar,
@@ -45,98 +103,85 @@ export default {
     DC,
     SMP,
   },
-  data(){
-    return{
-      askQuestion : false,
-      windowWidth : window.innerWidth,
-      showSidebar : false,
-      accessToken : '',
-      glass : false,
-      expanded : false,
-      editBody : ''
-    }
+  data() {
+    return {
+      askQuestion: false,
+      windowWidth: window.innerWidth,
+      showSidebar: false,
+      accessToken: "",
+      glass: false,
+      expanded: false,
+      editBody: "",
+    };
   },
   mounted() {
-      this.$nextTick(() => {
-      window.addEventListener('resize', this.onResize);
-      });
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+    });
   },
-  beforeDestroy() { 
-      window.removeEventListener('resize', this.onResize); 
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize);
   },
-  methods:{
-    async OnSubmit(newPost){
-      const response = await fetch('api/questions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newPost)
-      })
-
+  methods: {
+    async OnSubmit() {
       this.askQuestion = false;
     },
-    
-    
-    
-    async ask(){
+
+    async ask() {
       this.askQuestion = !this.askQuestion;
     },
     onResize() {
       this.windowWidth = window.innerWidth;
     },
-    async Burger(value){
+    async Burger(value) {
       this.showSidebar = value;
       console.log(this.showSidebar);
     },
-    async postInfoQues(){
+    async postInfoQues() {
       this.QuestionStore.SetAddImage(true);
-      if(this.Auth.role == 5980 ||this.Auth.role == 6311){
+      if (this.Auth.role == 5980 || this.Auth.role == 6311) {
         await this.ask();
         await this.QuestionStore.SetAction(5);
-      }
-      else{
+      } else {
         await this.ask();
         await this.QuestionStore.SetAction(4);
       }
     },
-    async ExpandImage(){
+    async ExpandImage() {
       this.glass = true;
       this.expanded = true;
     },
-    async CloseImg(){
+    async CloseImg() {
       this.glass = false;
       this.expanded = false;
     },
-    async glassClick(){
+    async glassClick() {
       this.glass = false;
       this.askQuestion = false;
       this.expanded = false;
     },
-    async EditInfo(body){
+    async EditInfo(body) {
       this.askQuestion = true;
-      console.log('body:',body);
+      console.log("body:", body);
       this.editBody = body;
     },
   },
   setup() {
-    const Auth= useAuthStore();
+    const Auth = useAuthStore();
     const QuestionStore = useQuestionStore();
     const ColourStore = useColourStore();
-    
+
     return {
       Auth,
       QuestionStore,
       ColourStore,
-     
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style scoped>
-
-.container{
+.container {
   display: flex;
   align-items: stretch;
   height: 100vh;
@@ -146,13 +191,13 @@ export default {
   /* border: 5px solid red; */
 }
 
-.Sidebar{
+.Sidebar {
   width: 21.45%;
   display: flex;
   justify-content: center;
 }
 
-.Content{
+.Content {
   height: 100vh;
   /* overflow-y: scroll; */
   display: flex;
@@ -161,7 +206,7 @@ export default {
   justify-content: center;
 }
 
-.Navbar{
+.Navbar {
   height: 14.29%;
   width: 66.58%;
   margin-top: 1.56%;
@@ -170,7 +215,7 @@ export default {
   align-items: center;
 }
 
-.RouterView{
+.RouterView {
   height: 85.71%;
   width: 78.65%;
   display: flex;
@@ -178,15 +223,15 @@ export default {
   align-items: center;
 }
 
-.popup{
+.popup {
   position: fixed;
   bottom: 18px;
-  width : 15.79%;
+  width: 15.79%;
   height: 10%;
   cursor: pointer;
 }
 
-.ask{
+.ask {
   position: fixed;
   width: 52.33vw;
   top: 100px;
@@ -196,7 +241,7 @@ export default {
   padding: 16px 24px;
 }
 
-.glass{
+.glass {
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -206,7 +251,7 @@ export default {
   align-items: center;
 }
 
-.ExpandedImg{
+.ExpandedImg {
   position: fixed;
   background: white;
   height: 400px;
@@ -218,121 +263,113 @@ export default {
   align-items: flex-start;
 }
 
-.cancel{
-    position: fixed;
-    z-index: 1;
-    width: 15px;
-    height: 15px;
-    border-radius: 50px;
-    background: #60b926;
-    margin-top: 15px;
-    margin-right: 15px;
+.cancel {
+  position: fixed;
+  z-index: 1;
+  width: 15px;
+  height: 15px;
+  border-radius: 50px;
+  background: #60b926;
+  margin-top: 15px;
+  margin-right: 15px;
 }
 
-.cancel:hover{
-    background: #ff7c7c;
+.cancel:hover {
+  background: #ff7c7c;
 }
 
-.ExpandedImg img{
+.ExpandedImg img {
   height: 100%;
   object-fit: cover;
 }
 
-.login{
+.login {
   width: 100vw;
   height: 100vh;
-  background: #FFF9E5;
+  background: #fff9e5;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.login-background{
+.login-background {
   position: fixed;
 }
 
-.DC{
+.DC {
   left: 10px;
   top: 0px;
   z-index: 1;
   position: fixed;
 }
 
-.SMP{
+.SMP {
   right: 30px;
   top: 20px;
   z-index: 1;
   position: fixed;
 }
 
-.login-form{
+.login-form {
   background: #fff;
   border-radius: 24px;
   width: 38vw;
   height: 85vh;
-  box-shadow:  20px 20px 60px #d9d4c3,
-             -20px -20px 60px #FFF9E5;
+  box-shadow: 20px 20px 60px #d9d4c3, -20px -20px 60px #fff9e5;
   z-index: 1;
-  padding: 24px 24px; 
+  padding: 24px 24px;
 }
 
-
-@media only screen and (max-width:950px){
-
-  .ExpandedImg{
+@media only screen and (max-width: 950px) {
+  .ExpandedImg {
     height: 300px;
   }
-
 }
 
-@media only screen and (max-width:750px){
+@media only screen and (max-width: 750px) {
+  .Sidebar {
+    height: 100vh;
+    z-index: 2;
+    position: fixed;
+    justify-content: start;
+  }
 
-.Sidebar{
-  height: 100vh;
-  z-index: 2;
-  position: fixed;
-  justify-content: start;
+  .Content {
+    margin-top: 64px;
+    height: 92vh;
+  }
+
+  .Navbar {
+    width: 95vw;
+  }
+
+  .RouterView {
+    width: 95vw;
+  }
+
+  .Sidebar {
+    width: 0px;
+  }
+
+  .popup {
+    width: 40%;
+    height: 5%;
+  }
+
+  .ask {
+    width: 100vw;
+    height: 90vh;
+    top: 100px;
+    padding: 16px 24px;
+  }
+
+  .ExpandedImg {
+    height: 200px;
+  }
+
+  .login-form {
+    width: 95vw;
+    height: 95vh;
+  }
 }
-
-.Content{
-  margin-top: 64px;
-  height: 92vh;
-}
-
-.Navbar{
-  width: 95vw;
-}
-
-.RouterView{
-  width: 95vw;
-}
-
-.Sidebar{
-  width: 0px;
-}
-
-.popup{
-  width: 40%;
-  height: 5%;
-}
-
-.ask{
-  width: 100vw;
-  height: 90vh;
-  top: 100px;
-  padding: 16px 24px;
-}
-
-.ExpandedImg{
-  height: 200px;
-}
-
-.login-form{
-  width: 95vw;
-  height: 95vh;
-}
-
-}
-
-
 </style>
