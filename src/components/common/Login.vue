@@ -27,13 +27,20 @@
         @click="Auth.Login(uid, password, false)"
       />
     </div>
-    <h2>Or</h2>
-    <input
-      type="button"
+    
+      <input type="button"
       class="sso"
       @click="redirectToExternalRoute"
-      value="Mentor Login"
-    />
+      value="Login as Mentor"/>
+  
+   
+   
+    <div class="headers">
+      <p>If you have trouble signing up, refer to this
+        <a href="https://smp.gymkhana.iitb.ac.in/">doc</a> 
+         or contact 
+         <a href="https://smp.gymkhana.iitb.ac.in/">gosavisanskar@gmail.com</a></p>
+    </div>
   </div>
 </template>
 
@@ -86,7 +93,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content:space-around;
   align-items: center;
   z-index: 1;
 }
@@ -132,17 +139,21 @@ export default {
   cursor: pointer;
 }
 
-.sso {
+
+ .sso{
   width: 15vw;
   border-radius: 10px;
-  background-color: #ccb160;
-  color: white;
-  font-size: large;
+  background-color: transparent;
+  color: black;
+  font-size:medium;
   font-weight: 500;
-  text-align: center;
+  text-align:center;
   padding: 12px;
   border: none;
   cursor: pointer;
+  text-decoration: underline;
+  
+  
 }
 
 @media only screen and (max-width: 1150px) {

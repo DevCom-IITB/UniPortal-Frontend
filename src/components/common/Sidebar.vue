@@ -52,11 +52,11 @@
               : { background: colourStore.sidebar }
           "
         >
-          <email />&nbsp;&nbsp;Email
+          <email />&nbsp;&nbsp;smpcs2023@gmail.com
         </button>
 
         <button
-          class="btn"
+          class="btn" @click="toSMP"
           @mouseover="hovering = 2"
           @mouseleave="hovering = 0"
           :style="
@@ -77,7 +77,7 @@
         </button>
 
         <button
-          class="btn"
+          class="btn" @click="insta"
           @mouseover="hovering = 3"
           @mouseleave="hovering = 0"
           :style="
@@ -94,7 +94,7 @@
               : { background: colourStore.sidebar }
           "
         >
-          <contact />&nbsp;&nbsp;Contact info.
+          <contact />&nbsp;&nbsp;smp.iitb
         </button>
       </div>
     </div>
@@ -186,6 +186,9 @@ export default {
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
     },
+    async insta(){
+      window.open("https://www.instagram.com/smp.iitb/")
+    }
   },
 };
 </script>
