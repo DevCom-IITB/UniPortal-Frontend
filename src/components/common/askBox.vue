@@ -35,7 +35,9 @@
               <p>Add photo</p>
             </div>        
         </div>
+        
   </form>
+  
 </template>
 
 <script>
@@ -47,6 +49,7 @@ let posted = false;
 
 export default {
   name: "askBox",
+  
   setup() {
     const questionStore = useQuestionStore();
     const authStore = useAuthStore();
@@ -224,6 +227,7 @@ export default {
   margin-top: 5px;
   margin-right: 5px;
 }
+
 
 .cancel:hover {
   background: #ff7c7c;

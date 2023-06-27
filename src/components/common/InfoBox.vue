@@ -1,11 +1,6 @@
 <template>
   <div class="main-container">
-    <div
-      class="edit"
-      v-if="authStore.role == 5980 || authStore.role == 1980"
-      @click="Edit"
-    >
-      <edit />
+    <div class="sizer">
     </div>
     <div class="container">
       <div class="Images" v-if="infopost.images">
@@ -20,16 +15,26 @@
       </div>
       <p>{{ infopost.body }}</p>
     </div>
+    <div class="icons">
     <div
       class="hide"
       v-if="authStore.role == 5980 || authStore.role == 1980"
-      @click="Hide"
+      @click="Hide"      
     >
       <eye v-if="!infopost['hidden']" class="icon" /><closed_eye
         v-if="infopost['hidden']"
         class="icon"
       />
+      </div>
+      <div
+      class="edit"
+      v-if="authStore.role == 5980 || authStore.role == 1980"
+      @click="Edit"
+    >
+      <edit />
     </div>
+    </div>
+    
   </div>
 </template>
 
@@ -107,12 +112,19 @@ export default {
   align-items: center;
 }
 
-.edit {
+.sizer {
   width: 2vw;
+  align-items: center;
+}
+
+.edit{
+  width: 2vw;
+  align-items: center;
+  padding-left: 5px;
 }
 .container {
   /* border: 5px solid red; */
-  width: 85.98%;
+  width: 84.98%;
   height: 100%;
   background: #fff9e5;
   display: flex;
@@ -124,6 +136,7 @@ export default {
   padding-top: 16px;
   padding-bottom: 16px;
   border-radius: 24px;
+  
 }
 
 p {
@@ -169,6 +182,15 @@ img {
 .hide {
   width: 2vw;
   cursor: pointer;
+  
+}
+
+.icons {
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: center;
+ 
 }
 
 @media only screen and (max-width: 1150px) {

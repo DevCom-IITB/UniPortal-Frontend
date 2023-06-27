@@ -29,6 +29,9 @@
                   <div class="timestamp" :style="{ color: colourStore.grey }">
                     {{ timestamp }}
                   </div>
+                  <div class="attached" v-if="(images.length)>0" :style="{ color : colourStore.grey }">
+                    Images Attached
+                  </div>
                 </div>
                 <div
                   v-if="question.verified"
@@ -167,6 +170,7 @@ export default {
       QuestionStore,
       AuthStore,
       colourStore,
+    
     };
   },
   data() {
@@ -175,6 +179,7 @@ export default {
       commentbtn_text: "View Comments",
       windowWidth: window.innerWidth,
       timestamp: "",
+      images: [],
     };
   },
   methods: {
@@ -221,7 +226,7 @@ export default {
       await this.QuestionStore.SetQuestionID(this.question["_id"]);
     },
   },
-  mounted() {
+  async mounted() {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
@@ -236,6 +241,7 @@ export default {
       second: "numeric",
     };
     this.timestamp = date.toLocaleString(undefined, options);
+    this.images=this.question.images;
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
@@ -342,6 +348,11 @@ export default {
 
 .timestamp {
   font-size: 10px;
+}
+
+.attached {
+  font-size: 10px;
+  margin-left: 6px;
 }
 
 .verified {
