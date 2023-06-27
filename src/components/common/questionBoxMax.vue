@@ -269,7 +269,10 @@ export default {
       for (let i = 0; i < this.images.length; i++) {
         //D:\SMP\SMP-Portal-Backend\uploads
         console.log(this.images[i]);
-        const temp = "http://10.198.49.120/uploads/" + this.images[i];
+        const temp =
+          (import.meta.env.VITE_NODE_ENV == "DEV"
+            ? "http://localhost:5000/uploads/"
+            : "10.198.49.120/uploads/") + this.images[i];
         this.images[i] = temp;
         console.log(this.images[i]);
       }
