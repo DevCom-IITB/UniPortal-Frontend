@@ -44,13 +44,13 @@
     </div>
    
     
-   <div class="snackbar"> <Snackbar /> </div>
+   
   </div>
 </template>
 
 <script>
 import Logo from "../icons/Logo.svg";
-import Snackbar from "../common/snackbar.vue"
+
 import { useAuthStore } from "@/stores/auth";
 const sso_client_id = import.meta.env.VITE_SSO_CLIENT_ID;
 const redirect_uri =
@@ -62,7 +62,7 @@ export default {
   name: "Login",
   components: {
     Logo,
-    Snackbar,
+    
   },
   
   
@@ -164,17 +164,7 @@ export default {
   
 }
 
-.snackbar {
-  background: white;
-  border-radius: 16px;
-  width: 110%;
-  height: fit-content;
-  text-align: center;
-  height: 6%;
-  justify-content: center;
-  padding: 6px;
-  margin-bottom: -15%;
-  }
+
 
 @media only screen and (max-width: 1150px) {
   .headers {

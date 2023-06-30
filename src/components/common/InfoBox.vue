@@ -15,7 +15,7 @@
       </div>
       <p>{{ infopost.body }}</p>
     </div>
-    <div class="icons">
+    <div class="sizer">
     <div
       class="hide"
       v-if="authStore.role == 5980 || authStore.role == 1980"
@@ -112,18 +112,20 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: start;
 }
 
 .sizer {
   width: 2vw;
   align-items: center;
+  
 }
 
 .edit{
-  width: 2vw;
+  width: 2.2vw;
   align-items: center;
-  padding-left: 5px;
+  padding-left: 1px;
+  
 }
 .container {
   /* border: 5px solid red; */
@@ -188,13 +190,7 @@ img {
   
 }
 
-.icons {
-  display: flex;
-  flex-direction: column;
-  justify-content:center;
-  align-items: center;
- 
-}
+
 
 @media only screen and (max-width: 1150px) {
   p {

@@ -33,6 +33,9 @@
           @edit="EditInfo"
         ></router-view>
       </div>
+      <div class="snackbar">
+      <Snackbar /> 
+      </div>
       <div
         class="popup"
         @click="postInfoQues"
@@ -42,9 +45,6 @@
       </div>
       <div class="ask" v-if="askQuestion == true">
         <askBox
-          :grey="grey"
-          :background="background"
-          :primary="primary"
           :askQuestion="askQuestion"
           @discard="ask"
           @OnSubmit="ask"
@@ -82,6 +82,7 @@ import Navbar from "./components/common/Navbar.vue";
 import Sidebar from "./components/common/Sidebar.vue";
 import popup from "./components/common/popup.vue";
 import askBox from "./components/common/askBox.vue";
+import Snackbar from "./components/common/snackbar.vue"
 import login_background from "./components/background_images/Group 9.svg";
 import Login from "./components/common/Login.vue";
 import DC from "./components/icons/DC.svg";
@@ -100,6 +101,7 @@ export default {
     askBox,
     login_background,
     Login,
+    Snackbar,
     DC,
     SMP,
   },
@@ -223,6 +225,12 @@ export default {
   align-items: center;
 }
 
+.snackbar {
+  z-index: 5;
+  
+  margin-bottom: 40px;
+  max-width: 66.58%;
+  }
 .popup {
   position: fixed;
   bottom: 18px;
