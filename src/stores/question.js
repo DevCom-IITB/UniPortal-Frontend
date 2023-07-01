@@ -14,6 +14,7 @@ export const useQuestionStore = defineStore("question", {
     info_ID: "",
     addImage: false,
     ImageLink: "",
+    showSnackbar: false,
     action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost, 6 is for editing an infopost
   }),
   persist: true,
@@ -84,14 +85,17 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: questionObj,
-      });
+      })
+      this.showSnackbar = true
+      console.log("snackbar");
 
       if (res.status == 200) {
         console.log("successfully added question");
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -103,7 +107,9 @@ export const useQuestionStore = defineStore("question", {
                 Authorization: bearer,
               },
               body: questionObj,
-            });
+            })
+            this.showSnackbar = true;
+
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -145,14 +151,17 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: infoPostObj,
-      });
+      })
+
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully added InfoPost");
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar=true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -164,7 +173,9 @@ export const useQuestionStore = defineStore("question", {
                 Authorization: bearer,
               },
               body: infoPostObj,
-            });
+            })
+            this.showSnackbar = true;
+
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -210,7 +221,8 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: answerObj,
-      });
+      })
+      this.showSnackbar = true;
 
       console.log(res.status);
       console.log(res.json());
@@ -221,7 +233,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -236,7 +249,8 @@ export const useQuestionStore = defineStore("question", {
                 },
                 body: answerObj,
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -285,7 +299,8 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: JSON.stringify(commentObj),
-      });
+      })
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully added comment on question");
@@ -300,7 +315,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -316,7 +332,8 @@ export const useQuestionStore = defineStore("question", {
                 },
                 body: JSON.stringify(commentObj),
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -326,7 +343,8 @@ export const useQuestionStore = defineStore("question", {
               body: body,
               user_Name: authStore.name,
               _id: "0",
-            };
+            }
+            this.showSnackbar = true;
             await listStore.AddCommentQuestion(this.question["_id"], comment);
             return data;
           } else {
@@ -374,7 +392,8 @@ export const useQuestionStore = defineStore("question", {
           },
           body: JSON.stringify(commentObj),
         }
-      );
+      )
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully added comment on answer :", this.answer_ID);
@@ -393,7 +412,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -409,7 +429,8 @@ export const useQuestionStore = defineStore("question", {
                 },
                 body: JSON.stringify(commentObj),
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -464,7 +485,8 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: JSON.stringify(upvoteObj),
-      });
+      })
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully upvotes on question :", this.question["_id"]);
@@ -475,7 +497,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -491,7 +514,8 @@ export const useQuestionStore = defineStore("question", {
                 },
                 body: JSON.stringify(upvoteObj),
               }
-            );
+            )
+            this.showSnackbar = true;
             this.question["upvotes"]++;
             console.log("new request sent");
             const data = await res.json();
@@ -539,7 +563,8 @@ export const useQuestionStore = defineStore("question", {
           },
           body: JSON.stringify(upvoteObj),
         }
-      );
+      )
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully added upvote on answer :", this.answer_ID);
@@ -550,7 +575,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -566,7 +592,8 @@ export const useQuestionStore = defineStore("question", {
                 },
                 body: JSON.stringify(upvoteObj),
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -604,7 +631,8 @@ export const useQuestionStore = defineStore("question", {
           "Content-Type": "application/json",
           Authorization: bearer,
         },
-      });
+      })
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully hid the question :", this.question["_id"]);
@@ -612,7 +640,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -627,7 +656,8 @@ export const useQuestionStore = defineStore("question", {
                   Authorization: bearer,
                 },
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -663,7 +693,8 @@ export const useQuestionStore = defineStore("question", {
             Authorization: bearer,
           },
         }
-      );
+      )
+      this.showSnackbar = true;
 
       const answer = this.question["answers"].find(
         (answer) => answer["_id"] === this.answer_ID
@@ -677,7 +708,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -692,7 +724,8 @@ export const useQuestionStore = defineStore("question", {
                   Authorization: bearer,
                 },
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -729,7 +762,8 @@ export const useQuestionStore = defineStore("question", {
             Authorization: bearer,
           },
         }
-      );
+      )
+      this.showSnackbar = true;
 
       const comment = this.question["comments"].find(
         (comment) => comment["_id"] === this.comment_ID
@@ -746,7 +780,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -761,7 +796,8 @@ export const useQuestionStore = defineStore("question", {
                   Authorization: bearer,
                 },
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -803,7 +839,8 @@ export const useQuestionStore = defineStore("question", {
             Authorization: bearer,
           },
         }
-      );
+      )
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully hid comment :", this.comment_ID);
@@ -815,7 +852,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -830,7 +868,8 @@ export const useQuestionStore = defineStore("question", {
                   Authorization: bearer,
                 },
               }
-            );
+            )
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -871,7 +910,8 @@ export const useQuestionStore = defineStore("question", {
           "Content-Type": "application/json",
           Authorization: bearer,
         },
-      });
+      })
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully hid the info post :", this.info_ID);
@@ -879,7 +919,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -891,7 +932,8 @@ export const useQuestionStore = defineStore("question", {
                 "Content-Type": "application/json",
                 Authorization: bearer,
               },
-            });
+            })
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);
@@ -929,7 +971,8 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: JSON.stringify(infoPostObj),
-      });
+      })
+      this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully edited InfoPost");
@@ -939,7 +982,8 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -952,7 +996,8 @@ export const useQuestionStore = defineStore("question", {
                 Authorization: bearer,
               },
               body: JSON.stringify(infoPostObj),
-            });
+            })
+            this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
             console.log(data);

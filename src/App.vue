@@ -33,8 +33,9 @@
           @edit="EditInfo"
         ></router-view>
       </div>
-      <div class="snackbar">
-      <Snackbar /> 
+      <div class="snackbar"
+      v-if="QuestionStore.showSnackbar == true">
+        <Snackbar /> 
       </div>
       <div
         class="popup"
@@ -231,6 +232,8 @@ export default {
   margin-bottom: 40px;
   max-width: 66.58%;
   }
+
+  
 .popup {
   position: fixed;
   bottom: 18px;
@@ -359,6 +362,9 @@ export default {
     width: 0px;
   }
 
+  .snackbar {
+    max-width: 95vw;
+  }
   .popup {
     width: 40%;
     height: 5%;
