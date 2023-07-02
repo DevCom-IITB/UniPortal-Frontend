@@ -125,9 +125,9 @@
 
 <script>
 import Logo from "../icons/Logo.svg";
-import Globe from "../icons/globe.svg";
+import Globe from "../icons/web.svg";
 import email from "../icons/email.svg";
-import contact from "../icons/contact.svg";
+import contact from "../icons/Insta.svg";
 import burger from "../icons/menu.svg";
 import DC from "../icons/DC.svg";
 import SMP from "../icons/SMP_black.svg";

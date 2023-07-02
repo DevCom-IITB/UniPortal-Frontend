@@ -1,38 +1,60 @@
 <template>
   <div class="main-container">
-    <div class="sizer">
+    <div class="sizer" v-if="windowWidth > 750">
     </div>
-    <div class="container">
-      <div class="Images" v-if="infopost.images">
+    <div class="main-content">
+      <div class="container">
+        <div class="timestamp">{{ timestamp }}</div>
+        <div class="Images" v-if="infopost.images">
+          <div
+            v-for="image in images"
+            v-bind:key="image.id"
+            class="img"
+            @click="Expand(image)"
+          >
+            <img :src="image" />
+          </div>
+        </div>
+        <Markdown :source="infopost.body" />
+      </div> 
+      <div class="sizer" v-if="windowWidth <=750">
         <div
-          v-for="image in images"
-          v-bind:key="image.id"
-          class="img"
-          @click="Expand(image)"
+          class="hide"
+          v-if="(authStore.role == 5980 || authStore.role == 1980)"
+          @click="Hide"      
         >
-          <img :src="image" />
+          <eye v-if="!infopost['hidden']" class="icon" /><closed_eye
+            v-if="infopost['hidden']"
+            class="icon"
+          />
+        </div>
+        <div
+          class="edit"
+          v-if="authStore.role == 5980 || authStore.role == 1980"
+          @click="Edit"
+        >
+          <edit />
         </div>
       </div>
-      <p>{{ infopost.body }}</p>
     </div>
-    <div class="sizer">
-    <div
-      class="hide"
-      v-if="authStore.role == 5980 || authStore.role == 1980"
-      @click="Hide"      
-    >
-      <eye v-if="!infopost['hidden']" class="icon" /><closed_eye
-        v-if="infopost['hidden']"
-        class="icon"
-      />
+    <div class="sizer" v-if="windowWidth > 750">
+      <div
+        class="hide"
+        v-if="(authStore.role == 5980 || authStore.role == 1980)"
+        @click="Hide"      
+      >
+        <eye v-if="!infopost['hidden']" class="icon" /><closed_eye
+          v-if="infopost['hidden']"
+          class="icon"
+        />
       </div>
       <div
-      class="edit"
-      v-if="authStore.role == 5980 || authStore.role == 1980"
-      @click="Edit"
-    >
-      <edit />
-    </div>
+        class="edit"
+        v-if="authStore.role == 5980 || authStore.role == 1980"
+        @click="Edit"
+      >
+        <edit />
+      </div>
     </div>
     
   </div>
@@ -44,6 +66,7 @@ import { useAuthStore } from "@/stores/auth";
 import eye from "../icons/visibility.svg";
 import closed_eye from "../icons/visibility_off.svg";
 import edit from "../icons/edit2.svg";
+import Markdown from "vue3-markdown-it";
 
 export default {
   name: "InfoBox",
@@ -59,10 +82,13 @@ export default {
     eye,
     closed_eye,
     edit,
+    Markdown,
   },
   data() {
     return {
       images: [],
+      windowWidth: window.innerWidth,
+      timestamp: "",
     };
   },
   methods: {
@@ -71,6 +97,9 @@ export default {
       this.questionStore.SetImageLink(image);
       console.log("expanding");
       this.$emit("expand");
+    },
+    onResize() {
+      this.windowWidth = window.innerWidth;
     },
     async Hide() {
       console.log("hiding");
@@ -86,7 +115,10 @@ export default {
       this.$emit("edit", this.infopost["body"]);
     },
   },
-  mounted() {
+  async mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+    });
     console.log("we will be loggin the images");
     this.images = this.infopost.images;
     if (this.images.length > 0) {
@@ -103,6 +135,20 @@ export default {
     } else {
       console.log("no images");
     }
+    const date = new Date(this.infopost["asked_At"]);
+    const options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+    this.timestamp = date.toLocaleString(undefined, options);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize);
   },
 };
 </script>
@@ -118,18 +164,26 @@ export default {
 .sizer {
   width: 2vw;
   align-items: center;
-  
 }
 
 .edit{
-  width: 2.2vw;
+  width: 2vw;
   align-items: center;
-  padding-left: 1px;
-  
+  padding-left: 5px;
+  cursor: pointer;
 }
+
+.main-content{
+  width: 84.98%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+}
+
 .container {
   /* border: 5px solid red; */
-  width: 84.98%;
+  width: 100%;
   height: 100%;
   background: #fff9e5;
   display: flex;
@@ -151,12 +205,19 @@ p {
   white-space: pre-wrap;
 }
 
+.timestamp{
+  font-size: x-small;
+  font-weight: 400;
+  color: #ccb160;
+}
+
 .Images {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: center;
+  margin-top: 8px;
 }
 
 .img {
@@ -195,6 +256,32 @@ img {
 @media only screen and (max-width: 1150px) {
   p {
     font-size: 12px;
+  }
+}
+
+@media only screen and (max-width : 750px){
+
+  .main-content{
+    width: 100%;
+  }
+
+  .container{
+    width: 100%;
+  }
+
+  .sizer{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .hide{
+    width: 8vw;
+    margin-left: 8px;
+  }
+
+  .edit{
+    width: 8vw;
   }
 }
 </style>

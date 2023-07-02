@@ -6,20 +6,29 @@ import MyQuestions from "@/components/background_images/MyQuestions.png";
 export const useColourStore = defineStore("colour", {
   id: "colour",
   state: () => ({
-    background: "",
-    primary: "",
-    unselected: "",
-    emphasis_text: "",
-    light_text: "",
-    grey: "",
-    active_hovering: "",
-    sidebar: "",
+    background: "#FFF9E5",
+    primary: "#FFDF80",
+    unselected: "#FAF4E1",
+    emphasis_text: "#211D12",
+    light_text: "#52492E",
+    grey: "#CCB160",
+    active_hovering: "#FFD899",
+    sidebar: "#FFEDB2",
+    snackColor: "#D9E7CB",
     askPopup: true,
     currentPage: 1,
     headerImage: InfoPost,
   }),
   persist: true,
   actions: {
+    async SetSnackColor(color) {
+      if(color){
+        this.snackColor = '#386A20';
+      }
+      else{
+        this.snackColor = '#CC655E';
+      }
+    },
     async colourInfopost() {
       this.background = "#FFF9E5";
       this.primary = "#FFDF80";

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth";
 import { useListStore } from "./list";
+import { useColourStore } from "./colour";
 
 export const useQuestionStore = defineStore("question", {
   id: "question",
@@ -15,6 +16,7 @@ export const useQuestionStore = defineStore("question", {
     addImage: false,
     ImageLink: "",
     showSnackbar: false,
+    snackMessage: "",
     action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost, 6 is for editing an infopost
   }),
   persist: true,
@@ -59,8 +61,17 @@ export const useQuestionStore = defineStore("question", {
       this.ImageLink = ImageLink;
       console.log("ImageLink : ", this.ImageLink);
     },
+    async SetShowSnackBar(showSnackbar) {
+      this.showSnackbar = showSnackbar;
+      console.log("showSnackbar : ", this.showSnackbar);
+    },
+    async SetSnackMessage(snackMessage) {
+      this.snackMessage = snackMessage;
+      console.log("snackMessage : ", this.snackMessage);
+    },
     async PostQuestion(body, images) {
       const authStore = useAuthStore();
+      const colourStore = useColourStore();
       console.log("we have entered the post question function in question.js");
       console.log("images : ", images);
       const uid = authStore.user_ID;
@@ -86,16 +97,26 @@ export const useQuestionStore = defineStore("question", {
         },
         body: questionObj,
       })
-      this.showSnackbar = true
+      // message for adding question
+      this.showSnackbar = true;
       console.log("snackbar");
 
       if (res.status == 200) {
         console.log("successfully added question");
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        await colourStore.SetSnackColor(true);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
+
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -108,23 +129,29 @@ export const useQuestionStore = defineStore("question", {
               },
               body: questionObj,
             })
+            // message for adding question
+            colourStore.SetSnackColor(true);
             this.showSnackbar = true;
-
+            console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
-            return data;
+            console.log('data :',data);
+            this.snackMessage = data.message;
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          colourStore.SetSnackColor(false);
+          this.showSnackbar = true;
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
     },
     async PostInfoPost(body, images) {
+      const colourStore = useColourStore();
       console.log("we have entered the post infopost function in question.js");
       const authStore = useAuthStore();
       console.log("images : ", images);
@@ -152,16 +179,24 @@ export const useQuestionStore = defineStore("question", {
         },
         body: infoPostObj,
       })
-
+      // message for adding InfoPost
       this.showSnackbar = true;
-
+      console.log("snackbar");
       if (res.status == 200) {
         console.log("successfully added InfoPost");
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        await colourStore.SetSnackColor(true);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
-          this.showSnackbar=true;
+          this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -174,24 +209,30 @@ export const useQuestionStore = defineStore("question", {
               },
               body: infoPostObj,
             })
+            // message for adding InfoPost
             this.showSnackbar = true;
-
+            colourStore.SetSnackColor(true);
+            console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
-            return data;
+            console.log('data :',data);
+            this.snackMessage = data.message;
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          colourStore.SetSnackColor(false);
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
     },
     async AddAnswer(body, images) {
       const authStore = useAuthStore();
+      const colourStore = useColourStore();
       console.log("we have entered the add answer function in question.js");
 
       console.log("images : ", images);
@@ -222,19 +263,27 @@ export const useQuestionStore = defineStore("question", {
         },
         body: answerObj,
       })
+      // message for adding answer
       this.showSnackbar = true;
-
-      console.log(res.status);
-      console.log(res.json());
+      console.log("snackbar");
 
       if (res.status == 200) {
         console.log("successfully added answer");
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        await colourStore.SetSnackColor(true);
         window.location.href = "/answered";
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -250,10 +299,14 @@ export const useQuestionStore = defineStore("question", {
                 body: answerObj,
               }
             )
+            // message for adding answer
             this.showSnackbar = true;
+            colourStore.SetSnackColor(true);
+            console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
             window.location.href = "/answered";
             window.onload = function () {
               window.location.href = "/question";
@@ -264,7 +317,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -272,6 +328,7 @@ export const useQuestionStore = defineStore("question", {
     async AddCommentQuestion(body) {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the add comment on a question function in question.js"
       );
@@ -299,11 +356,17 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
         body: JSON.stringify(commentObj),
-      })
+      });
+      // message for adding comment on question
       this.showSnackbar = true;
+      console.log("snackbar");
 
       if (res.status == 200) {
         console.log("successfully added comment on question");
+        const data = await res.json();
+        colourStore.SetSnackColor(true);
+        console.log('data :',data);
+        this.snackMessage = data.message;
         const comment = {
           asked_At: new Date(),
           hidden: false,
@@ -316,7 +379,12 @@ export const useQuestionStore = defineStore("question", {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -333,10 +401,13 @@ export const useQuestionStore = defineStore("question", {
                 body: JSON.stringify(commentObj),
               }
             )
+            // message for adding comment on question
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             const comment = {
               asked_At: new Date(),
               hidden: false,
@@ -352,7 +423,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -360,6 +434,7 @@ export const useQuestionStore = defineStore("question", {
     async AddCommentAnswer(body) {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the add comment on an answer function in question.js"
       );
@@ -393,10 +468,17 @@ export const useQuestionStore = defineStore("question", {
           body: JSON.stringify(commentObj),
         }
       )
+      // message for adding comment on answer
       this.showSnackbar = true;
+      console.log("snackbar");
+
 
       if (res.status == 200) {
         console.log("successfully added comment on answer :", this.answer_ID);
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         const comment = {
           asked_At: new Date(),
           hidden: false,
@@ -413,7 +495,12 @@ export const useQuestionStore = defineStore("question", {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -430,10 +517,13 @@ export const useQuestionStore = defineStore("question", {
                 body: JSON.stringify(commentObj),
               }
             )
+            // message for adding comment on answer
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             const comment = {
               asked_At: new Date(),
               hidden: false,
@@ -452,7 +542,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -460,6 +553,7 @@ export const useQuestionStore = defineStore("question", {
     async UpvoteQuestion() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the upvote a question function in question.js",
         this.question["_id"]
@@ -486,19 +580,28 @@ export const useQuestionStore = defineStore("question", {
         },
         body: JSON.stringify(upvoteObj),
       })
+      // message for upvoting a question
       this.showSnackbar = true;
+      console.log("snackbar");
 
       if (res.status == 200) {
         console.log("successfully upvotes on question :", this.question["_id"]);
         const data = await res.json();
-        console.log("data : ", data);
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         const val = data["val"];
         listStore.UpvoteQuestion(this.question["_id"], val);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -515,20 +618,23 @@ export const useQuestionStore = defineStore("question", {
                 body: JSON.stringify(upvoteObj),
               }
             )
+            // message for upvoting a question
             this.showSnackbar = true;
             this.question["upvotes"]++;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
-            return data;
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
           }
-        } else if (res.status === 401) {
-          alert("already upvoted");
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -536,6 +642,7 @@ export const useQuestionStore = defineStore("question", {
     async UpvoteAnswer() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the upvote on an answer function in question.js"
       );
@@ -564,19 +671,27 @@ export const useQuestionStore = defineStore("question", {
           body: JSON.stringify(upvoteObj),
         }
       )
+      // message for upvoting an answer
       this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully added upvote on answer :", this.answer_ID);
         const data = await res.json();
         console.log("data : ", data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         const val = data["val"];
         listStore.UpvoteAnswer(this.question_ID, this.answer_ID, val);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -593,19 +708,22 @@ export const useQuestionStore = defineStore("question", {
                 body: JSON.stringify(upvoteObj),
               }
             )
+            // message for upvoting an answer
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
-            return data;
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
           }
-        } else if (res.status === 401) {
-          alert("already upvoted");
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -613,6 +731,7 @@ export const useQuestionStore = defineStore("question", {
     async HideQuestion() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the hide a question function in question.js",
         this.question["_id"]
@@ -632,16 +751,26 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
       })
+      // message for hiding a question
       this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully hid the question :", this.question["_id"]);
         await listStore.SetHideQuestion(this.question["_id"]);
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -657,18 +786,23 @@ export const useQuestionStore = defineStore("question", {
                 },
               }
             )
+            // message for hiding a question
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             await listStore.SetHideQuestion(this.question["_id"]);
-            return data;
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
+          colourStore.SetSnackColor(false);
           await this.authStore.Logout();
         }
       }
@@ -676,6 +810,7 @@ export const useQuestionStore = defineStore("question", {
     async HideAnswer() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log("we have entered the hide an answer function in question.js");
       const accessToken = authStore.accessToken;
 
@@ -694,6 +829,7 @@ export const useQuestionStore = defineStore("question", {
           },
         }
       )
+      // message for hiding an answer
       this.showSnackbar = true;
 
       const answer = this.question["answers"].find(
@@ -704,12 +840,21 @@ export const useQuestionStore = defineStore("question", {
 
       if (res.status == 200) {
         console.log("successfully hid answer :", this.answer_ID);
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -725,10 +870,13 @@ export const useQuestionStore = defineStore("question", {
                 },
               }
             )
+            // message for hiding an answer
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
             return data;
           } else {
@@ -736,7 +884,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -745,6 +896,7 @@ export const useQuestionStore = defineStore("question", {
     async HideQuestionComment() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log("we have entered the hide a comment function in question.js");
       const accessToken = authStore.accessToken;
 
@@ -763,6 +915,7 @@ export const useQuestionStore = defineStore("question", {
           },
         }
       )
+      // message for hiding a comment
       this.showSnackbar = true;
 
       const comment = this.question["comments"].find(
@@ -773,6 +926,10 @@ export const useQuestionStore = defineStore("question", {
 
       if (res.status == 200) {
         console.log("successfully hid comment :", this.comment_ID);
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         await listStore.SetHideQuestionComment(
           this.question_ID,
           this.comment_ID
@@ -781,7 +938,12 @@ export const useQuestionStore = defineStore("question", {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -797,10 +959,13 @@ export const useQuestionStore = defineStore("question", {
                 },
               }
             )
+            // message for hiding a comment
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             await listStore.SetHideQuestionComment(
               this.question_ID,
               this.comment_ID
@@ -811,7 +976,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
@@ -820,6 +988,7 @@ export const useQuestionStore = defineStore("question", {
     async HideAnswerComment() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the hide a comment for answer function in question.js"
       );
@@ -840,10 +1009,15 @@ export const useQuestionStore = defineStore("question", {
           },
         }
       )
+      // message for hiding a comment
       this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully hid comment :", this.comment_ID);
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         await listStore.SetHideAnswerComment(
           this.question_ID,
           this.answer_ID,
@@ -853,7 +1027,12 @@ export const useQuestionStore = defineStore("question", {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -869,10 +1048,13 @@ export const useQuestionStore = defineStore("question", {
                 },
               }
             )
+            // message for hiding a comment
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             await listStore.SetHideAnswerComment(
               this.question_ID,
               this.answer_ID,
@@ -884,7 +1066,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
+          colourStore.SetSnackColor(false);
           await this.authStore.Logout();
         }
       }
@@ -893,6 +1078,7 @@ export const useQuestionStore = defineStore("question", {
     async HideInfoPost() {
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       console.log(
         "we have entered the hide a infopost function in question.js",
         this.info_ID
@@ -911,17 +1097,27 @@ export const useQuestionStore = defineStore("question", {
           Authorization: bearer,
         },
       })
+      // message for hiding a comment
       this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully hid the info post :", this.info_ID);
+        const data = await res.json();
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         await listStore.SetHideInfoPost(this.info_ID);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
-
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
+          
           if (res.status === 200) {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
@@ -933,10 +1129,13 @@ export const useQuestionStore = defineStore("question", {
                 Authorization: bearer,
               },
             })
+            // message for hiding a comment
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
             await listStore.SetHideInfoPost(this.info_ID);
             return data;
           } else {
@@ -944,7 +1143,10 @@ export const useQuestionStore = defineStore("question", {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
+          colourStore.SetSnackColor(false);
           await this.authStore.Logout();
         }
       }
@@ -953,6 +1155,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("we have entered the post infopost function in question.js");
       const authStore = useAuthStore();
       const listStore = useListStore();
+      const colourStore = useColourStore();
       const infoPostObj = {
         body: body,
       };
@@ -972,18 +1175,26 @@ export const useQuestionStore = defineStore("question", {
         },
         body: JSON.stringify(infoPostObj),
       })
+      // message for hiding a comment
       this.showSnackbar = true;
 
       if (res.status == 200) {
         console.log("successfully edited InfoPost");
         const data = await res.json();
-        console.log(data);
+        console.log('data :',data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
         listStore.SetEditInfoPost(this.info_ID, body);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
           const res = await this.authStore.Refresh()
+          // message for refreshing token
           this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :',data);
+          this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
@@ -997,18 +1208,23 @@ export const useQuestionStore = defineStore("question", {
               },
               body: JSON.stringify(infoPostObj),
             })
+            // message for hiding a comment
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log(data);
-            listStore.SetEditInfoPost(this.info_ID, body);
-            return data;
+            console.log('data :',data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
+            await listStore.SetEditInfoPost(this.info_ID, body);
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
+          this.showSnackbar = true;
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
+          colourStore.SetSnackColor(false);
           await this.authStore.Logout();
         }
       }

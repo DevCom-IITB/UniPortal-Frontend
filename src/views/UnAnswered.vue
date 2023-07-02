@@ -111,7 +111,6 @@ export default {
             await this.authStore.Logout();
           }
         } else {
-          alert("not enough permissions");
           await this.authStore.Logout();
         }
       }

@@ -30,16 +30,16 @@
                     {{ timestamp }}
                   </div>
                   <div class="attached" v-if="(images.length)>0" :style="{ color : colourStore.grey }">
-                    Images Attached
+                    &nbsp;&nbsp;Images Attached
                   </div>
                 </div>
                 <div
-                  v-if="question.verified"
+                  v-if="question.answers.length > 0"
                   class="verified"
                   :style="{ color: colourStore.grey }"
                 >
                   <verified class="icon" />&nbsp;
-                  <p>Verified Answer</p>
+                  <p>Answered</p>
                 </div>
               </div>
               <div class="text" :style="{ color: colourStore.emphasis_text }">
@@ -90,13 +90,19 @@
               :svgColor="secondaryColor"
             />
           </div>
+          <div class="Hide">
+            <alert
+              v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth <= 750"
+              @click = "alertClick"
+            />
+          </div>
           <div class="comments">
             <button
               class="view-comments"
               @click="viewComments"
               :style="{ color: colourStore.emphasis_text }"
             >
-              {{ commentbtn_text }}
+              {{ commentbtn_text }} ({{ question.comments.length }})
             </button>
             <button
               class="comment"
@@ -112,7 +118,12 @@
           </div>
         </div>
       </div>
-
+      <div class="alert">
+        <alert
+          v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth > 750"
+          @click = "alertClick"
+        />
+      </div>
       <div class="Hide" v-if="windowWidth > 750" @click="Hide">
         <eye
           v-if="AuthStore.role == 5980 && !question['hidden']"
@@ -142,10 +153,11 @@ import upvote from "../common/upvote.vue";
 
 import viewcomments from "../common/viewcomments.vue";
 import verified from "../icons/new_releases.svg";
-import Uparrow from "../icons/arrow_circle_up.svg";
+import Uparrow from "../icons/add_comment.svg";
 import eye from "../icons/visibility.svg";
 import closed_eye from "../icons/visibility_off.svg";
-import forum from "../icons/forum.svg";
+import forum from "../icons/send.svg";
+import alert from "../icons/Alert.svg";
 
 import { useQuestionStore } from "@/stores/question";
 import { useAuthStore } from "@/stores/auth";
@@ -158,6 +170,7 @@ export default {
     verified,
     Uparrow,
     eye,
+    alert,
     closed_eye,
     viewcomments,
     forum,
@@ -225,6 +238,11 @@ export default {
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetQuestionID(this.question["_id"]);
     },
+    async alertClick() {
+      await this.QuestionStore.SetShowSnackBar(true);
+      await this.colourStore.SetSnackColor(false);
+      await this.QuestionStore.SetSnackMessage("This query may have already been answered in an InfoPost or on the Questions page. Please have a careful look!");
+    },
   },
   async mounted() {
     this.$nextTick(() => {
@@ -272,7 +290,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
+  align-items: start;
   width: 100%;
   height: fit-content;
 }
@@ -453,6 +471,10 @@ p {
   justify-content: center;
   align-items: center;
   padding: 5px 12px 5px 12px;
+}
+
+.alert{
+  cursor : pointer;
 }
 
 .Hide {

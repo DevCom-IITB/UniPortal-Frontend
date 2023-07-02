@@ -25,8 +25,8 @@
                 class="verified"
                 :style="{ color: colourStore.grey }"
               >
-                <verified class="icon" />&nbsp;
-                <p>Verified Answer</p>
+                <verified class="icon" />&nbsp;&nbsp;
+                <p>Verified</p>
               </div>
             </div>
             <div class="images" v-if="question.images">
@@ -86,13 +86,19 @@
               :svgColor="secondaryColor"
             />
           </div>
+          <div class="Hide">
+            <alert
+              v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth <= 750"
+              @click = "alertClick"
+            />
+          </div>
           <div class="comments">
             <button
               class="view-comments"
               @click="viewComments"
               :style="{ color: colourStore.emphasis_text }"
             >
-              {{ commentbtn_text }}
+              {{ commentbtn_text }} ({{ question.comments.length }})
             </button>
             <button
               class="comment"
@@ -108,7 +114,12 @@
           </div>
         </div>
       </div>
-
+      <div class="alert">
+        <alert
+          v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth > 750"
+          @click = "alertClick"
+        />
+      </div>
       <div class="Hide" v-if="windowWidth > 750" @click="Hide">
         <eye
           v-if="AuthStore.role == 5980 && !question['hidden']"
@@ -134,10 +145,11 @@ import upvote from "../common/upvote.vue";
 
 import viewcomments from "../common/viewcomments.vue";
 import verified from "../icons/new_releases.svg";
-import Uparrow from "../icons/arrow_circle_up.svg";
+import Uparrow from "../icons/add_comment.svg";
 import eye from "../icons/visibility.svg";
 import closed_eye from "../icons/visibility_off.svg";
-import forum from "../icons/forum.svg";
+import forum from "../icons/send.svg";
+import alert from "../icons/Alert.svg";
 
 import { useQuestionStore } from "@/stores/question";
 import { useAuthStore } from "@/stores/auth";
@@ -163,6 +175,7 @@ export default {
     closed_eye,
     viewcomments,
     forum,
+    alert,
   },
   data() {
     return {
@@ -249,6 +262,11 @@ export default {
       console.log("expanding");
       this.$emit("expand");
     },
+    async alertClick() {
+      await this.questionStore.SetShowSnackBar(true);
+      await this.colourStore.SetSnackColor(false);
+      await this.questionStore.SetSnackMessage("This query may have already been answered in an InfoPost or on the Questions page. Please have a careful look!");
+    },
   },
   async mounted() {
     console.log("question in questionBoxMax", this.question);
@@ -323,7 +341,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
+  align-items: start;
   width: 100%;
   height: fit-content;
 }
@@ -523,6 +541,10 @@ p {
   justify-content: center;
   align-items: center;
   padding: 5px 12px 5px 12px;
+}
+
+.alert{
+  cursor: pointer;
 }
 
 .Hide {

@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { useQuestionStore } from "./question";
+import { useColourStore } from "./colour";
 const SMP_KEY = import.meta.env.VITE_SMP_ACCESS_KEY;
 
 export const useAuthStore = defineStore("auth", {
@@ -14,6 +16,8 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async Login(uid, password, sso) {
       let info = {};
+      const questionStore = useQuestionStore();
+      const colourStore = useColourStore();
       if (sso) {
         console.log("login with sso");
         const urlParams = new URLSearchParams(window.location.search);
@@ -27,13 +31,12 @@ export const useAuthStore = defineStore("auth", {
           },
           body: JSON.stringify({ authCode: authorizationCode }),
         });
-
-        const rollNumber = await res.json();
-        uid = rollNumber.rollNumber;
-        console.log("roll number :", rollNumber);
+        const data = await res.json();
+        console.log("data from smp login :", data);
+        uid = data.rollNumber;
         console.log("SMP KEY :", SMP_KEY);
         info = {
-          user_ID: rollNumber.rollNumber,
+          user_ID: data.rollNumber,
           password: SMP_KEY,
         };
       } else {
@@ -71,10 +74,16 @@ export const useAuthStore = defineStore("auth", {
         window.location.href = "/";
       } else {
         console.log("logging out from login");
-        await this.Logout();
+        const data = await res.json();
+        console.log("data :", data);
+        await questionStore.SetShowSnackBar(true);
+        await questionStore.SetSnackMessage(data.message);
+        await colourStore.SetSnackColor(false);
       }
     },
     async Refresh() {
+      const questionStore = useQuestionStore();
+      const colourStore = useColourStore();
       console.log("We entered the refresh function in auth.js");
       const res = await fetch("api/user/refresh", {
         method: "PUT",
@@ -83,8 +92,10 @@ export const useAuthStore = defineStore("auth", {
         },
       });
 
+      const data = await res.json();
+      console.log("data :", data);
+
       if (res.status == 200) {
-        const data = await res.json();
         this.accessToken = data["accessToken"];
         console.log("new access token: " + this.accessToken);
         this.loggedIn = true;
@@ -92,11 +103,15 @@ export const useAuthStore = defineStore("auth", {
         this.role = data["role"];
         this.name = data["name"];
       } else {
+        await questionStore.SetShowSnackBar(true);
+        await questionStore.SetSnackMessage(data.message);
+        await colourStore.SetSnackColor(false);
         this.loggedIn = false;
       }
-      return res;
     },
     async Logout() {
+      const questionStore = useQuestionStore();
+      const colourStore = useColourStore();
       console.log("logging out");
       const res = await fetch("api/user/logout", {
         method: "POST",
@@ -104,15 +119,20 @@ export const useAuthStore = defineStore("auth", {
           "Content-Type": "application/json",
         },
       });
+      console.log("res :", res);
+
+      
 
       if (res.status == 200) {
         console.log("logged out");
         this.accessToken = "";
         this.loggedIn = false;
       } else {
-        console.log("error logging out");
         this.accessToken = "";
         this.loggedIn = false;
+        await questionStore.SetShowSnackBar(true);
+        await questionStore.SetSnackMessage('cookie was not found');
+        await colourStore.SetSnackColor(false);
         console.log("logged in as :", this.loggedIn);
       }
     },

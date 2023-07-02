@@ -34,8 +34,8 @@
         ></router-view>
       </div>
       <div class="snackbar"
-      v-if="QuestionStore.showSnackbar == true">
-        <Snackbar /> 
+        v-if="QuestionStore.showSnackbar == true">
+          <Snackbar /> 
       </div>
       <div
         class="popup"
@@ -63,7 +63,7 @@
       @click="glassClick"
       :style="
         windowWidth <= 750
-          ? { background: background }
+          ? { background: ColourStore.background }
           : { background: 'rgba(0, 0, 0, 0.5)' }
       "
     ></div>
@@ -74,6 +74,10 @@
     <login_background class="login-background" />
     <div class="login-form">
       <Login :loggedIn="loggedIn" @loggedIn="Login" />
+    </div>
+    <div class="snackbar"
+        v-if="QuestionStore.showSnackbar == true">
+          <Snackbar /> 
     </div>
   </div>
 </template>
@@ -228,9 +232,9 @@ export default {
 
 .snackbar {
   z-index: 5;
-  
-  margin-bottom: 40px;
+  bottom: 40px;
   max-width: 66.58%;
+  position: absolute;
   }
 
   
