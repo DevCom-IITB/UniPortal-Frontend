@@ -51,7 +51,7 @@ export default {
     async fetchInfoPosts() {
       const bearer = `Bearer ${this.authStore.accessToken}`;
       const role = this.authStore.role;
-      const get = role == (5980 || 1980) ? "get" : "getStu";
+      const get = (role == 5980 ||role == 1980) ? "get" : "getStu";
 
       console.log("bearer : ", bearer);
 
