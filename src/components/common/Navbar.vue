@@ -49,7 +49,7 @@
       ><div class="route">My Questions</div></router-link
     >
     <router-link
-      v-if="authStore.role == 5980 || authStore.role == 6311"
+      v-if="authStore.role == 5980 || authStore.role == 6311 || authStore.role == 1980"
       to="/unanswered"
       class="btn"
       @click="selected2"
@@ -65,7 +65,7 @@
       ><div class="route">UnAnswered</div></router-link
     >
     <router-link
-      v-if="authStore.role == 5980 || authStore.role == 6311"
+      v-if="authStore.role == 5980 || authStore.role == 6311 || authStore.role == 1980"
       to="/answered"
       class="btn"
       @click="selected3"
