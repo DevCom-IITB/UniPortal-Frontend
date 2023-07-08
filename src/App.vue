@@ -69,8 +69,8 @@
     ></div>
   </div>
   <div class="login" v-if="!Auth.loggedIn">
-    <DC class="DC" />
-    <SMP class="SMP" />
+    <DC class="DC" @click="toDevCom"/>
+    <SMP class="SMP" @click="toSMP"/>
     <login_background class="login-background" />
     <div class="login-form">
       <Login :loggedIn="loggedIn" @loggedIn="Login" />
@@ -171,6 +171,12 @@ export default {
       this.askQuestion = true;
       console.log("body:", body);
       this.editBody = body;
+    },
+    async toDevCom() {
+      window.open("https://devcom-iitb.org/");
+    },
+    async toSMP() {
+      window.open("https://smp.gymkhana.iitb.ac.in/");
     },
   },
   setup() {

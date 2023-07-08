@@ -40,7 +40,7 @@
       <p>If you have trouble signing up, refer to this
         <a href="https://smp.gymkhana.iitb.ac.in/">doc</a> 
          or contact 
-         <a href="https://smp.gymkhana.iitb.ac.in/">gosavisanskar@gmail.com</a></p>
+         smpcs2023@gmail.com</p>
     </div>
    
     

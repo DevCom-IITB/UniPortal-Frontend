@@ -8,6 +8,9 @@ import "./assets/main.css";
 
 const pinia = createPinia();
 
+if(import.meta.env.VITE_NODE_ENV != "DEV"){
+    console.log = () => {};
+}
 
 pinia.use(piniaPluginPersistedState);
 
