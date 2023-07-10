@@ -21,15 +21,15 @@
 </template>
 
 <script>
-import Header from "../components/common/Header.vue";
-import InfoBox from "../components/common/InfoBox.vue";
+import Header from '../components/common/Header.vue';
+import InfoBox from '../components/common/InfoBox.vue';
 
-import { useAuthStore } from "../stores/auth";
-import { useListStore } from "../stores/list";
-import { useColourStore } from "../stores/colour";
+import { useAuthStore } from '../stores/auth';
+import { useListStore } from '../stores/list';
+import { useColourStore } from '../stores/colour';
 
 export default {
-  name: "Infopost",
+  name: 'Infopost',
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
@@ -38,8 +38,8 @@ export default {
   },
   data() {
     return {
-      headerName: "Infopost",
-      headerText: "Infoposts from SMPCs",
+      headerName: 'Infopost',
+      headerText: 'Infoposts from SMPCs',
       infoposts: [],
     };
   },
@@ -51,53 +51,56 @@ export default {
     async fetchInfoPosts() {
       const bearer = `Bearer ${this.authStore.accessToken}`;
       const role = this.authStore.role;
-      const get = (role == 5980 ||role == 1980) ? "get" : "getStu";
+      const get = role == 5980 || role == 1980 ? 'get' : 'getStu';
 
-      console.log("bearer : ", bearer);
+      console.log('bearer : ', bearer);
 
-      console.log("fetching info posts");
+      console.log('fetching info posts');
 
-      const res = await fetch(`newbee/api/info/${get}`, {
-        method: "GET",
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/${get}`, {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: bearer,
         },
       });
 
-      console.log("response : ", res);
+      console.log('response : ', res);
 
-      console.log("request sent");
+      console.log('request sent');
 
       if (res.status === 200) {
-        console.log("received response");
+        console.log('received response');
         const data = await res.json();
         console.log(data);
         this.listStore.SetList(data);
         return data;
       } else {
         if (res.status === 403) {
-          console.log("refreshing token");
+          console.log('refreshing token');
           const res = await this.authStore.Refresh();
 
           if (res.status === 200) {
-            console.log("refreshed token");
+            console.log('refreshed token');
             const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log("new bearer : ", bearer);
-            const res = await fetch(`newbee/api/info/${get}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: bearer,
-              },
-            });
-            console.log("new request sent");
+            console.log('new bearer : ', bearer);
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/info/${get}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: bearer,
+                },
+              }
+            );
+            console.log('new request sent');
             const data = await res.json();
             console.log(data);
             this.listStore.SetList(data);
             return data;
           } else {
-            console.log("refresh failed");
+            console.log('refresh failed');
             await this.authStore.Logout();
           }
         } else {
@@ -106,9 +109,9 @@ export default {
       }
     },
     async EditInfo(infopost) {
-      console.log("editing info");
+      console.log('editing info');
       console.log(infopost);
-      this.$emit("edit", infopost);
+      this.$emit('edit', infopost);
     },
   },
   async mounted() {

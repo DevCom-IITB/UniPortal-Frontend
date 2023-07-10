@@ -31,15 +31,15 @@
 </template>
 
 <script>
-import Question from "../components/common/questionBox.vue";
-import Header from "../components/common/Header.vue";
+import Question from '../components/common/questionBox.vue';
+import Header from '../components/common/Header.vue';
 
-import { useAuthStore } from "../stores/auth";
-import { useListStore } from "../stores/list";
-import { useColourStore } from "../stores/colour";
+import { useAuthStore } from '../stores/auth';
+import { useListStore } from '../stores/list';
+import { useColourStore } from '../stores/colour';
 
 export default {
-  name: "Questions",
+  name: 'Questions',
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      headerName: "Questions",
+      headerName: 'Questions',
       headerText: "Where all your friend's questions reside",
       questions: [],
       true: true,
@@ -67,49 +67,55 @@ export default {
       };
       const bearer = `Bearer ${this.authStore.accessToken}`;
 
-      console.log("bearer : ", bearer);
+      console.log('bearer : ', bearer);
 
-      const res = await fetch("api/question/otherQ", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: bearer,
-        },
-        body: JSON.stringify(request),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE}/question/otherQ`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: bearer,
+          },
+          body: JSON.stringify(request),
+        }
+      );
 
-      console.log("request sent");
+      console.log('request sent');
 
       if (res.status === 200) {
-        console.log("received response");
+        console.log('received response');
         const data = await res.json();
         console.log(data);
         this.listStore.SetList(data);
         return data;
       } else {
         if (res.status === 403) {
-          console.log("refreshing token");
+          console.log('refreshing token');
           const res = await this.authStore.Refresh();
 
           if (res.status === 200) {
-            console.log("refreshed token");
+            console.log('refreshed token');
             const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log("new bearer : ", bearer);
-            const res = await fetch("api/question/otherQ", {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: bearer,
-              },
-              body: JSON.stringify(request),
-            });
-            console.log("new request sent");
+            console.log('new bearer : ', bearer);
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/question/otherQ`,
+              {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: bearer,
+                },
+                body: JSON.stringify(request),
+              }
+            );
+            console.log('new request sent');
             const data = await res.json();
             console.log(data);
             this.listStore.SetList(data);
             return data;
           } else {
-            console.log("refresh failed");
+            console.log('refresh failed');
             await this.authStore.Logout();
           }
         } else {

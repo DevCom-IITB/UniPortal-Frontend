@@ -24,7 +24,7 @@ export const useAuthStore = defineStore("auth", {
         const authorizationCode = urlParams.get("code");
         console.log(authorizationCode);
 
-        const res = await fetch("api/user/smplogin", {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/smplogin`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -48,9 +48,7 @@ export const useAuthStore = defineStore("auth", {
         };
       }
 
-      console.log("sending login request with info :", info);
-      console.log("url", "api/user/login");
-      const res = await fetch("api/user/login", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +83,7 @@ export const useAuthStore = defineStore("auth", {
       const questionStore = useQuestionStore();
       const colourStore = useColourStore();
       console.log("We entered the refresh function in auth.js");
-      const res = await fetch("api/user/refresh", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/refresh`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +111,7 @@ export const useAuthStore = defineStore("auth", {
       const questionStore = useQuestionStore();
       const colourStore = useColourStore();
       console.log("logging out");
-      const res = await fetch("api/user/logout", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +119,7 @@ export const useAuthStore = defineStore("auth", {
       });
       console.log("res :", res);
 
-      
+
 
       if (res.status == 200) {
         console.log("logged out");

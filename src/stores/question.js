@@ -90,7 +90,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`api/question/post`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/post`, {
         method: "POST",
         headers: {
           Authorization: bearer,
@@ -104,7 +104,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully added question");
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
       } else {
@@ -114,7 +114,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
 
@@ -122,7 +122,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`api/question/post`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}question/post`, {
               method: "POST",
               headers: {
                 Authorization: bearer,
@@ -135,7 +135,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
           } else {
             console.log("refresh failed");
@@ -172,7 +172,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`api/info/post`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}info/post`, {
         method: "POST",
         headers: {
           Authorization: bearer,
@@ -185,7 +185,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully added InfoPost");
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
       } else {
@@ -195,14 +195,14 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`api/info/post`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}info/post`, {
               method: "POST",
               headers: {
                 Authorization: bearer,
@@ -215,7 +215,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
           } else {
             console.log("refresh failed");
@@ -256,7 +256,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`api/question/answerQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/answerQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           Authorization: bearer,
@@ -270,7 +270,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully added answer");
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
         window.location.href = "/answered";
@@ -282,7 +282,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -290,7 +290,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/answerQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}question/answerQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -305,7 +305,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             window.location.href = "/answered";
             window.onload = function () {
@@ -349,7 +349,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`api/question/commentQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/commentQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -365,7 +365,7 @@ export const useQuestionStore = defineStore("question", {
         console.log("successfully added comment on question");
         const data = await res.json();
         colourStore.SetSnackColor(true);
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         const comment = {
           asked_At: new Date(),
@@ -383,7 +383,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -391,7 +391,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/commentQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}question/commentQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -405,7 +405,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             const comment = {
@@ -458,7 +458,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
       const res = await fetch(
-        `api/question/commentA/${this.question_ID}/${this.answer_ID}`,
+        `${import.meta.env.VITE_API_BASE}question/commentA/${this.question_ID}/${this.answer_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -476,7 +476,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully added comment on answer :", this.answer_ID);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         const comment = {
@@ -499,7 +499,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -507,7 +507,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/commentA/${this.question_ID}/${this.answer_ID}`,
+              `${import.meta.env.VITE_API_BASE}question/commentA/${this.question_ID}/${this.answer_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -521,7 +521,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             const comment = {
@@ -572,7 +572,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`api/question/upvoteQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/upvoteQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -587,7 +587,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully upvotes on question :", this.question["_id"]);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         const val = data["val"];
@@ -600,7 +600,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -608,7 +608,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/upvoteQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}question/upvoteQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -623,7 +623,7 @@ export const useQuestionStore = defineStore("question", {
             this.question["upvotes"]++;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
           } else {
@@ -661,7 +661,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `api/question/upvoteA/${this.question_ID}/${this.answer_ID}`,
+        `${import.meta.env.VITE_API_BASE}question/upvoteA/${this.question_ID}/${this.answer_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -690,7 +690,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -698,7 +698,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/upvoteA/${this.question_ID}/${this.answer_ID}`,
+              `${import.meta.env.VITE_API_BASE}question/upvoteA/${this.question_ID}/${this.answer_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -712,7 +712,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
           } else {
@@ -744,7 +744,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`api/question/hideQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/hideQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -758,7 +758,7 @@ export const useQuestionStore = defineStore("question", {
         console.log("successfully hid the question :", this.question["_id"]);
         await listStore.SetHideQuestion(this.question["_id"]);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
       } else {
@@ -769,7 +769,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -777,7 +777,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/hideQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}question/hideQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -790,7 +790,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             await listStore.SetHideQuestion(this.question["_id"]);
@@ -820,7 +820,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `api/question/hideA/${this.question_ID}/${this.answer_ID}`,
+        `${import.meta.env.VITE_API_BASE}question/hideA/${this.question_ID}/${this.answer_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -841,7 +841,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully hid answer :", this.answer_ID);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
@@ -853,7 +853,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -861,7 +861,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/hideA/${this.question_ID}/${this.answer_ID}`,
+              `${import.meta.env.VITE_API_BASE}question/hideA/${this.question_ID}/${this.answer_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -874,7 +874,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             await listStore.SetHideAnswer(this.question_ID, this.answer_ID);
@@ -906,7 +906,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `api/question/hideC/${this.question_ID}/${this.comment_ID}`,
+        `${import.meta.env.VITE_API_BASE}question/hideC/${this.question_ID}/${this.comment_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -927,7 +927,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully hid comment :", this.comment_ID);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         await listStore.SetHideQuestionComment(
@@ -942,7 +942,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -950,7 +950,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/hideC/${this.question_ID}/${this.comment_ID}`,
+              `${import.meta.env.VITE_API_BASE}question/hideC/${this.question_ID}/${this.comment_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -963,7 +963,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             await listStore.SetHideQuestionComment(
@@ -1000,7 +1000,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `api/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
+        `${import.meta.env.VITE_API_BASE}question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -1015,7 +1015,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully hid comment :", this.comment_ID);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         await listStore.SetHideAnswerComment(
@@ -1031,7 +1031,7 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
@@ -1039,7 +1039,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `api/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
+              `${import.meta.env.VITE_API_BASE}question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -1052,7 +1052,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             await listStore.SetHideAnswerComment(
@@ -1090,7 +1090,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`api/info/hide/${this.info_ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}info/hide/${this.info_ID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -1103,7 +1103,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully hid the info post :", this.info_ID);
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         await listStore.SetHideInfoPost(this.info_ID);
@@ -1115,14 +1115,14 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
-          
+
           if (res.status === 200) {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`api/info/hide/${this.info_ID}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}info/hide/${this.info_ID}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
@@ -1133,7 +1133,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             await listStore.SetHideInfoPost(this.info_ID);
@@ -1167,7 +1167,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`api/info/edit/${this.info_ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}info/edit/${this.info_ID}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -1181,7 +1181,7 @@ export const useQuestionStore = defineStore("question", {
       if (res.status == 200) {
         console.log("successfully edited InfoPost");
         const data = await res.json();
-        console.log('data :',data);
+        console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         listStore.SetEditInfoPost(this.info_ID, body);
@@ -1193,14 +1193,14 @@ export const useQuestionStore = defineStore("question", {
           this.showSnackbar = true;
           console.log("snackbar");
           const data = await res.json();
-          console.log('data :',data);
+          console.log('data :', data);
           this.snackMessage = data.message;
 
           if (res.status === 200) {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`api/info/edit/${this.info_ID}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}info/edit/${this.info_ID}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",
@@ -1212,7 +1212,7 @@ export const useQuestionStore = defineStore("question", {
             this.showSnackbar = true;
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :',data);
+            console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
             await listStore.SetEditInfoPost(this.info_ID, body);
