@@ -11,7 +11,7 @@
       <div class="QuestionBox">
         <div class="content" :style="{ background: colourStore.background }">
           <router-link
-            to="/question"
+            :to="import.meta.env.VITE_BASE + '/question'"
             class="questionRoute"
             @comment="$emit('comment')"
             @click="SetQuestionView"
@@ -24,12 +24,16 @@
                     class="name"
                     :style="{ color: colourStore.emphasis_text }"
                   >
-                    {{ question["user_Name"] }}
+                    {{ question['user_Name'] }}
                   </div>
                   <div class="timestamp" :style="{ color: colourStore.grey }">
                     {{ timestamp }}
                   </div>
-                  <div class="attached" v-if="(images.length)>0" :style="{ color : colourStore.grey }">
+                  <div
+                    class="attached"
+                    v-if="images.length > 0"
+                    :style="{ color: colourStore.grey }"
+                  >
                     &nbsp;&nbsp;Images Attached
                   </div>
                 </div>
@@ -43,7 +47,7 @@
                 </div>
               </div>
               <div class="text" :style="{ color: colourStore.emphasis_text }">
-                {{ question["body"] }}
+                {{ question['body'] }}
               </div>
             </div>
           </router-link>
@@ -92,8 +96,12 @@
           </div>
           <div class="Hide">
             <alert
-              v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth <= 750"
-              @click = "alertClick"
+              v-if="
+                question['hidden'] &&
+                AuthStore.role == 7669 &&
+                windowWidth <= 750
+              "
+              @click="alertClick"
             />
           </div>
           <div class="comments">
@@ -120,8 +128,10 @@
       </div>
       <div class="alert">
         <alert
-          v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth > 750"
-          @click = "alertClick"
+          v-if="
+            question['hidden'] && AuthStore.role == 7669 && windowWidth > 750
+          "
+          @click="alertClick"
         />
       </div>
       <div class="Hide" v-if="windowWidth > 750" @click="Hide">
@@ -149,22 +159,22 @@
 </template>
 
 <script>
-import upvote from "../common/upvote.vue";
+import upvote from '../common/upvote.vue';
 
-import viewcomments from "../common/viewcomments.vue";
-import verified from "../icons/new_releases.svg";
-import Uparrow from "../icons/add_comment.svg";
-import eye from "../icons/visibility.svg";
-import closed_eye from "../icons/visibility_off.svg";
-import forum from "../icons/send.svg";
-import alert from "../icons/Alert.svg";
+import viewcomments from '../common/viewcomments.vue';
+import verified from '../icons/new_releases.svg';
+import Uparrow from '../icons/add_comment.svg';
+import eye from '../icons/visibility.svg';
+import closed_eye from '../icons/visibility_off.svg';
+import forum from '../icons/send.svg';
+import alert from '../icons/Alert.svg';
 
-import { useQuestionStore } from "@/stores/question";
-import { useAuthStore } from "@/stores/auth";
-import { useColourStore } from "@/stores/colour";
+import { useQuestionStore } from '@/stores/question';
+import { useAuthStore } from '@/stores/auth';
+import { useColourStore } from '@/stores/colour';
 
 export default {
-  name: "Question",
+  name: 'Question',
   components: {
     upvote,
     verified,
@@ -183,15 +193,14 @@ export default {
       QuestionStore,
       AuthStore,
       colourStore,
-    
     };
   },
   data() {
     return {
       showComments: false,
-      commentbtn_text: "View Comments",
+      commentbtn_text: 'View Comments',
       windowWidth: window.innerWidth,
-      timestamp: "",
+      timestamp: '',
       images: [],
     };
   },
@@ -200,69 +209,71 @@ export default {
       console.log(this.comments);
       (this.showComments = !this.showComments),
         (this.commentbtn_text =
-          this.commentbtn_text === "View Comments"
-            ? "Hide Comments"
-            : "View Comments");
-      await this.QuestionStore.SetQuestionID(this.question["_id"]);
+          this.commentbtn_text === 'View Comments'
+            ? 'Hide Comments'
+            : 'View Comments');
+      await this.QuestionStore.SetQuestionID(this.question['_id']);
     },
     onResize() {
       this.windowWidth = window.innerWidth;
     },
     async AnswerClick() {
-      console.log("we will be answering a question");
+      console.log('we will be answering a question');
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetAction(1);
       await this.QuestionStore.SetAddImage(true);
-      this.$emit("comment");
+      this.$emit('comment');
     },
     async CommentClick() {
-      console.log("we will be commenting on a question");
+      console.log('we will be commenting on a question');
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetAction(2);
       await this.QuestionStore.SetAddImage(false);
-      this.$emit("comment");
+      this.$emit('comment');
     },
     async Upvote() {
-      console.log("we will be upvoting a question");
-      console.log("upvotes: " + this.upvotes);
+      console.log('we will be upvoting a question');
+      console.log('upvotes: ' + this.upvotes);
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.UpvoteQuestion();
-      console.log("upvotes: " + this.upvotes);
+      console.log('upvotes: ' + this.upvotes);
     },
     async Hide() {
-      console.log("we will be hiding a question");
+      console.log('we will be hiding a question');
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.HideQuestion();
     },
     async SetQuestionView() {
       await this.QuestionStore.SetQuestion(this.question);
-      await this.QuestionStore.SetQuestionID(this.question["_id"]);
+      await this.QuestionStore.SetQuestionID(this.question['_id']);
     },
     async alertClick() {
       await this.QuestionStore.SetShowSnackBar(true);
       await this.colourStore.SetSnackColor(false);
-      await this.QuestionStore.SetSnackMessage("This query may have already been answered in an InfoPost or on the Questions page. Please have a careful look!");
+      await this.QuestionStore.SetSnackMessage(
+        'This query may have already been answered in an InfoPost or on the Questions page. Please have a careful look!'
+      );
     },
   },
   async mounted() {
     this.$nextTick(() => {
-      window.addEventListener("resize", this.onResize);
+      window.addEventListener('resize', this.onResize);
     });
-    const date = new Date(this.question["asked_At"]);
+    const date = new Date(this.question['asked_At']);
     const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
     };
     this.timestamp = date.toLocaleString(undefined, options);
-    this.images=this.question.images;
+    this.images = this.question.images;
   },
   beforeUnmount() {
-    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener('resize', this.onResize);
   },
   props: {
     question: {
@@ -473,8 +484,8 @@ p {
   padding: 5px 12px 5px 12px;
 }
 
-.alert{
-  cursor : pointer;
+.alert {
+  cursor: pointer;
 }
 
 .Hide {
