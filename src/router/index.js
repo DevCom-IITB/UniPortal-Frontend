@@ -8,37 +8,37 @@ import Questionview from "../views/Questionview.vue";
 
 const routes = [
   {
-    path: "/",
+    path: import.meta.env.VITE_BASE + "/",
     name: "Infopost",
     component: Infopost,
   },
 
   {
-    path: "/myquestions",
+    path: import.meta.env.VITE_BASE + "/myquestions",
     name: "MyQuestions",
     component: MyQuestions,
   },
 
   {
-    path: "/questions",
+    path: import.meta.env.VITE_BASE + "/questions",
     name: "Questions",
     component: Questions,
   },
 
   {
-    path: "/unanswered",
+    path: import.meta.env.VITE_BASE + "/unanswered",
     name: "UnAnswered",
     component: UnAnswered,
   },
 
   {
-    path: "/answered",
+    path: import.meta.env.VITE_BASE + "/answered",
     name: "Answered",
     component: Answered,
   },
 
   {
-    path: "/question",
+    path: import.meta.env.VITE_BASE + "/question",
     name: "Questionview",
     component: Questionview,
     props: true,
