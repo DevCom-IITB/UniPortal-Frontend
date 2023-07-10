@@ -90,7 +90,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/post`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/post`, {
         method: "POST",
         headers: {
           Authorization: bearer,
@@ -122,7 +122,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}question/post`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/post`, {
               method: "POST",
               headers: {
                 Authorization: bearer,
@@ -172,7 +172,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}info/post`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/post`, {
         method: "POST",
         headers: {
           Authorization: bearer,
@@ -202,7 +202,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}info/post`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/post`, {
               method: "POST",
               headers: {
                 Authorization: bearer,
@@ -256,7 +256,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/answerQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/answerQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           Authorization: bearer,
@@ -290,7 +290,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/answerQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}/question/answerQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -349,7 +349,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/commentQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/commentQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -391,7 +391,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/commentQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}/question/commentQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -458,7 +458,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}question/commentA/${this.question_ID}/${this.answer_ID}`,
+        `${import.meta.env.VITE_API_BASE}/question/commentA/${this.question_ID}/${this.answer_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -507,7 +507,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/commentA/${this.question_ID}/${this.answer_ID}`,
+              `${import.meta.env.VITE_API_BASE}/question/commentA/${this.question_ID}/${this.answer_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -572,7 +572,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/upvoteQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/upvoteQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -608,7 +608,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/upvoteQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}/question/upvoteQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -661,7 +661,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}question/upvoteA/${this.question_ID}/${this.answer_ID}`,
+        `${import.meta.env.VITE_API_BASE}/question/upvoteA/${this.question_ID}/${this.answer_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -698,7 +698,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/upvoteA/${this.question_ID}/${this.answer_ID}`,
+              `${import.meta.env.VITE_API_BASE}/question/upvoteA/${this.question_ID}/${this.answer_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -744,7 +744,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("bearer : ", bearer);
       console.log("question id : ", this.question["_id"]);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}question/hideQ/${this.question["_id"]}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/hideQ/${this.question["_id"]}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -777,7 +777,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/hideQ/${this.question["_id"]}`,
+              `${import.meta.env.VITE_API_BASE}/question/hideQ/${this.question["_id"]}`,
               {
                 method: "PATCH",
                 headers: {
@@ -820,7 +820,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}question/hideA/${this.question_ID}/${this.answer_ID}`,
+        `${import.meta.env.VITE_API_BASE}/question/hideA/${this.question_ID}/${this.answer_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -861,7 +861,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/hideA/${this.question_ID}/${this.answer_ID}`,
+              `${import.meta.env.VITE_API_BASE}/question/hideA/${this.question_ID}/${this.answer_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -906,7 +906,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}question/hideC/${this.question_ID}/${this.comment_ID}`,
+        `${import.meta.env.VITE_API_BASE}/question/hideC/${this.question_ID}/${this.comment_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -950,7 +950,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/hideC/${this.question_ID}/${this.comment_ID}`,
+              `${import.meta.env.VITE_API_BASE}/question/hideC/${this.question_ID}/${this.comment_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -1000,7 +1000,7 @@ export const useQuestionStore = defineStore("question", {
       console.log("question id : ", this.question_ID);
       console.log("Sending request");
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
+        `${import.meta.env.VITE_API_BASE}/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
         {
           method: "PATCH",
           headers: {
@@ -1039,7 +1039,7 @@ export const useQuestionStore = defineStore("question", {
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
+              `${import.meta.env.VITE_API_BASE}/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
               {
                 method: "PATCH",
                 headers: {
@@ -1090,7 +1090,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}info/hide/${this.info_ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/hide/${this.info_ID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -1122,7 +1122,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}info/hide/${this.info_ID}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/hide/${this.info_ID}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
@@ -1167,7 +1167,7 @@ export const useQuestionStore = defineStore("question", {
 
       console.log("bearer : ", bearer);
       console.log("Sending request");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}info/edit/${this.info_ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/edit/${this.info_ID}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -1200,7 +1200,7 @@ export const useQuestionStore = defineStore("question", {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}info/edit/${this.info_ID}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/edit/${this.info_ID}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",

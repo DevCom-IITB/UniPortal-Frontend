@@ -31,15 +31,15 @@
 </template>
 
 <script>
-import Question from "../components/common/questionBox.vue";
-import Header from "../components/common/Header.vue";
+import Question from '../components/common/questionBox.vue';
+import Header from '../components/common/Header.vue';
 
-import { useAuthStore } from "../stores/auth";
-import { useListStore } from "../stores/list";
-import { useColourStore } from "../stores/colour";
+import { useAuthStore } from '../stores/auth';
+import { useListStore } from '../stores/list';
+import { useColourStore } from '../stores/colour';
 
 export default {
-  name: "UnAnsweredQ",
+  name: 'UnAnsweredQ',
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
@@ -48,13 +48,13 @@ export default {
   },
   data() {
     return {
-      headerName: "UnAnswered",
-      headerText: "Where all the unanswered questions reside",
+      headerName: 'UnAnswered',
+      headerText: 'Where all the unanswered questions reside',
       questions: [],
-      background: "#FFF3F2",
-      primaryColor: "#1F1514",
-      secondaryColor: "#CC655E",
-      primaryAccent: "#FFD2D1",
+      background: '#FFF3F2',
+      primaryColor: '#1F1514',
+      secondaryColor: '#CC655E',
+      primaryAccent: '#FFD2D1',
       true: true,
       false: false,
     };
@@ -67,47 +67,53 @@ export default {
     async fetchQuestions() {
       const bearer = `Bearer ${this.authStore.accessToken}`;
 
-      console.log("bearer : ", bearer);
+      console.log('bearer : ', bearer);
 
-      const res = await fetch("api/question/unansweredQ", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: bearer,
-        },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE}/question/unansweredQ`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: bearer,
+          },
+        }
+      );
 
-      console.log("request sent");
+      console.log('request sent');
 
       if (res.status === 200) {
-        console.log("received response");
+        console.log('received response');
         const data = await res.json();
         console.log(data);
         this.listStore.SetList(data);
         return data;
       } else {
         if (res.status === 403) {
-          console.log("refreshing token");
+          console.log('refreshing token');
           const res = await this.authStore.Refresh();
 
           if (res.status === 200) {
-            console.log("refreshed token");
+            console.log('refreshed token');
             const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log("new bearer : ", bearer);
-            const res = await fetch("api/question/unansweredQ", {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: bearer,
-              },
-            });
-            console.log("new request sent");
+            console.log('new bearer : ', bearer);
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/question/unansweredQ`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: bearer,
+                },
+              }
+            );
+            console.log('new request sent');
             const data = await res.json();
             console.log(data);
             this.listStore.SetList(data);
             return data;
           } else {
-            console.log("refresh failed");
+            console.log('refresh failed');
             await this.authStore.Logout();
           }
         } else {
