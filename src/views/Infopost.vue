@@ -57,7 +57,7 @@ export default {
 
       console.log("fetching info posts");
 
-      const res = await fetch(`api/info/${get}`, {
+      const res = await fetch(`newbee/api/info/${get}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export default {
             console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
             console.log("new bearer : ", bearer);
-            const res = await fetch(`api/info/${get}`, {
+            const res = await fetch(`newbee/api/info/${get}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
