@@ -70,7 +70,7 @@ export const useAuthStore = defineStore("auth", {
         console.log("user id :", this.user_ID);
         console.log("role :", this.role);
         console.log("name :", this.name);
-        window.location.href = "/";
+        window.location.href = import.meta.env.VITE_BASE + "/";
       } else {
         console.log("logging out from login");
         const data = await res.json();

@@ -273,7 +273,7 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
-        window.location.href = "/answered";
+        window.location.href = import.meta.env.VITE_BASE + "/answered";
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
@@ -307,9 +307,9 @@ export const useQuestionStore = defineStore("question", {
             const data = await res.json();
             console.log('data :', data);
             this.snackMessage = data.message;
-            window.location.href = "/answered";
+            window.location.href = import.meta.env.VITE_BASE + "/answered";
             window.onload = function () {
-              window.location.href = "/question";
+              window.location.href = import.meta.env.VITE_BASE + "/question";
             };
             return data;
           } else {
