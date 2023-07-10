@@ -1,7 +1,7 @@
 <template>
   <div class="navbar" :style="{ background: colourStore.unselected }">
     <router-link
-      :to="AuthStore.vite_base + '/'"
+      :to="authStore.vite_base + '/'"
       class="btn"
       id="info"
       @click="selected1"
@@ -18,7 +18,7 @@
     >
     <router-link
       v-if="authStore.role == 1980 || authStore.role == 7669"
-      :to="AuthStore.vite_base + '/questions'"
+      :to="authStore.vite_base + '/questions'"
       class="btn"
       @click="selected2"
       @hover="hover2"
@@ -34,7 +34,7 @@
     >
     <router-link
       v-if="authStore.role == 1980 || authStore.role == 7669"
-      :to="AuthStore.vite_base + '/myquestions'"
+      :to="authStore.vite_base + '/myquestions'"
       class="btn"
       @click="selected3"
       @hover="hover3"
@@ -54,7 +54,7 @@
         authStore.role == 6311 ||
         authStore.role == 1980
       "
-      :to="AuthStore.vite_base + '/unanswered'"
+      :to="authStore.vite_base + '/unanswered'"
       class="btn"
       @click="selected2"
       @hover="hover2"
@@ -74,7 +74,7 @@
         authStore.role == 6311 ||
         authStore.role == 1980
       "
-      :to="AuthStore.vite_base + '/answered'"
+      :to="authStore.vite_base + '/answered'"
       class="btn"
       @click="selected3"
       @hover="hover3"
