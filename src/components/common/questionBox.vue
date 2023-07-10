@@ -11,7 +11,7 @@
       <div class="QuestionBox">
         <div class="content" :style="{ background: colourStore.background }">
           <router-link
-            :to="import.meta.env.VITE_BASE + '/question'"
+            :to="AuthStore.vite_base + '/question'"
             class="questionRoute"
             @comment="$emit('comment')"
             @click="SetQuestionView"

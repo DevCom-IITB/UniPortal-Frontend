@@ -5,6 +5,7 @@ const SMP_KEY = import.meta.env.VITE_SMP_ACCESS_KEY;
 
 export const useAuthStore = defineStore("auth", {
   id: "auth",
+  vite_base: import.meta.env.VITE_BASE,
   state: () => ({
     accessToken: "",
     loggedIn: true,
