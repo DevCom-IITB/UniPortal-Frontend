@@ -55,16 +55,14 @@
         <div class="box-footer">
           <div
             class="Upvote"
-            @click="test"
+            @click="Upvote"
             v-if="
               windowWidth <= 750 &&
               (AuthStore.role == 7669 || AuthStore.role == 1980)
             "
           >
             <upvote
-              :background="primaryAccent"
-              :primaryColor1="primaryColor"
-              :upvotes="upvotes"
+              :upvotes="question.upvotes"
               :windowWidth="windowWidth"
             />
           </div>
@@ -83,18 +81,20 @@
             <forum class="icon" />&nbsp;
             <p>Answer</p>
           </div>
-          <div class="Hide" v-if="windowWidth <= 750" @click="Hide">
+          <div class="Hide" v-if="windowWidth <= 750" >
             <eye
               v-if="AuthStore.role == 5980 && !question['hidden']"
               class="icon"
               :svgColor="secondaryColor"
+              @click="Hide"
             /><closed_eye
               v-if="AuthStore.role == 5980 && question['hidden']"
               class="icon"
               :svgColor="secondaryColor"
+              @click="Hide"
             />
           </div>
-          <div class="Hide">
+          <div class="alert" v-if="question['hidden']">
             <alert
               v-if="
                 question['hidden'] &&
@@ -126,21 +126,20 @@
           </div>
         </div>
       </div>
-      <div class="alert">
-        <alert
+      <div class="Hide" v-if="windowWidth > 750">
+        <eye
+          v-if="AuthStore.role == 5980 && !question['hidden']"
+          class="icon"
+          @click="Hide"
+        /><closed_eye
+          v-if="AuthStore.role == 5980 && question['hidden']"
+          class="icon"
+          @click="Hide"
+        /><alert
           v-if="
             question['hidden'] && AuthStore.role == 7669 && windowWidth > 750
           "
           @click="alertClick"
-        />
-      </div>
-      <div class="Hide" v-if="windowWidth > 750" @click="Hide">
-        <eye
-          v-if="AuthStore.role == 5980 && !question['hidden']"
-          class="icon"
-        /><closed_eye
-          v-if="AuthStore.role == 5980 && question['hidden']"
-          class="icon"
         />
       </div>
     </div>
@@ -486,6 +485,9 @@ p {
 
 .alert {
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  margin-left: 16px;
 }
 
 .Hide {

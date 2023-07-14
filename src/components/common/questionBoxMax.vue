@@ -47,7 +47,7 @@
         <div class="box-footer">
           <div
             class="Upvote"
-            @click="test"
+            @click="Upvote"
             v-if="
               windowWidth <= 750 &&
               (AuthStore.role == 7669 || AuthStore.role == 1980)
@@ -114,21 +114,20 @@
           </div>
         </div>
       </div>
-      <div class="alert">
-        <alert
-          v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth > 750"
-          @click = "alertClick"
-        />
-      </div>
-      <div class="Hide" v-if="windowWidth > 750" @click="Hide">
+      <div class="Hide" v-if="windowWidth > 750" >
         <eye
           v-if="AuthStore.role == 5980 && !question['hidden']"
           class="icon"
           :svgColor="secondaryColor"
+          @click="Hide"
         /><closed_eye
           v-if="AuthStore.role == 5980 && question['hidden']"
           class="icon"
           :svgColor="secondaryColor"
+          @click="Hide"
+        /><alert
+          v-if="question['hidden'] && AuthStore.role == 7669 && windowWidth > 750"
+          @click = "alertClick"
         />
       </div>
     </div>

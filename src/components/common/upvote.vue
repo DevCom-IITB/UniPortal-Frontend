@@ -7,20 +7,23 @@
         background: colourStore.background,
       }"
     >
-      <div class="icon"><Upvote /></div>
-      <p v-if="windowWidth <= 750">&nbsp;Upvotes&nbsp;</p>
+      <div class="icon"><Upvote1 /></div>
+      <p v-if="windowWidth <= 750">&nbsp;Upvotes&nbsp;(</p>
       <p>{{ upvotes }}</p>
+      <p v-if="windowWidth <= 750">)</p>
     </button>
   </div>
 </template>
 
 <script>
 import Upvote from "../icons/expand_more.svg";
+import Upvote1 from "../icons/arrow_circle_up.svg";
 import { useColourStore } from "../../stores/colour";
 export default {
   name: "upvote",
   components: {
     Upvote,
+    Upvote1,
   },
   setup() {
     const colourStore = useColourStore();
@@ -44,6 +47,7 @@ export default {
 };
 </script>
 <style scoped>
+
 .btn {
   border: none;
   border-radius: 100px;
