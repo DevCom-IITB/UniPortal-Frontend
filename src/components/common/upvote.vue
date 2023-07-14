@@ -17,7 +17,7 @@
 
 <script>
 import Upvote from "../icons/expand_more.svg";
-import Upvote1 from "../icons/arrow_circle_up.svg";
+import Upvote1 from "../icons/upvote.svg";
 import { useColourStore } from "../../stores/colour";
 export default {
   name: "upvote",
