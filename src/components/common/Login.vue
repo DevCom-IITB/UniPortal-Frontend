@@ -13,13 +13,13 @@
         type="text"
         class="input"
         v-model="uid"
-        placeholder="Enter your id"
+        placeholder="Enter your JEE Advanced Roll Number"
       />
       <input
         type="password"
         class="input"
         v-model="password"
-        placeholder="Enter your password"
+        placeholder="Enter your DOB in ddmmyyyy"
       />
       <input
         type="submit"
@@ -37,9 +37,7 @@
    
    
     <div class="headers">
-      <p>If you have trouble signing up, refer to this
-        <a href="https://smp.gymkhana.iitb.ac.in/">doc</a> 
-         or contact 
+      <p>If you have trouble signing up, contact 
          smpcs2023@gmail.com</p>
     </div>
    
