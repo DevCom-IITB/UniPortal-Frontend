@@ -29,8 +29,7 @@
     >
       <div class="InfoText">
         Welcome aboard! <br />
-        With the all new freshers’ portal clear all your doubts regarding the
-        admission process
+        With the all new JEE Entrant's Portal NewBee, clear all your doubts about the admission process at IIT Bombay
       </div>
 
       <div class="InfoLinks">

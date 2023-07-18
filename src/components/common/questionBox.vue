@@ -81,7 +81,27 @@
             <forum class="icon" />&nbsp;
             <p>Answer</p>
           </div>
-          <div class="Hide" v-if="windowWidth <= 750" >
+          <router-link
+            :to="AuthStore.vite_base + '/question'"
+            @click="SetQuestionView"
+            class="expand-route"
+            @expand="$emit('expand')">
+            <div
+              v-if="
+                showAnswerBox &&
+                (AuthStore.role == 7669 || AuthStore.role == 1980)
+              "
+              class="expand"
+              :style="{
+                color: colourStore.emphasis_text,
+                background: colourStore.background,
+              }"
+            >
+              <open class="icon" />&nbsp;
+              <p>Answers</p>
+            </div>
+          </router-link>
+          <div class="Hide" v-if="windowWidth <= 750 && AuthStore.role == 5980" >
             <eye
               v-if="AuthStore.role == 5980 && !question['hidden']"
               class="icon"
@@ -167,6 +187,7 @@ import eye from '../icons/visibility.svg';
 import closed_eye from '../icons/visibility_off.svg';
 import forum from '../icons/send.svg';
 import alert from '../icons/Alert.svg';
+import open from '../icons/open_in_new.svg'
 
 import { useQuestionStore } from '@/stores/question';
 import { useAuthStore } from '@/stores/auth';
@@ -183,6 +204,7 @@ export default {
     closed_eye,
     viewcomments,
     forum,
+    open,
   },
   setup() {
     const QuestionStore = useQuestionStore();
@@ -481,7 +503,25 @@ p {
   justify-content: center;
   align-items: center;
   padding: 5px 12px 5px 12px;
+} 
+
+.expand-route {
+  text-decoration: none;
 }
+.expand{
+  border-radius: 100px;
+  width: fit-content;
+  height: fit-content;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 12px;
+  text-decoration: none;
+} 
+
 
 .alert {
   cursor: pointer;
@@ -593,6 +633,10 @@ p {
     font-size: 6px;
   }
 
+  .expand{
+    margin-left: 20px;
+  }
+
   .view-comments {
     font-size: 10px;
   }
@@ -602,7 +646,7 @@ p {
   }
 
   .Upvote {
-    margin-left: 36px;
+    margin-left: 16px;
     flex-direction: row;
   }
 

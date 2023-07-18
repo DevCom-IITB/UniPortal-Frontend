@@ -653,7 +653,7 @@ p {
   }
 
   .Upvote {
-    margin-left: 48px;
+    margin-left: 18px;
     flex-direction: row;
   }
 

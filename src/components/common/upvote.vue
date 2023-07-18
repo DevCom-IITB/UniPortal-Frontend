@@ -8,7 +8,7 @@
       }"
     >
       <div class="icon"><Upvote1 /></div>
-      <p v-if="windowWidth <= 750">&nbsp;Upvotes&nbsp;(</p>
+      <p v-if="windowWidth <= 750">&nbsp;(</p>
       <p>{{ upvotes }}</p>
       <p v-if="windowWidth <= 750">)</p>
     </button>
