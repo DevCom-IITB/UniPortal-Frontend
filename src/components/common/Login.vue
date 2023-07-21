@@ -13,7 +13,7 @@
         type="text"
         class="input"
         v-model="uid"
-        placeholder="Enter your JEE Advanced Roll Number"
+        placeholder="Enter your JEE Advanced / UCEED Roll Number"
       />
       <input
         type="password"
