@@ -22,7 +22,7 @@
       </div>
       <div class="Logoimg"><Logo /></div>
     </div>
-
+    <div class="sidebar-content" v-if="!showNotifications">
     <div
       class="Info"
       v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)"
@@ -33,6 +33,29 @@
       </div>
 
       <div class="InfoLinks">
+      
+        <button
+          class="btn notif-btn" @click="notify"
+          @mouseover="hovering = 4"
+          @mouseleave="hovering = 0"
+          :style="
+            hovering == 4
+              ? {
+                  background: colourStore.active_hovering,
+                  color: colourStore.emphasis_text,
+                }
+              : windowWidth > 750
+              ? {
+                  background: colourStore.sidebar,
+                  color: colourStore.emphasis_text,
+                }
+              : { background: colourStore.sidebar }
+          "
+        >
+          <Bell /><span class ="notification-mid" >&nbsp;&nbsp;Notifications </span> <span v-if="notifs.length > 0" class="notificationCount" >{{ (notifs.length) ? notifs.length : '' }}</span>
+        </button>
+        
+
         <button
           class="btn"
           @mouseover="hovering = 1"
@@ -95,11 +118,25 @@
         >
           <contact />&nbsp;&nbsp;smp.iitb
         </button>
+
+        
       </div>
     </div>
+  </div>
+  <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
+    <div class="back-notify"><arrow @click="notify"/>  Notifications</div>
+    <div class="notifs">
+      <div class="notif" v-for="notif in Object.values(notifs)" :style = "{background: colourStore.primary}">{{  (notif.length>21)  ? (console.log(notif.slice(0,24))) + "..." : (console.log(notif))}}</div>
+      
+    </div>
+    
+
+    
+    
+  </div>
     <div
       class="Creds"
-      v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)"
+      v-if="windowWidth > 750 || ( showSidebar && windowWidth < 750)"
     >
       <button class="credentials" :style="{ background: colourStore.sidebar }">
         <DC class="DevComLogo" @click="toDevCom" /><SMP
@@ -119,7 +156,10 @@
         Log out
       </button>
     </div>
-  </div>
+  
+  
+  
+</div>
 </template>
 
 <script>
@@ -130,6 +170,8 @@ import contact from "../icons/Insta.svg";
 import burger from "../icons/menu.svg";
 import DC from "../icons/DC.svg";
 import SMP from "../icons/SMP_black.svg";
+import arrow from "../icons/arrow.svg"
+import Bell from "../icons/Bell.svg"
 
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "@/stores/colour";
@@ -149,12 +191,16 @@ export default {
     burger,
     DC,
     SMP,
+    arrow,
+    Bell
   },
   data() {
     return {
       hovering: 0,
       windowWidth: window.innerWidth,
       showSidebar: false,
+      showNotifications: false,
+      notifs: []
     };
   },
   mounted() {
@@ -165,6 +211,10 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
+  },
+
+  created() {
+    this.notifs = this.fetch_notifs(72)
   },
 
   methods: {
@@ -187,6 +237,15 @@ export default {
     },
     async insta(){
       window.open("https://www.instagram.com/smp.iitb/")
+    },
+    async notify(){
+      this.showNotifications = !this.showNotifications
+    },
+    async fetch_notifs(id){
+      const res = await fetch(`http://localhost:3000/notification/${id}`)
+      const data = await res.json()
+      console.log(data)
+      return data
     }
   },
 };
@@ -206,6 +265,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 
 .Logo {
   height: 12.98%;
@@ -270,6 +330,52 @@ export default {
   cursor: pointer;
 }
 
+.notif-btn{
+  display: flex;
+
+}
+
+.notificationCount {
+  justify-self: flex-end;
+  /* align-self: flex-end; */
+  color: orangered;
+  font-weight: 600;
+  margin-right: 1rem;
+}
+.notification-mid{
+  margin-right: auto;
+  font-size: 16px;
+  font-weight: 600;
+}
+.back-notify {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: left;
+  margin-bottom: 1em;
+}
+.notifications-content{
+  margin-bottom: auto;
+  margin-top: 1rem;
+  width: 90%;
+}
+
+.notifs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* background-color: red; */
+
+}
+.notif {
+  background-color: rgb(250,224,141);
+  padding: 1em;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
 .Creds {
   width: 87.63%;
   display: flex;

@@ -9,7 +9,7 @@
             : { width: '70vw' }
         "
       />
-    </div>
+    </div>    
     <div
       class="Content"
       :style="windowWidth < 750 ? { width: '100vw' } : { width: '78.55vw' }"
