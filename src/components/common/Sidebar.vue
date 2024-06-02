@@ -126,7 +126,7 @@
   <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
     <div class="back-notify"><arrow @click="notify"/>  Notifications</div>
     <div class="notifs">
-      <div class="notif" v-for="notif in Object.values(notifs)" :style = "{background: colourStore.primary}">{{  (notif.length>21)  ? (console.log(notif.slice(0,24))) + "..." : (console.log(notif))}}</div>
+      <div class="notif" v-for="notif in Object.values(notifs)" :style = "{background: colourStore.primary}">{{  (notif.length>24)  ? (notif.slice(0,24)) + "..." : (notif)}}</div>
       
     </div>
     
@@ -214,7 +214,9 @@ export default {
   },
 
   created() {
-    this.notifs = this.fetch_notifs(72)
+    this.notifs = this.fetch_notifs()
+    // this.notifs = ['notif 1' , ' Notification 2 Notification 2 Notification 2 ', 
+    //   'notif 3'] For testing
   },
 
   methods: {
@@ -241,7 +243,9 @@ export default {
     async notify(){
       this.showNotifications = !this.showNotifications
     },
-    async fetch_notifs(id){
+    async fetch_notifs(){
+      const id = this.authStore.user_ID;
+      console.log('user id : ', id);
       const res = await fetch(`http://localhost:3000/notification/${id}`)
       const data = await res.json()
       console.log(data)
