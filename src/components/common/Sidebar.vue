@@ -52,7 +52,7 @@
               : { background: colourStore.sidebar }
           "
         >
-          <Bell /><span class ="notification-mid" >&nbsp;&nbsp;Notifications </span> <span v-if="notifs.length > 0" class="notificationCount" >{{ (notifs.length) ? notifs.length : '' }}</span>
+          <Bell /><span class ="notification-mid" >&nbsp;&nbsp;Notifications </span> <span v-if="notifs.notifications" class="notificationCount" >{{ (notifs.notifications.length) ? notifs.notifications.length : '' }}</span>
         </button>
         
 
@@ -125,11 +125,18 @@
   </div>
   <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
     <div class="back-notify"><arrow @click="notify"/>  Notifications</div>
-    <div class="notifs">
-      <div class="notif" v-for="notif in Object.values(notifs)" :style = "{background: colourStore.primary}">{{  (notif.length>24)  ? (notif.slice(0,24)) + "..." : (notif)}}</div>
-      
+    <div class="notifs"  >
+      <div class="notif" 
+     v-for="notif in notifs.notifications" 
+     :key="notif._id"
+     @click="emitNotif(notif)"
+     :style="{ background: colourStore.primary }">
+      {{ notif.content.length > 24 ? notif.content.slice(0, 24) + '...' : notif.content }}
+</div>
+
     </div>
-    
+
+  
 
     
     
@@ -194,6 +201,7 @@ export default {
     arrow,
     Bell
   },
+  emits : ['displaynotif'],
   data() {
     return {
       hovering: 0,
@@ -215,8 +223,39 @@ export default {
 
   created() {
     this.notifs = this.fetch_notifs()
-    // this.notifs = ['notif 1' , ' Notification 2 Notification 2 Notification 2 ', 
-    //   'notif 3'] For testing
+    console.log(this.notifs)
+    this.notifs = {
+  "notifications": [
+    {
+      "_id": "60d4b5b8b3b3eb0015a07e72",
+      "recipientlist": ["student123"],
+      "senderid": "sender456",
+      "contentid": "content789",
+      "content": "Notification 1: Hello! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
+      "sent_At": "2024-06-25T12:00:00.000Z",
+      "isseen": false
+    },
+    {
+      "_id": "60d4b5b8b3b3eb0015a07e73",
+      "recipientlist": ["student123"],
+      "senderid": "sender789",
+      "contentid": "content101112",
+      "content": "Notification 2: How are you? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
+      "sent_At": "2024-06-26T08:30:00.000Z",
+      "isseen": true
+    },
+    {
+      "_id": "60d4b5b8b3b3eb0015a07e74",
+      "recipientlist": ["student123"],
+      "senderid": "sender123",
+      "contentid": "content131415",
+      "content": "Notification 3: Have a nice day! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
+      "sent_At": "2024-06-27T15:45:00.000Z",
+      "isseen": false
+    }
+  ]
+}
+ 
   },
 
   methods: {
@@ -246,10 +285,15 @@ export default {
     async fetch_notifs(){
       const id = this.authStore.user_ID;
       console.log('user id : ', id);
-      const res = await fetch(`http://localhost:3000/notification/${id}`)
+      const res = await fetch(`http://localhost:8080/notification/${id}`)
       const data = await res.json()
       console.log(data)
       return data
+    },
+    emitNotif(notif){
+      this.$emit('displaynotif', notif);
+      console.log(notif)
+      console.log('works')
     }
   },
 };

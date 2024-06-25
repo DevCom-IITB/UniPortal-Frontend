@@ -1,6 +1,6 @@
 <template>
-  <div class="container" v-if="Auth.loggedIn">
-    <div class="Sidebar">
+  <div class="container" v-if="Auth.loggedIn" >
+    <div class="Sidebar" >
       <Sidebar
         @Burger="Burger"
         :style="
@@ -8,12 +8,14 @@
             ? { width: '0vw' }
             : { width: '70vw' }
         "
+        @displaynotif="showNotification2"
       />
     </div>    
     <div
       class="Content"
       :style="windowWidth < 750 ? { width: '100vw' } : { width: '78.55vw' }"
     >
+      <button @click="showNotification">Show Notification</button>
       <div class="Navbar">
         <Navbar
           @selected1="ColorInfoPost"
@@ -52,6 +54,16 @@
           :editBody="editBody"
         />
       </div>
+      <div class="ask" v-if="notificationVisible == true">
+      <NotificationBox 
+      v-if="notificationVisible" 
+      :notifP="notif1"
+      @closeNwindow="handleClose" 
+      @saveNwindow="handleSave" 
+      
+    />
+  </div>
+    
       <div class="ExpandedImg" v-if="expanded">
         <div class="cancel" @click="CloseImg"></div>
         <img :src="QuestionStore.ImageLink" alt="" />
@@ -59,7 +71,7 @@
     </div>
     <div
       class="glass"
-      v-if="askQuestion == true || glass == true"
+      v-if="askQuestion == true || glass == true "
       @click="glassClick"
       :style="
         windowWidth <= 750
@@ -67,6 +79,8 @@
           : { background: 'rgba(0, 0, 0, 0.5)' }
       "
     ></div>
+    
+    
   </div>
   <div class="login" v-if="!Auth.loggedIn">
     <DC class="DC" @click="toDevCom"/>
@@ -80,9 +94,11 @@
           <Snackbar /> 
     </div>
   </div>
+  
 </template>
 
 <script>
+import NotificationBox from "./components/common/NotificationBox.vue";
 import Navbar from "./components/common/Navbar.vue";
 import Sidebar from "./components/common/Sidebar.vue";
 import popup from "./components/common/popup.vue";
@@ -97,9 +113,11 @@ import { useAuthStore } from "./stores/auth";
 import { useQuestionStore } from "./stores/question";
 import { useColourStore } from "./stores/colour";
 
+
 export default {
   name: "App",
   components: {
+    NotificationBox,
     Navbar,
     Sidebar,
     popup,
@@ -119,6 +137,8 @@ export default {
       glass: false,
       expanded: false,
       editBody: "",
+      notificationVisible: false,
+      notif1: [],
     };
   },
   mounted() {
@@ -165,6 +185,7 @@ export default {
     async glassClick() {
       this.glass = false;
       this.askQuestion = false;
+      this.notificationVisible = false;
       this.expanded = false;
     },
     async EditInfo(body) {
@@ -177,6 +198,27 @@ export default {
     },
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
+    },
+    showNotification() {
+      this.notificationVisible = true;
+      this.glass = true;
+      console.log('this is in app.vue')
+    },
+    handleSave() {
+      // something about save
+      console.log('Save button clicked');
+      this.notificationVisible = false;
+      this.glass = false;
+    },
+    handleClose(){
+      this.notificationVisible = false;
+      this.glass = false;
+    },
+    showNotification2(notif){
+      this.notificationVisible = true;
+      this.glass = true;
+      this.notif1 = notif
+      console.log(notif)
     },
   },
   setup() {
