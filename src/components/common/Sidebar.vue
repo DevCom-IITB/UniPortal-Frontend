@@ -127,11 +127,11 @@
     <div class="back-notify"><arrow @click="notify"/>  Notifications</div>
     <div class="notifs"  >
       <div class="notif" 
-     v-for="notif in notifs.notifications" 
+     v-for="notif in notifs.notifications.reverse()" 
      :key="notif._id"
      @click="emitNotif(notif)"
      :style="{ background: colourStore.primary }">
-      {{ notif.content.length > 24 ? notif.content.slice(0, 24) + '...' : notif.content }}
+      {{ notif.content.length > 16 ? notif.content.slice(0, 16) + '...' : notif.content }}
 </div>
 
     </div>
@@ -169,7 +169,7 @@
 </div>
 </template>
 
-<script>
+<!-- <script>
 import Logo from "../icons/Logo.svg";
 import Globe from "../icons/web.svg";
 import email from "../icons/email.svg";
@@ -222,41 +222,41 @@ export default {
   },
 
   created() {
-    this.notifs = this.fetch_notifs()
+    this.notifs = await this.fetch_notifs()
     console.log(this.notifs)
-    this.notifs = {
-  "notifications": [
-    {
-      "_id": "60d4b5b8b3b3eb0015a07e72",
-      "recipientlist": ["student123"],
-      "senderid": "sender456",
-      "contentid": "content789",
-      "content": "Notification 1: Hello! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
-      "sent_At": "2024-06-25T12:00:00.000Z",
-      "isseen": false
-    },
-    {
-      "_id": "60d4b5b8b3b3eb0015a07e73",
-      "recipientlist": ["student123"],
-      "senderid": "sender789",
-      "contentid": "content101112",
-      "content": "Notification 2: How are you? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
-      "sent_At": "2024-06-26T08:30:00.000Z",
-      "isseen": true
-    },
-    {
-      "_id": "60d4b5b8b3b3eb0015a07e74",
-      "recipientlist": ["student123"],
-      "senderid": "sender123",
-      "contentid": "content131415",
-      "content": "Notification 3: Have a nice day! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
-      "sent_At": "2024-06-27T15:45:00.000Z",
-      "isseen": false
-    }
-  ]
+  //   this.notifs = {
+  // "notifications": [
+  //   {
+  //     "_id": "60d4b5b8b3b3eb0015a07e72",
+  //     "recipientlist": ["student123"],
+  //     "senderid": "sender456",
+  //     "contentid": "content789",
+  //     "content": "Notification 1: Hello! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
+  //     "sent_At": "2024-06-25T12:00:00.000Z",
+  //     "isseen": false
+  //   },
+  //   {
+  //     "_id": "60d4b5b8b3b3eb0015a07e73",
+  //     "recipientlist": ["student123"],
+  //     "senderid": "sender789",
+  //     "contentid": "content101112",
+  //     "content": "Notification 2: How are you? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
+  //     "sent_At": "2024-06-26T08:30:00.000Z",
+  //     "isseen": true
+  //   },
+  //   {
+  //     "_id": "60d4b5b8b3b3eb0015a07e74",
+  //     "recipientlist": ["student123"],
+  //     "senderid": "sender123",
+  //     "contentid": "content131415",
+  //     "content": "Notification 3: Have a nice day! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus dignissim semper tortor, vel sagittis justo bibendum eu. Integer consequat, dolor eget vestibulum faucibus, ligula justo pharetra purus, ac dignissim justo justo ut orci. Duis non felis turpis. Nulla facilisi. Morbi porta neque id magna iaculis, sed venenatis arcu fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam erat volutpat. Mauris ut convallis libero. Fusce bibendum est vel eros bibendum, vel interdum sapien faucibus. Nulla facilisi. Nam consequat ligula vel arcu sollicitudin rhoncus. Suspendisse potenti. Donec gravida nisi augue, a finibus ligula finibus vel. Maecenas placerat ipsum at augue pulvinar sollicitudin.",
+  //     "sent_At": "2024-06-27T15:45:00.000Z",
+  //     "isseen": false
+  //   }
+  // ]
 }
  
-  },
+  ,
 
   methods: {
     onResize() {
@@ -282,20 +282,247 @@ export default {
     async notify(){
       this.showNotifications = !this.showNotifications
     },
+    // async fetch_notifs(){
+    //   const id = this.authStore.user_ID;
+    //   console.log('user id : ', id);
+    //   this.refreshToken()
+    //   const res = await fetch(`http://localhost:8080/notification/get`)
+    //   const data = await res.json()
+    //   console.log(data)
+    //   return data
+    // },
+    // async refreshToken() {
+    //     const res = await fetch('http://localhost:8080/user/refresh', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({ refreshToken: this.authStore.refreshToken })
+    //     })},
     async fetch_notifs(){
-      const id = this.authStore.user_ID;
-      console.log('user id : ', id);
-      const res = await fetch(`http://localhost:8080/notification/${id}`)
-      const data = await res.json()
-      console.log(data)
-      return data
-    },
-    emitNotif(notif){
-      this.$emit('displaynotif', notif);
-      console.log(notif)
-      console.log('works')
+      const user_id = this.authStore.user_ID;
+      console.log('user id : ', user_id);
+      
+      const request = {
+        user_ID: user_id,
+      };
+      
+
+      const bearer = `Bearer ${this.authStore.accessToken}`;
+
+      console.log('bearer : ', bearer);
+
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/notification/get/${user_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        },
+        // body: JSON.stringify(request),
+
+      })
+      if (res.status === 200) {
+        console.log('received response');
+        const data = await res.json();
+        console.log(data);
+        return data;
+      } else {
+        if (res.status === 403) {
+          console.log('refreshing token');
+          const res = await this.authStore.Refresh();
+
+          if (res.status === 200) {
+            console.log('refreshed token');
+            const bearer = `Bearer ${this.authStore.accessToken}`;
+            console.log('new bearer : ', bearer);
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/notification/get${user_id}`,
+              {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: bearer,
+                },
+                // body: JSON.stringify(request),
+              }
+            );
+            console.log('new request sent');
+            const data = await res.json();
+            console.log(data);
+            return data;
+
     }
+    
+      
+    }
+  }
+        
+      },
+      emitNotif(notif){
+        this.$emit('displaynotif', notif);
+        console.log(notif);
+        console.log('works');
+    }
+  }}
+</script> -->
+
+
+<script>
+import Logo from "../icons/Logo.svg";
+import Globe from "../icons/web.svg";
+import email from "../icons/email.svg";
+import contact from "../icons/Insta.svg";
+import burger from "../icons/menu.svg";
+import DC from "../icons/DC.svg";
+import SMP from "../icons/SMP_black.svg";
+import arrow from "../icons/arrow.svg";
+import Bell from "../icons/Bell.svg";
+
+import { useAuthStore } from "@/stores/auth";
+import { useColourStore } from "@/stores/colour";
+
+export default {
+  name: "Sidebar",
+  components: {
+    Logo,
+    Globe,
+    email,
+    contact,
+    burger,
+    DC,
+    SMP,
+    arrow,
+    Bell
   },
+  emits: ['displaynotif'],
+  setup() {
+    const authStore = useAuthStore();
+    const colourStore = useColourStore();
+
+    const fetchNotifs = async () => {
+      try {
+        const user_id = authStore.user_ID;
+        // console.log('user id : ', user_id);
+        
+        const bearer = `Bearer ${authStore.accessToken}`;
+        // console.log('bearer : ', bearer);
+
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/notification/get/${user_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: bearer,
+          },
+        });
+
+        if (res.status === 200) {
+          // console.log('Received response');
+          const data = await res.json();
+          // console.log(data);
+          return data; 
+        } else if (res.status === 403) {
+          // console.log('Refreshing token');
+          const refreshRes = await authStore.Refresh();
+
+          if (refreshRes.status === 200) {
+            // console.log('Refreshed token');
+            const newBearer = `Bearer ${authStore.accessToken}`;
+            // console.log('New bearer : ', newBearer);
+
+           
+            const retryRes = await fetch(`${import.meta.env.VITE_API_BASE}/notification/get/${user_id}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: newBearer,
+              },
+            });
+
+            if (retryRes.status === 200) {
+              console.log('Received response after token refresh');
+              const data = await retryRes.json();
+              // console.log(data);
+              return data; 
+            } else {
+              console.error('Failed to fetch notifications after token refresh');
+              return []; 
+            }
+          } else {
+            console.error('Failed to refresh token');
+            return []; 
+          }
+        } else {
+          console.error('Failed to fetch notifications');
+          return []; 
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+        return []; 
+      }
+    };
+
+    return {
+      authStore,
+      colourStore,
+      fetchNotifs,
+    };
+  },
+  data() {
+    return {
+      hovering: 0,
+      windowWidth: window.innerWidth,
+      showSidebar: false,
+      showNotifications: false,
+      notifs: [], 
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+      this.loadNotifications();
+    });
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onResize);
+  },
+  methods: {
+    onResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    async loadNotifications() {
+      try {
+        this.notifs = await this.fetchNotifs(); 
+        // console.log('Loaded notifications:', this.notifs);
+      } catch (error) {
+        console.error('Error loading notifications:', error);
+      }
+    },
+    async Burger() {
+      this.showSidebar = !this.showSidebar;
+      this.$emit("Burger", this.showSidebar);
+    },
+    async Logout() {
+      console.log("logout");
+      await this.authStore.Logout();
+    },
+    async toDevCom() {
+      window.open("https://devcom-iitb.org/");
+    },
+    async toSMP() {
+      window.open("https://smp.gymkhana.iitb.ac.in/");
+    },
+    async insta() {
+      window.open("https://www.instagram.com/smp.iitb/");
+    },
+    async notify() {
+      this.showNotifications = !this.showNotifications;
+    },
+    emitNotif(notif) {
+      this.$emit('displaynotif', notif);
+      console.log(notif);
+      console.log('works');
+    }
+  }
 };
 </script>
 
@@ -414,6 +641,8 @@ export default {
   flex-direction: column;
   gap: 0.5rem;
   /* background-color: red; */
+  max-height: 400px;
+  overflow-y: auto; 
 
 }
 .notif {

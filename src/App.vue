@@ -15,7 +15,6 @@
       class="Content"
       :style="windowWidth < 750 ? { width: '100vw' } : { width: '78.55vw' }"
     >
-      <button @click="showNotification">Show Notification</button>
       <div class="Navbar">
         <Navbar
           @selected1="ColorInfoPost"
