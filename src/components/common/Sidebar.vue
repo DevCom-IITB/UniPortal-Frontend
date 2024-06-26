@@ -127,7 +127,7 @@
     <div class="back-notify"><arrow @click="notify"/>  Notifications</div>
     <div class="notifs"  >
       <div class="notif" 
-     v-for="notif in notifs.notifications" 
+     v-for="notif in notifs.notifications.reverse()" 
      :key="notif._id"
      @click="emitNotif(notif)"
      :style="{ background: colourStore.primary }">
