@@ -4,7 +4,7 @@
       <div class="content">
         <div class="inner-container">
           <div class="titles">
-            <div class="title">{{ notifP.contentid }}</div>
+            <div class="title">Notification</div>
             <div class="subtitle" :style="{ color: colourStore.grey }">Sent at {{ formatDate(notifP.sent_At) }}</div>
           </div>
           <div class="body" :style="{ color : colourStore.grey }">
@@ -13,8 +13,7 @@
             </div>
           </div>
           <div class="actions">
-            <button class="close-btn" @click="close" :style="{ borderColor : colourStore.grey, color: colourStore.grey }">Close</button>
-            <button class="save-btn" @click="save" :style="{ background: colourStore.primary }">Save</button>
+            <button class="close-btn" @click="close" :style="{ background : colourStore.primary}">Close</button>
           </div>
         </div>
       </div>
@@ -175,21 +174,7 @@ button {
   margin-right: 5px; */
 }
 
-.close-btn {
-  
-  border: 1px solid;
-}
 
-/* .close-btn:hover {
-  background-color: #bd2130; /* Example close button hover color */
-/* } */
 
-/* .save-btn { */
-  /* background-color: #007bff; Example save button color */
-  /* color: #fff; */
-/* } */
 
-/* .save-btn:hover { */
-  /* background-color: #0056b3; Example save button hover color */
-/* } */
 </style>
