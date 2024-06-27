@@ -9,7 +9,7 @@
       />
     </div>
     <div class="Lister">
-      <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
+      <div :key="infopost.id" :ref="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
         <InfoBox
           :infopost="infopost"
           @expand="$emit('expand')"

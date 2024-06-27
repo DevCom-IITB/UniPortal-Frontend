@@ -14,9 +14,13 @@
           </div>
           <div class="actions">
             <button class="close-btn" @click="close" :style="{ borderColor : colourStore.grey, color : colourStore.grey}">Close</button>
-            
-            <!-- <button class="open-btn" @click="open" :style="{ background : colourStore.primary}">Open</button>
-           -->
+          
+
+    
+            <button class="open-btn" @click="open" :style="{ background : colourStore.primary}">Open</button> 
+
+
+
         </div>
         </div>
       </div>
@@ -26,33 +30,63 @@
 
 <script>
 import { useColourStore } from '@/stores/colour';
+import { useAuthStore } from '../../stores/auth';
+import { useListStore } from '../../stores/list';
+import { useQuestionStore } from '../../stores/question';
 
 export default {
   name: 'NotificationBox',
   props: ['notifP'],
+  data(){
+    return {
+      questions: [],
+      question: null
+    };
+  },
   setup() {
     const colourStore = useColourStore();
+    const authStore = useAuthStore()
+    const listStore = useListStore()
+    const QuestionStore = useQuestionStore()
 
     // Example data for demonstration
     const title = "Orientation";
     const subtitle = "Sent on a Tuesday";
     const body = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 
+
     return {
       colourStore,
       title,
       subtitle,
-      body
+      body,
+      authStore,
+      listStore,
+      QuestionStore
     };
   },
   methods: {
     close() {
       this.$emit('closeNwindow');
     },
-    // open() {
-
-    //   this.$emit('openNwindow');
-    // },
+    open() {
+    if (this.notifP.isquestion){
+      window.location.href = this.authStore.vite_base + '/question'
+      this.fetchQuestions();
+      this.questions = this.listStore.list;
+      console.log(this.questions);
+      this.colourStore.colourMyQuestions();
+      this.question = this.findQuestionById(this.notifP._id)
+      this.SetQuestionView()
+        this.$emit('openNwindow');
+    }
+    else {
+      window.location.href = this.authStore.vite_base + '/';
+    }
+    },
+    findQuestionById(questionId){
+      return this.questions.find(question => question._id === questionId);
+    },
     formatDate(dateString) {
       // Parse the date string
       const date = new Date(dateString);
@@ -78,8 +112,78 @@ export default {
       const formattedDateTime = `${formattedDate} at ${formattedTime.toLowerCase()}`;
 
       return formattedDateTime;
-    }
-  }
+    },
+    async fetchQuestions() {
+      const user_id = this.authStore.user_ID;
+      console.log('user id : ', user_id);
+      const request = {
+        user_ID: user_id,
+      };
+
+      console.log('body : ', request);
+
+      const bearer = `Bearer ${this.authStore.accessToken}`;
+
+      console.log('bearer : ', bearer);
+
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/myQ`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        },
+        body: JSON.stringify(request),
+      });
+
+      console.log('request sent');
+
+      if (res.status === 200) {
+        console.log('received response');
+        const data = await res.json();
+        console.log(data);
+        this.listStore.SetList(data);
+        // this.questions = data;
+        return data;
+      } else {
+        if (res.status === 403) {
+          console.log('refreshing token');
+          const res = await this.authStore.Refresh();
+
+          if (res.status === 200) {
+            console.log('refreshed token');
+            const bearer = `Bearer ${this.authStore.accessToken}`;
+            console.log('new bearer : ', bearer);
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/question/myQ`,
+              {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: bearer,
+                },
+                body: JSON.stringify(request),
+              }
+            );
+            console.log('new request sent');
+            const data = await res.json();
+            console.log(data);
+            this.listStore.SetList(data);
+            // this.questions = data;
+            return data;
+          } else {
+            console.log('refresh failed');
+            await this.authStore.Logout();
+          }
+        } else {
+          await this.authStore.Logout();
+        }
+      }
+    },
+    async SetQuestionView() {
+      await this.QuestionStore.SetQuestion(this.question);
+      await this.QuestionStore.SetQuestionID(this.question['_id']);
+    },
+  },
 };
 </script>
 
@@ -159,6 +263,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
+
 
 button {
   padding: 10px 20px;

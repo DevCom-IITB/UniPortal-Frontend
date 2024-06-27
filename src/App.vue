@@ -202,12 +202,12 @@ export default {
       this.glass = true;
       console.log('this is in app.vue')
     },
-    // handleOpen() {
-    //   // something about save
-    //   console.log('Save button open');
-    //   this.notificationVisible = false;
-    //   this.glass = false;
-    // },
+    handleOpen() {
+      // something about save
+      console.log('Open button clicked');
+      this.notificationVisible = false;
+      this.glass = false;
+    },
     handleClose(){
       this.notificationVisible = false;
       this.glass = false;
