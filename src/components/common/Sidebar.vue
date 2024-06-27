@@ -124,7 +124,7 @@
     </div>
   </div>
   <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
-    <div class="back-notify"><arrow @click="notify"/>  Notifications</div>
+    <div class="back-notify"><arrow class="arrow" @click="notify"/>  Notifications</div>
     <div class="notifs"  >
       <div class="notif" 
      v-for="notif in notifs.notifications.reverse()" 
@@ -380,6 +380,7 @@ import Bell from "../icons/Bell.svg";
 
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "@/stores/colour";
+import { useQuestionStore} from '@/stores/question'
 
 export default {
   name: "Sidebar",
@@ -398,6 +399,7 @@ export default {
   setup() {
     const authStore = useAuthStore();
     const colourStore = useColourStore();
+    const QuestionStore = useQuestionStore()
 
     const fetchNotifs = async () => {
       try {
@@ -521,7 +523,11 @@ export default {
       this.$emit('displaynotif', notif);
       console.log(notif);
       console.log('works');
-    }
+    },
+    // async SetQuestionView() {
+    //   await this.QuestionStore.SetQuestion(this.question);
+    //   await this.QuestionStore.SetQuestionID(this.question['_id']);
+    // },
   }
 };
 </script>
@@ -610,6 +616,10 @@ export default {
 
 }
 
+.arrow{
+  cursor: pointer;
+}
+
 .notificationCount {
   justify-self: flex-end;
   /* align-self: flex-end; */
@@ -652,7 +662,10 @@ export default {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+  cursor: pointer;
 }
+
+
 .Creds {
   width: 87.63%;
   display: flex;

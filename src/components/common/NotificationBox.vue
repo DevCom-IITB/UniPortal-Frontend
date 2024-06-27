@@ -13,8 +13,11 @@
             </div>
           </div>
           <div class="actions">
-            <button class="close-btn" @click="close" :style="{ background : colourStore.primary}">Close</button>
-          </div>
+            <button class="close-btn" @click="close" :style="{ borderColor : colourStore.grey, color : colourStore.grey}">Close</button>
+            
+            <!-- <button class="open-btn" @click="open" :style="{ background : colourStore.primary}">Open</button>
+           -->
+        </div>
         </div>
       </div>
     </div>
@@ -46,9 +49,10 @@ export default {
     close() {
       this.$emit('closeNwindow');
     },
-    save() {
-      this.$emit('saveNwindow');
-    },
+    // open() {
+
+    //   this.$emit('openNwindow');
+    // },
     formatDate(dateString) {
       // Parse the date string
       const date = new Date(dateString);
@@ -174,7 +178,9 @@ button {
   margin-right: 5px; */
 }
 
-
+.close-btn {
+  border: 1px solid;
+}
 
 
 </style>
