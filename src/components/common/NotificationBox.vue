@@ -82,6 +82,7 @@ export default {
     }
     else {
       this.$router.push(this.authStore.vite_base + '/');
+      this.$emit('openNwindow');
     }
     },
     findQuestionById(questionId){
