@@ -71,7 +71,7 @@ export default {
     },
     open() {
     if (this.notifP.isquestion){
-      window.location.href = this.authStore.vite_base + '/question'
+      this.$router.push(this.authStore.vite_base + '/question');
       this.fetchQuestions();
       this.questions = this.listStore.list;
       console.log(this.questions);
@@ -81,7 +81,7 @@ export default {
         this.$emit('openNwindow');
     }
     else {
-      window.location.href = this.authStore.vite_base + '/';
+      this.$router.push(this.authStore.vite_base + '/');
     }
     },
     findQuestionById(questionId){
