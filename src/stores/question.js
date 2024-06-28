@@ -17,7 +17,7 @@ export const useQuestionStore = defineStore("question", {
     ImageLink: "",
     showSnackbar: false,
     snackMessage: "",
-    action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question, 5 is for posting a infopost, 6 is for editing an infopost
+    action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question with student's original identity, 5 is for posting a infopost, 6 is for editing an infopost, 7 for posting a question anonymously by a student
   }),
   persist: true,
   actions: {
@@ -79,6 +79,7 @@ export const useQuestionStore = defineStore("question", {
       const questionObj = new FormData();
       questionObj.append("user_ID", uid);
       questionObj.append("body", body);
+      questionObj.append("is_Anonymous", false);
       for (let i = 0; i < images.length; i++) {
         questionObj.append("images", images[i]);
         console.log(`image ${i} : `, images[i]);
@@ -1225,6 +1226,88 @@ export const useQuestionStore = defineStore("question", {
           console.log("snackbar");
           this.snackMessage = "not enough permissions";
           colourStore.SetSnackColor(false);
+          await this.authStore.Logout();
+        }
+      }
+    },
+    async PostQuestionAnonymously(body, images) {
+      const authStore = useAuthStore();
+      const colourStore = useColourStore();
+      console.log("we have entered the post question function in question.js");
+      console.log("images : ", images);
+      const uid = authStore.user_ID;
+      console.log("user id  parent function: ", uid);
+      const questionObj = new FormData();
+      questionObj.append("user_ID", uid);
+      questionObj.append("body", body);
+      questionObj.append("is_Anonymous", true);
+      for (let i = 0; i < images.length; i++) {
+        questionObj.append("images", images[i]);
+        console.log(`image ${i} : `, images[i]);
+      }
+
+      const accessToken = authStore.accessToken;
+
+      const bearer = `Bearer ${accessToken}`;
+
+      console.log("bearer : ", bearer);
+      console.log("Sending request");
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/post`, {
+        method: "POST",
+        headers: {
+          Authorization: bearer,
+        },
+        body: questionObj,
+      })
+      // message for adding question
+      this.showSnackbar = true;
+      console.log("snackbar");
+
+      if (res.status == 200) {
+        console.log("successfully added question");
+        const data = await res.json();
+        console.log('data :', data);
+        this.snackMessage = data.message;
+        await colourStore.SetSnackColor(true);
+      } else {
+        if (res.status === 403) {
+          console.log("refreshing token");
+          const res = await this.authStore.Refresh()
+          this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :', data);
+          this.snackMessage = data.message;
+
+
+          if (res.status === 200) {
+            console.log("refreshed token");
+            const bearer = `Bearer ${this.authStore.accessToken}`;
+            console.log("new bearer : ", bearer);
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/post`, {
+              method: "POST",
+              headers: {
+                Authorization: bearer,
+              },
+              body: questionObj,
+            })
+            // message for adding question
+            colourStore.SetSnackColor(true);
+            this.showSnackbar = true;
+            console.log("snackbar");
+            console.log("new request sent");
+            const data = await res.json();
+            console.log('data :', data);
+            this.snackMessage = data.message;
+          } else {
+            console.log("refresh failed");
+            await this.authStore.Logout();
+          }
+        } else {
+          colourStore.SetSnackColor(false);
+          this.showSnackbar = true;
+          console.log("snackbar");
+          this.snackMessage = "not enough permissions";
           await this.authStore.Logout();
         }
       }
