@@ -58,8 +58,7 @@
       v-if="notificationVisible" 
       :notifP="notif1"
       @closeNwindow="handleClose" 
-      @saveNwindow="handleSave" 
-      
+      @openNwindow="handleOpen" 
     />
   </div>
     
@@ -203,9 +202,9 @@ export default {
       this.glass = true;
       console.log('this is in app.vue')
     },
-    handleSave() {
+    handleOpen() {
       // something about save
-      console.log('Save button clicked');
+      console.log('Open button clicked');
       this.notificationVisible = false;
       this.glass = false;
     },
