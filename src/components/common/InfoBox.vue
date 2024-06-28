@@ -235,6 +235,21 @@ p {
   white-space: pre-wrap;
 }
 
+.body-content{
+  display: flex;
+}
+
+.tag{
+  width: 100px;
+  height: 20px;
+  background-color: #FFEDB2;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
 .timestamp{
   font-size: x-small;
   font-weight: 400;
