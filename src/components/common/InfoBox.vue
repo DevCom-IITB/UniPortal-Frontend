@@ -15,7 +15,10 @@
             <img :src="image" />
           </div>
         </div>
-        <Markdown :source="infopost.body" />
+        <div class="body-content">
+          <Markdown :source="infopost.body" />
+          <div v-if="infopost['tag']!=null" class="tag">{{infopost['tag']}}</div>
+        </div>
       </div> 
       <div class="sizer" v-if="windowWidth <=750">
         <div
@@ -203,6 +206,21 @@ p {
   font-size: 14px;
   font-weight: 400;
   white-space: pre-wrap;
+}
+
+.body-content{
+  display: flex;
+}
+
+.tag{
+  width: 100px;
+  height: 20px;
+  background-color: #FFEDB2;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
 }
 
 .timestamp{
