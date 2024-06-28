@@ -265,6 +265,7 @@ export default {
       await this.QuestionStore.HideQuestion();
     },
     async SetQuestionView() {
+      console.log(this.question);
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetQuestionID(this.question['_id']);
     },
