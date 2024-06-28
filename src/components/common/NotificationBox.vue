@@ -54,7 +54,6 @@ export default {
     const subtitle = "Sent on a Tuesday";
     const body = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 
-
     return {
       colourStore,
       title,
@@ -69,16 +68,30 @@ export default {
     close() {
       this.$emit('closeNwindow');
     },
-    open() {
+    async open() {
     if (this.notifP.isquestion){
-      this.$router.push(this.authStore.vite_base + '/question');
-      this.fetchQuestions();
-      this.questions = this.listStore.list;
-      console.log(this.questions);
-      this.colourStore.colourMyQuestions();
-      this.question = this.findQuestionById(this.notifP._id)
-      this.SetQuestionView()
+      await this.$router.push(this.authStore.vite_base + '/myquestions');
+  
+      // this.colourStore.colourMyQuestions()
+      console.log('Fetching questions...');
+        
+        // this.colourStore.colourQuestionView()
+        await this.fetchQuestions(); 
+        this.questions = this.listStore.list;
+        console.log('Questions fetched:', this.questions);
+
+        
+
+        console.log('Finding question with ID:', this.notifP.contentid);
+        this.question = this.findQuestionById(this.notifP.contentid);
+        console.log('Found question:', this.question);
+        
+        await this.$router.push(this.authStore.vite_base + '/question');
+ 
+        // this.colourStore.colourQuestionView()
         this.$emit('openNwindow');
+        this.colourStore.colourQuestionView()
+        
     }
     else {
       this.$router.push(this.authStore.vite_base + '/');
