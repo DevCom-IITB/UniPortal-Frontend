@@ -1,6 +1,8 @@
 <template>
-    <form class="asker" @submit="OnSubmit">
-        <div class="name">{{ authStore.name }}</div>
+
+
+    <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
+        <div class="name">{{ nameOfPoster }}</div>
         <textarea class="text" :style="{  borderColor : colourStore.grey }" v-model="text" type="text" placeholder="Please be considerate of others when typing in your queries" ></textarea>
         <div class="preview" v-if="selectedImages.length > 0">
             <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
@@ -73,6 +75,10 @@ export default {
     editBody: {
       type: String,
       default: "",
+    },
+    nameOfPoster: {
+      type: String,
+      required: true,
     },
   },
   data() {
@@ -156,6 +162,11 @@ export default {
           this.questionStore.info_ID
         );
         await this.questionStore.EditInfoPost(this.text);
+      } else if(decision == 7){
+        console.log("we will be posting a new question Anonymously");
+        console.log("selected images are : ", this.selectedImages);
+        await this.questionStore.PostQuestionAnonymously(this.text, this.selectedImages);
+        // await this.questionStore.AddCommentComment(this.text)
       }
 
       this.$emit("discard");

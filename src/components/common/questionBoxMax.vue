@@ -14,7 +14,7 @@
             <div class="stamps">
               <div class="info">
                 <div class="name" :style="{ color: colourStore.emphasis_text }">
-                  {{ question["user_Name"] }}
+                  {{ showName }}
                 </div>
                 <div class="timestamp" :style="{ color: colourStore.grey }">
                   {{ timestamp }}
@@ -183,6 +183,7 @@ export default {
       windowWidth: window.innerWidth,
       images: [],
       timestamp: "",
+      showName:'',
     };
   },
   methods: {
@@ -299,6 +300,19 @@ export default {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
+    if(this.question['is_Anonymous'] == true){
+        if(this.AuthStore.role == 5980 || this.AuthStore.role == 6311){
+          this.showName = this.question['user_Name'];
+          console.log(this.AuthStore.role)
+          console.log(this.AuthStore.name)
+        }
+        else{
+          this.showName = "Anonymous"
+        }
+      }
+      else{
+        this.showName = this.question['user_Name'];
+      }
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
