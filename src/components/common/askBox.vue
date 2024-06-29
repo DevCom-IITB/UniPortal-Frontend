@@ -1,58 +1,43 @@
 <template>
 
 
-    <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
-        <div class="name">{{ nameOfPoster }}</div>
-        <textarea class="text" :style="{  borderColor : colourStore.grey }" v-model="text" type="text" placeholder="Please be considerate of others when typing in your queries" ></textarea>
-        <div class="preview" v-if="selectedImages.length > 0">
-            <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
-                <div class="cancel" @click="RemoveImage(index)" />
-                <img :src="image" alt="Preview Image">
-            </div>
-        </div>
-        <div class="actions">
-            <div class="decision">
-                <div class="discard" :style="{ color : colourStore.grey }" @click="$emit('discard')">Discard</div>
-                <input
-                  class="post"
-                  :style="{ background: colourStore.primary }"
-                  value="Post"
-                  type="submit"
-                  @click="decide"
-                />
-            </div>
-            <div
-              v-if="questionStore.addImage"
-              class="photo"
-              :style="{ background: colourStore.background }"
-              @click="AddImages"
-            >
-              <input
-                type="file"
-                id="fileInput"
-                @change="SelectingFiles"
-                multiple
-              /><add />&nbsp;&nbsp;
-              <p>Add photo</p>
-            </div>
-        </div>
-        <ul v-if="text.length!=0 && authStore.role ==7669" class="similarQues">
+  <form class="asker" @submit="OnSubmit" :style="{
+    height: selectedImages.length === 0 && messages.length === 0 ? '25vh' : (messages.length > 0 && selectedImages.length > 0 ? '50vh' : (selectedImages.length > 0 || messages.length > 0 ? '38vh' : '30vh'))
+  }">
+    <div class="name">{{ nameOfPoster }}</div>
+    <textarea class="text" :style="{ borderColor: colourStore.grey }" v-model="text" type="text"
+      placeholder="Please be considerate of others when typing in your queries"></textarea>
+    <div class="preview" v-if="selectedImages.length > 0">
+      <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
+        <div class="cancel" @click="RemoveImage(index)" />
+        <img :src="image" alt="Preview Image">
+      </div>
+    </div>
+    <div class="actions">
+      <div class="decision">
+        <div class="discard" :style="{ color: colourStore.grey }" @click="$emit('discard')">Discard</div>
+        <input class="post" :style="{ background: colourStore.primary }" value="Post" type="submit" @click="decide" />
+      </div>
+      <div v-if="questionStore.addImage" class="photo" :style="{ background: colourStore.background }"
+        @click="AddImages">
+        <input type="file" id="fileInput" @change="SelectingFiles" multiple />
+        <add />&nbsp;&nbsp;
+        <p>Add photo</p>
+      </div>
+    </div>
+    <ul v-if="text.length != 0 && authStore.role == 7669" class="similarQues">
+      <p> Click to view similar questions</p>
+      <transition-group name="message-transition" tag="div">
+        <li class="question" v-for="(msg, index) in messages" :key=index>
+          <router-link :to="authStore.vite_base + '/question'" class="questionRoute" @click="SetQuestionView(msg)">
+            {{ msg.question }}
+          </router-link>
+        </li>
+      </transition-group>
 
-          <transition-group name="message-transition" tag="div">
-          <li class="question"  v-for="(msg, index) in messages" :key= index>
-            <router-link
-            :to="authStore.vite_base + '/question'"
-            class="questionRoute"
-            @click="SetQuestionView(msg)"
-          >
-            {{msg.question}}
-            </router-link>
-            </li>
-          </transition-group>
-
-        </ul>
+    </ul>
   </form>
-  
+
 </template>
 
 <script>
@@ -64,7 +49,7 @@ let posted = false;
 
 export default {
   name: "askBox",
-  
+
   setup() {
     const questionStore = useQuestionStore();
     const authStore = useAuthStore();
@@ -94,14 +79,14 @@ export default {
       this.text = this.editBody;
     }
   },
-   created() {
-    if(this.authStore.role===7669){
+  created() {
+    if (this.authStore.role === 7669) {
       this.connectWebSocket();
     }
   },
-  watch:{
-    text(newText){
-      if(this.authStore.role===7669){
+  watch: {
+    text(newText) {
+      if (this.authStore.role === 7669) {
         this.sendQuery(newText);
       }
     }
@@ -162,7 +147,7 @@ export default {
           this.questionStore.info_ID
         );
         await this.questionStore.EditInfoPost(this.text);
-      } else if(decision == 7){
+      } else if (decision == 7) {
         console.log("we will be posting a new question Anonymously");
         console.log("selected images are : ", this.selectedImages);
         await this.questionStore.PostQuestionAnonymously(this.text, this.selectedImages);
@@ -201,21 +186,21 @@ export default {
         console.log('Connected to WebSocket server');
       });
       this.socket.onmessage = (event) => {
-        const parsedData= JSON.parse(event.data);
-        console.log(typeof(parsedData))
+        const parsedData = JSON.parse(event.data);
+        console.log(typeof (parsedData))
         this.messages.push(...parsedData)
         console.log('Received message from WebSocket server:', this.messages);
       };
-      this.socket.addEventListener('close', (event) =>{
+      this.socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed:', event)
       })
     },
-    sendQuery(query){
-      if(this.socket && this.socket.readyState=== WebSocket.OPEN){
+    sendQuery(query) {
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
         console.log("WebSocket is open. Ready state : ", this.socket.readyState)
         this.socket.send(query);
-        this.messages=[];
-      }else{
+        this.messages = [];
+      } else {
         console.error('WebSocket is not open. Ready state:', this.socket.readyState);
       }
     },
@@ -236,9 +221,10 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: start;
   margin: 8px 0;
+  min-height: 210px;
 }
 
 .name {
@@ -255,7 +241,8 @@ export default {
 
 .text {
   width: 100%;
-  height: 100px;
+  height: 80px;
+  max-height: 80px;
   border: 1px solid;
   border-radius: 10px;
   padding: 8px 8px;
@@ -372,7 +359,8 @@ input[type="file"] {
   font-weight: 500;
   cursor: pointer;
 }
-.similarQues{
+
+.similarQues {
   list-style: none;
   width: 100%;
   margin: 0;
@@ -381,11 +369,11 @@ input[type="file"] {
   transition: height 0.3s ease;
 }
 
-.question{
+.question {
   margin: 8px 0;
 }
 
-.question a{
+.question a {
   text-decoration: none;
   color: #000;
 }
