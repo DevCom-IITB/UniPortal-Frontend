@@ -1,7 +1,9 @@
 <template>
   <div class="form">
-    
-    <div class="logo"><Logo /></div>
+
+    <div class="logo">
+      <Logo />
+    </div>
     <div class="headers">
       <h2>Welcome NewBee</h2>
       <h3>
@@ -9,40 +11,22 @@
       </h3>
     </div>
     <div class="login">
-      <input
-        type="text"
-        class="input"
-        v-model="uid"
-        placeholder="Enter your JEE Advanced / UCEED Roll Number"
-      />
-      <input
-        type="password"
-        class="input"
-        v-model="password"
-        placeholder="Enter your DOB in ddmmyyyy"
-      />
-      <input
-        type="submit"
-        value="Login"
-        class="button"
-        @click="Auth.Login(uid, password, false)"
-      />
+      <input type="text" class="input" v-model="uid" placeholder="Enter your JEE Advanced / UCEED Roll Number" />
+      <input type="password" class="input" v-model="password" placeholder="Enter your DOB in ddmmyyyy" />
+      <input type="submit" value="Login" class="button" @click="Auth.Login(uid, password, false)" />
     </div>
-    
-      <input type="button"
-      class="sso"
-      @click="redirectToExternalRoute"
-      value="Login as Mentor"/>
-  
-   
-   
+
+    <input type="button" class="sso" @click="redirectToExternalRoute" value="Login as Mentor" />
+
+
+
     <div class="headers">
-      <p>If you have trouble signing up, contact 
-         smpcs2023@gmail.com</p>
+      <p>If you have trouble signing up, contact
+        smpcs2024@gmail.com</p>
     </div>
-   
-    
-   
+
+
+
   </div>
 </template>
 
@@ -60,10 +44,10 @@ export default {
   name: "Login",
   components: {
     Logo,
-    
+
   },
-  
-  
+
+
   props: {
     loggedIn: Boolean,
   },
@@ -99,7 +83,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content:space-around;
+  justify-content: space-around;
   align-items: center;
   z-index: 1;
 }
@@ -146,20 +130,20 @@ export default {
 }
 
 
- .sso{
+.sso {
   width: 15vw;
   border-radius: 10px;
   background-color: transparent;
   color: black;
-  font-size:medium;
+  font-size: medium;
   font-weight: 500;
-  text-align:center;
+  text-align: center;
   padding: 12px;
   border: none;
   cursor: pointer;
   text-decoration: underline;
-  
-  
+
+
 }
 
 
