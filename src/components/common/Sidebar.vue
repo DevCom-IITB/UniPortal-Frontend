@@ -243,7 +243,7 @@ export default {
   padding-left: 15px;
   font-size: 18px;
   font-weight: 500;
-  margin-bottom: 15%;
+  margin-bottom: 5%;
 }
 
 .InfoLinks {
@@ -296,7 +296,7 @@ export default {
 }
 
 .logout {
-  width: 100%;
+  width: 98%;
   height: 48px;
   border: none;
   border-radius: 100px;
