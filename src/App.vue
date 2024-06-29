@@ -48,7 +48,7 @@
       <div class="ask" v-if="askQuestion == true">
         <askBox
           :askQuestion="askQuestion"
-          @discard="ask"
+          @discard="handleDiscard"
           @OnSubmit="ask"
           :editBody="editBody"
           :nameOfPoster="nameOfPoster"
@@ -149,10 +149,9 @@ export default {
       expanded: false,
       editBody: "",
       showAnonymousBox: false,
-      nameOfPoster:"",
+      nameOfPoster:this.Auth.name,
       notificationVisible: false,
       notif1: [],
-
     };
   },
   mounted() {
@@ -212,14 +211,20 @@ export default {
       this.expanded = false;
     },
     async glassMobileClick() {
+      this.nameOfPoster = this.Auth.name;
       this.glassMobile = false;
       this.showAnonymousBox = false;
+    },
+    async handleDiscard(){
+      await this.ask();
+      this.nameOfPoster = this.Auth.name;
     },
     async glassClick() {
       this.glass = false;
       this.askQuestion = false;
       this.notificationVisible = false;
       this.expanded = false;
+      this.nameOfPoster = this.Auth.name;
     },
     async EditInfo(body) {
       this.askQuestion = true;
