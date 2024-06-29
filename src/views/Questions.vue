@@ -8,7 +8,7 @@
         :primaryColor="primaryColor"
       />
     </div>
-    <div class="Lister">
+    <div class="Lister" @scroll="storePosition($event)">
       <div
         :key="question['id']"
         v-for="question in questions"
@@ -53,6 +53,7 @@ export default {
       questions: [],
       true: true,
       false: false,
+      scrollPositionY: 0,
     };
   },
   components: {
@@ -60,6 +61,24 @@ export default {
     Header,
   },
   methods: {
+    storePosition(event) {
+      this.scrollPositionY= event.target.scrollTop;
+      localStorage.setItem('scrollPosition', this.scrollPositionY);
+  },
+    scrollToPosition() {
+      this.$nextTick(() => {
+        const listerDiv = this.$el.querySelector('.Lister');
+        if (listerDiv) {
+          const storedPosition = localStorage.getItem('scrollPosition');
+          if (storedPosition) {
+            listerDiv.scrollTop = parseInt(storedPosition, 10);
+          }
+        } else {
+          console.error('Element with class "Lister" not found.');
+        }
+      });
+    },
+
     async fetchQuestions() {
       const user_id = this.authStore.user_ID;
       const request = {
@@ -129,6 +148,7 @@ export default {
     this.questions = this.listStore.list;
     console.log(this.questions);
     this.colourStore.colourQuestions();
+    this.scrollToPosition();
   },
 };
 </script>

@@ -22,7 +22,7 @@
       </div>
       <div class="Logoimg"><Logo /></div>
     </div>
-
+    <div class="sidebar-content" v-if="!showNotifications">
     <div
       class="Info"
       v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)"
@@ -33,6 +33,29 @@
       </div>
 
       <div class="InfoLinks">
+      
+        <button
+          class="btn notif-btn" @click="notify"
+          @mouseover="hovering = 4"
+          @mouseleave="hovering = 0"
+          :style="
+            hovering == 4
+              ? {
+                  background: colourStore.active_hovering,
+                  color: colourStore.emphasis_text,
+                }
+              : windowWidth > 750
+              ? {
+                  background: colourStore.sidebar,
+                  color: colourStore.emphasis_text,
+                }
+              : { background: colourStore.sidebar }
+          "
+        >
+          <Bell /><span class ="notification-mid" >&nbsp;&nbsp;Notifications </span> <span v-if="notifs.notifications" class="notificationCount" >{{ (notifs.notifications.length) ? notifs.notifications.length : '' }}</span>
+        </button>
+        
+
         <button
           class="btn"
           @mouseover="hovering = 1"
@@ -95,11 +118,32 @@
         >
           <contact />&nbsp;&nbsp;smp.iitb
         </button>
+
+        
       </div>
     </div>
+  </div>
+  <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
+    <div class="back-notify"><arrow class="arrow" @click="notify"/>  Notifications</div>
+    <div class="notifs"  >
+      <div class="notif" 
+     v-for="notif in notifs.notifications" 
+     :key="notif._id"
+     @click="emitNotif(notif)"
+     :style="{ background: colourStore.primary }">
+      {{ notif.content.length > 16 ? notif.content.slice(0, 16) + '...' : notif.content }}
+</div>
+
+    </div>
+
+  
+
+    
+    
+  </div>
     <div
       class="Creds"
-      v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)"
+      v-if="windowWidth > 750 || ( showSidebar && windowWidth < 750)"
     >
       <button class="credentials" :style="{ background: colourStore.sidebar }">
         <DC class="DevComLogo" @click="toDevCom" /><SMP
@@ -119,8 +163,12 @@
         Log out
       </button>
     </div>
-  </div>
+  
+  
+  
+</div>
 </template>
+
 
 <script>
 import Logo from "../icons/Logo.svg";
@@ -130,17 +178,15 @@ import contact from "../icons/Insta.svg";
 import burger from "../icons/menu.svg";
 import DC from "../icons/DC.svg";
 import SMP from "../icons/SMP_black.svg";
+import arrow from "../icons/arrow.svg";
+import Bell from "../icons/Bell.svg";
 
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "@/stores/colour";
+import { useQuestionStore} from '@/stores/question'
 
 export default {
   name: "Sidebar",
-  setup() {
-    const authStore = useAuthStore();
-    const colourStore = useColourStore();
-    return { authStore, colourStore };
-  },
   components: {
     Logo,
     Globe,
@@ -149,27 +195,113 @@ export default {
     burger,
     DC,
     SMP,
+    arrow,
+    Bell
+  },
+  emits: ['displaynotif'],
+  setup() {
+    const authStore = useAuthStore();
+    const colourStore = useColourStore();
+    const QuestionStore = useQuestionStore()
+
+    const fetchNotifs = async () => {
+      try {
+        const user_id = authStore.user_ID;
+        // console.log('user id : ', user_id);
+        
+        const bearer = `Bearer ${authStore.accessToken}`;
+        // console.log('bearer : ', bearer);
+
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/notification/get/${user_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: bearer,
+          },
+        });
+
+        if (res.status === 200) {
+          // console.log('Received response');
+          const data = await res.json();
+          // console.log(data);
+          return data; 
+        } else if (res.status === 403) {
+          // console.log('Refreshing token');
+          const refreshRes = await authStore.Refresh();
+
+          if (refreshRes.status === 200) {
+            // console.log('Refreshed token');
+            const newBearer = `Bearer ${authStore.accessToken}`;
+            // console.log('New bearer : ', newBearer);
+
+           
+            const retryRes = await fetch(`${import.meta.env.VITE_API_BASE}/notification/get/${user_id}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: newBearer,
+              },
+            });
+
+            if (retryRes.status === 200) {
+              console.log('Received response after token refresh');
+              const data = await retryRes.json();
+              // console.log(data);
+              return data; 
+            } else {
+              console.error('Failed to fetch notifications after token refresh');
+              return []; 
+            }
+          } else {
+            console.error('Failed to refresh token');
+            return []; 
+          }
+        } else {
+          console.error('Failed to fetch notifications');
+          return []; 
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+        return []; 
+      }
+    };
+
+    return {
+      authStore,
+      colourStore,
+      fetchNotifs,
+    };
   },
   data() {
     return {
       hovering: 0,
       windowWidth: window.innerWidth,
       showSidebar: false,
+      showNotifications: false,
+      notifs: [], 
     };
   },
   mounted() {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
+      this.loadNotifications();
     });
   },
-
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
   },
-
   methods: {
     onResize() {
       this.windowWidth = window.innerWidth;
+    },
+    async loadNotifications() {
+      try {
+        this.notifs = await this.fetchNotifs(); 
+        this.notifs.notifications.reverse();
+        // console.log('Loaded notifications:', this.notifs);
+      } catch (error) {
+        console.error('Error loading notifications:', error);
+      }
     },
     async Burger() {
       this.showSidebar = !this.showSidebar;
@@ -185,10 +317,22 @@ export default {
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
     },
-    async insta(){
-      window.open("https://www.instagram.com/smp.iitb/")
-    }
-  },
+    async insta() {
+      window.open("https://www.instagram.com/smp.iitb/");
+    },
+    async notify() {
+      this.showNotifications = !this.showNotifications;
+    },
+    emitNotif(notif) {
+      this.$emit('displaynotif', notif);
+      console.log(notif);
+      console.log('works');
+    },
+    // async SetQuestionView() {
+    //   await this.QuestionStore.SetQuestion(this.question);
+    //   await this.QuestionStore.SetQuestionID(this.question['_id']);
+    // },
+  }
 };
 </script>
 
@@ -206,6 +350,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 
 .Logo {
   height: 12.98%;
@@ -269,6 +414,61 @@ export default {
   margin: 8px 0px;
   cursor: pointer;
 }
+
+.notif-btn{
+  display: flex;
+
+}
+
+.arrow{
+  cursor: pointer;
+}
+
+.notificationCount {
+  justify-self: flex-end;
+  /* align-self: flex-end; */
+  color: orangered;
+  font-weight: 600;
+  margin-right: 1rem;
+}
+.notification-mid{
+  margin-right: auto;
+  font-size: 16px;
+  font-weight: 600;
+}
+.back-notify {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: left;
+  margin-bottom: 1em;
+}
+.notifications-content{
+  margin-bottom: auto;
+  margin-top: 1rem;
+  width: 90%;
+}
+
+.notifs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* background-color: red; */
+  max-height: 400px;
+  overflow-y: auto; 
+
+}
+.notif {
+  background-color: rgb(250,224,141);
+  padding: 1em;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  cursor: pointer;
+}
+
 
 .Creds {
   width: 87.63%;

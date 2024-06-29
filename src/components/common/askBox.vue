@@ -1,5 +1,6 @@
 <template>
 
+
     <form class="asker" @submit="OnSubmit" :style=" (selectedImages.length == 0) ? { height : '30vh'} : { height : '50vh'} ">
         <div class="name">{{ nameOfPoster }}</div>
         <textarea class="text" :style="{  borderColor : colourStore.grey }" v-model="text" type="text" placeholder="Please be considerate of others when typing in your queries" ></textarea>
@@ -33,9 +34,23 @@
                 multiple
               /><add />&nbsp;&nbsp;
               <p>Add photo</p>
-            </div>        
+            </div>
         </div>
-        
+        <ul v-if="text.length!=0 && authStore.role ==7669" class="similarQues">
+
+          <transition-group name="message-transition" tag="div">
+          <li class="question"  v-for="(msg, index) in messages" :key= index>
+            <router-link
+            :to="authStore.vite_base + '/question'"
+            class="questionRoute"
+            @click="SetQuestionView(msg)"
+          >
+            {{msg.question}}
+            </router-link>
+            </li>
+          </transition-group>
+
+        </ul>
   </form>
   
 </template>
@@ -71,11 +86,24 @@ export default {
       text: "",
       selectedImages: [],
       previewImages: [],
+      messages: [],
     };
   },
   mounted() {
     if (this.editBody && this.questionStore.action == 6) {
       this.text = this.editBody;
+    }
+  },
+   created() {
+    if(this.authStore.role===7669){
+      this.connectWebSocket();
+    }
+  },
+  watch:{
+    text(newText){
+      if(this.authStore.role===7669){
+        this.sendQuery(newText);
+      }
     }
   },
   methods: {
@@ -166,6 +194,35 @@ export default {
       this.previewImages.splice(index, 1);
       this.selectedImages.splice(index, 1);
     },
+    connectWebSocket() {
+      this.socket = new WebSocket('ws://localhost:3000');
+
+      this.socket.addEventListener('open', (event) => {
+        console.log('Connected to WebSocket server');
+      });
+      this.socket.onmessage = (event) => {
+        const parsedData= JSON.parse(event.data);
+        console.log(typeof(parsedData))
+        this.messages.push(...parsedData)
+        console.log('Received message from WebSocket server:', this.messages);
+      };
+      this.socket.addEventListener('close', (event) =>{
+        console.log('WebSocket connection closed:', event)
+      })
+    },
+    sendQuery(query){
+      if(this.socket && this.socket.readyState=== WebSocket.OPEN){
+        console.log("WebSocket is open. Ready state : ", this.socket.readyState)
+        this.socket.send(query);
+        this.messages=[];
+      }else{
+        console.error('WebSocket is not open. Ready state:', this.socket.readyState);
+      }
+    },
+    async SetQuestionView(question) {
+      await this.questionStore.SetQuestionID(question['qid']);
+      this.$emit('discard');
+    },
   },
   components: {
     add,
@@ -181,6 +238,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: start;
+  margin: 8px 0;
 }
 
 .name {
@@ -191,6 +249,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  margin-bottom: 8px;
   /* border: 1px solid; */
 }
 
@@ -201,6 +260,7 @@ export default {
   border-radius: 10px;
   padding: 8px 8px;
   resize: none;
+  margin: 8px 0;
 }
 
 .preview {
@@ -255,6 +315,7 @@ export default {
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: end;
+  margin: 8px 0;
 }
 
 .photo {
@@ -311,10 +372,32 @@ input[type="file"] {
   font-weight: 500;
   cursor: pointer;
 }
+.similarQues{
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding-left: 8px;
+  overflow-y: auto;
+  transition: height 0.3s ease;
+}
+
+.question{
+  margin: 8px 0;
+}
+
+.question a{
+  text-decoration: none;
+  color: #000;
+}
+
+.message-transition-enter-active,
+.message-transition-leave-active {
+  transition: all 0.2s ease;
+}
 
 @media only screen and (max-width: 750px) {
   .asker {
-    justify-content: space-around;
+    justify-content: space-between;
     height: fit-content;
   }
 
