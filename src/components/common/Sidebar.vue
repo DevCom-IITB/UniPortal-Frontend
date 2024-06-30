@@ -1,27 +1,22 @@
 <template>
-  <div
-    class="sidebar"
-    :style="
-      windowWidth > 750
-        ? { background: colourStore.sidebar, color: colourStore.emphasis_text }
-        : showSidebar
-        ? { background: colourStore.sidebar }
-        : { width: '0px' }
-    "
-  >
-    <div
-      class="Logo"
-      :style="
-        windowWidth < 750
-          ? { background: colourStore.primary }
-          : { background: colourStore.sidebar }
-      "
-    >
+  <div class="sidebar" :style="windowWidth > 750
+    ? { background: colourStore.sidebar, color: colourStore.emphasis_text }
+    : showSidebar
+      ? { background: colourStore.sidebar }
+      : { width: '0px' }
+    ">
+    <div class="Logo" :style="windowWidth < 750
+      ? { background: colourStore.primary }
+      : { background: colourStore.sidebar }
+      ">
       <div v-if="windowWidth < 750" class="burger" @click="Burger">
         <burger />
       </div>
-      <div class="Logoimg"><Logo /></div>
+      <div class="Logoimg">
+        <Logo />
+      </div>
     </div>
+
     <div class="sidebar-content" v-if="!showNotifications">
     <div
       class="Info"
@@ -33,6 +28,7 @@
       </div>
 
       <div class="InfoLinks">
+
       
         <button
           class="btn notif-btn" @click="notify"
@@ -56,72 +52,56 @@
         </button>
         
 
-        <button
-          class="btn"
-          @mouseover="hovering = 1"
-          @mouseleave="hovering = 0"
-          :style="
-            hovering == 1
-              ? {
-                  background: colourStore.active_hovering,
-                  color: colourStore.emphasis_text,
-                }
-              : windowWidth > 750
-              ? {
-                  background: colourStore.sidebar,
-                  color: colourStore.emphasis_text,
-                }
-              : { background: colourStore.sidebar }
-          "
-        >
-          <email />&nbsp;&nbsp;smpcs2023@gmail.com
+        <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="hovering == 1
+          ? {
+            background: colourStore.active_hovering,
+            color: colourStore.emphasis_text,
+          }
+          : windowWidth > 750
+            ? {
+              background: colourStore.sidebar,
+              color: colourStore.emphasis_text,
+            }
+            : { background: colourStore.sidebar }
+          ">
+          <email />&nbsp;&nbsp;smpcs2024@gmail.com
+
         </button>
 
-        <button
-          class="btn" @click="toSMP"
-          @mouseover="hovering = 2"
-          @mouseleave="hovering = 0"
-          :style="
-            hovering == 2
-              ? {
-                  background: colourStore.active_hovering,
-                  color: colourStore.emphasis_text,
-                }
-              : windowWidth > 750
-              ? {
-                  background: colourStore.sidebar,
-                  color: colourStore.emphasis_text,
-                }
-              : { background: colourStore.sidebar }
-          "
-        >
+        <button class="btn" @click="toSMP" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="hovering == 2
+          ? {
+            background: colourStore.active_hovering,
+            color: colourStore.emphasis_text,
+          }
+          : windowWidth > 750
+            ? {
+              background: colourStore.sidebar,
+              color: colourStore.emphasis_text,
+            }
+            : { background: colourStore.sidebar }
+          ">
           <Globe />&nbsp;&nbsp;SMP Website
         </button>
 
-        <button
-          class="btn" @click="insta"
-          @mouseover="hovering = 3"
-          @mouseleave="hovering = 0"
-          :style="
-            hovering == 3
-              ? {
-                  background: colourStore.active_hovering,
-                  color: colourStore.emphasis_text,
-                }
-              : windowWidth > 750
-              ? {
-                  background: colourStore.sidebar,
-                  color: colourStore.emphasis_text,
-                }
-              : { background: colourStore.sidebar }
-          "
-        >
+        <button class="btn" @click="insta" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="hovering == 3
+          ? {
+            background: colourStore.active_hovering,
+            color: colourStore.emphasis_text,
+          }
+          : windowWidth > 750
+            ? {
+              background: colourStore.sidebar,
+              color: colourStore.emphasis_text,
+            }
+            : { background: colourStore.sidebar }
+          ">
           <contact />&nbsp;&nbsp;smp.iitb
         </button>
 
         
       </div>
     </div>
+
   </div>
   <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
     <div class="back-notify"><arrow class="arrow" @click="notify"/>  Notifications</div>
@@ -145,21 +125,16 @@
       class="Creds"
       v-if="windowWidth > 750 || ( showSidebar && windowWidth < 750)"
     >
+
       <button class="credentials" :style="{ background: colourStore.sidebar }">
-        <DC class="DevComLogo" @click="toDevCom" /><SMP
-          class="SMPLogo"
-          @click="toSMP"
-        />
+        <DC class="DevComLogo" @click="toDevCom" />
+        <SMP class="SMPLogo" @click="toSMP" />
       </button>
-      <button
-        class="logout"
-        :style="{
-          background: colourStore.sidebar,
-          borderColor: colourStore.grey,
-          color: colourStore.grey,
-        }"
-        @click="Logout"
-      >
+      <button class="logout" :style="{
+        background: colourStore.sidebar,
+        borderColor: colourStore.grey,
+        color: colourStore.grey,
+      }" @click="Logout">
         Log out
       </button>
     </div>
