@@ -1,6 +1,6 @@
 <template>
-  <div class="container" v-if="Auth.loggedIn">
-    <div class="Sidebar">
+  <div class="container" v-if="Auth.loggedIn" >
+    <div class="Sidebar" >
       <Sidebar
         @Burger="Burger"
         :style="
@@ -8,8 +8,9 @@
             ? { width: '0vw' }
             : { width: '70vw' }
         "
+        @displaynotif="showNotification2"
       />
-    </div>
+    </div>    
     <div
       class="Content"
       :style="windowWidth < 750 ? { width: '100vw' } : { width: '78.55vw' }"
@@ -47,19 +48,38 @@
       <div class="ask" v-if="askQuestion == true">
         <askBox
           :askQuestion="askQuestion"
-          @discard="ask"
+          @discard="handleDiscard"
           @OnSubmit="ask"
           :editBody="editBody"
+          :nameOfPoster="nameOfPoster"
         />
       </div>
+      <div class="anonymous" v-if="showAnonymousBox">
+        <anonymousBox @namedIdentityClick="postQueswithIdentity" @anonIdentityClick="postQueswithoutIdentity"/>
+      </div>
+      <div class="ask" v-if="notificationVisible == true">
+      <NotificationBox 
+      v-if="notificationVisible" 
+      :notifP="notif1"
+      @closeNwindow="handleClose" 
+      @openNwindow="handleOpen" 
+    />
+  </div>
+    
       <div class="ExpandedImg" v-if="expanded">
         <div class="cancel" @click="CloseImg"></div>
         <img :src="QuestionStore.ImageLink" alt="" />
       </div>
     </div>
     <div
+      class="glass-mobile"
+      v-if="glass-mobile == true || showAnonymousBox == true"
+      @click="glassMobileClick"
+      :style="{ background: 'rgba(0, 0, 0, 0.5)' }"
+    ></div>
+    <div
       class="glass"
-      v-if="askQuestion == true || glass == true"
+      v-if="askQuestion == true || glass == true "
       @click="glassClick"
       :style="
         windowWidth <= 750
@@ -67,6 +87,8 @@
           : { background: 'rgba(0, 0, 0, 0.5)' }
       "
     ></div>
+    
+    
   </div>
   <div class="login" v-if="!Auth.loggedIn">
     <DC class="DC" @click="toDevCom"/>
@@ -80,9 +102,11 @@
           <Snackbar /> 
     </div>
   </div>
+  
 </template>
 
 <script>
+import NotificationBox from "./components/common/NotificationBox.vue";
 import Navbar from "./components/common/Navbar.vue";
 import Sidebar from "./components/common/Sidebar.vue";
 import popup from "./components/common/popup.vue";
@@ -90,6 +114,7 @@ import askBox from "./components/common/askBox.vue";
 import Snackbar from "./components/common/snackbar.vue"
 import login_background from "./components/background_images/Group 9.svg";
 import Login from "./components/common/Login.vue";
+import anonymousBox from "./components/common/anonymousBox.vue";
 import DC from "./components/icons/DC.svg";
 import SMP from "./components/icons/SMP_black.svg";
 
@@ -97,9 +122,11 @@ import { useAuthStore } from "./stores/auth";
 import { useQuestionStore } from "./stores/question";
 import { useColourStore } from "./stores/colour";
 
+
 export default {
   name: "App",
   components: {
+    NotificationBox,
     Navbar,
     Sidebar,
     popup,
@@ -109,6 +136,7 @@ export default {
     Snackbar,
     DC,
     SMP,
+    anonymousBox,
   },
   data() {
     return {
@@ -117,8 +145,13 @@ export default {
       showSidebar: false,
       accessToken: "",
       glass: false,
+      glassMobile: false,
       expanded: false,
       editBody: "",
+      showAnonymousBox: false,
+      nameOfPoster:this.Auth.name,
+      notificationVisible: false,
+      notif1: [],
     };
   },
   mounted() {
@@ -144,15 +177,30 @@ export default {
       this.showSidebar = value;
       console.log(this.showSidebar);
     },
+    async askIdentity(){
+      this.showAnonymousBox = !this.showAnonymousBox;
+      console.log(this.Auth.role)
+    },
     async postInfoQues() {
       this.QuestionStore.SetAddImage(true);
       if (this.Auth.role == 5980 || this.Auth.role == 6311) {
         await this.ask();
         await this.QuestionStore.SetAction(5);
       } else {
-        await this.ask();
-        await this.QuestionStore.SetAction(4);
+        await this.askIdentity();
       }
+    },
+    async postQueswithIdentity(){
+      await this.askIdentity();
+      this.nameOfPoster = this.Auth.name;
+      await this.ask();
+      await this.QuestionStore.SetAction(4);
+    },
+    async postQueswithoutIdentity(){
+      this.nameOfPoster = "Anonymous";
+      await this.askIdentity();
+      await this.ask();
+      await this.QuestionStore.SetAction(7);
     },
     async ExpandImage() {
       this.glass = true;
@@ -162,10 +210,21 @@ export default {
       this.glass = false;
       this.expanded = false;
     },
+    async glassMobileClick() {
+      this.nameOfPoster = this.Auth.name;
+      this.glassMobile = false;
+      this.showAnonymousBox = false;
+    },
+    async handleDiscard(){
+      await this.ask();
+      this.nameOfPoster = this.Auth.name;
+    },
     async glassClick() {
       this.glass = false;
       this.askQuestion = false;
+      this.notificationVisible = false;
       this.expanded = false;
+      this.nameOfPoster = this.Auth.name;
     },
     async EditInfo(body) {
       this.askQuestion = true;
@@ -177,6 +236,27 @@ export default {
     },
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
+    },
+    showNotification() {
+      this.notificationVisible = true;
+      this.glass = true;
+      console.log('this is in app.vue')
+    },
+    handleOpen() {
+      // something about save
+      console.log('Open button clicked');
+      this.notificationVisible = false;
+      this.glass = false;
+    },
+    handleClose(){
+      this.notificationVisible = false;
+      this.glass = false;
+    },
+    showNotification2(notif){
+      this.notificationVisible = true;
+      this.glass = true;
+      this.notif1 = notif
+      console.log(notif)
     },
   },
   setup() {
@@ -261,8 +341,28 @@ export default {
   border-radius: 24px;
   padding: 16px 24px;
 }
+.anonymous{
+  position: fixed;
+  width: 375px;
+  height: 218px;
+  top: 35%;
+  z-index: 1;
+  background-color: #FCFCFC;
+  border-radius: 24px;
+  padding: 16px 24px;
+}
 
 .glass {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.glass-mobile{
   position: fixed;
   width: 100vw;
   height: 100vh;

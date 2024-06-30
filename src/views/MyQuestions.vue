@@ -133,7 +133,7 @@ export default {
     await this.fetchQuestions();
     this.questions = this.listStore.list;
     console.log(this.questions);
-    this.colourStore.colourMyQuestions();
+    await this.colourStore.colourMyQuestions();
   },
 };
 </script>

@@ -24,7 +24,7 @@
                     class="name"
                     :style="{ color: colourStore.emphasis_text }"
                   >
-                    {{ question['user_Name'] }}
+                    {{ showName }}
                   </div>
                   <div class="timestamp" :style="{ color: colourStore.grey }">
                     {{ timestamp }}
@@ -223,6 +223,7 @@ export default {
       windowWidth: window.innerWidth,
       timestamp: '',
       images: [],
+      showName:'',
     };
   },
   methods: {
@@ -265,6 +266,7 @@ export default {
       await this.QuestionStore.HideQuestion();
     },
     async SetQuestionView() {
+      console.log(this.question);
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetQuestionID(this.question['_id']);
     },
@@ -292,6 +294,19 @@ export default {
     };
     this.timestamp = date.toLocaleString(undefined, options);
     this.images = this.question.images;
+    if(this.question['is_Anonymous'] == true){
+        if(this.AuthStore.role == 5980 || this.AuthStore.role == 6311){
+          this.showName = this.question['user_Name'];
+          console.log(this.AuthStore.role)
+          console.log(this.AuthStore.name)
+        }
+        else{
+          this.showName = "Anonymous"
+        }
+      }
+      else{
+        this.showName = this.question['user_Name'];
+      }
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
