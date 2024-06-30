@@ -1,30 +1,13 @@
 <template>
   <div class="container">
     <div class="Header">
-      <Header
-        :headerName="headerName"
-        :headerText="headerText"
-        :background="background"
-        :primaryColor="primaryColor"
-      />
+      <Header :headerName="headerName" :headerText="headerText" :tags="tags" @tag-selected="handleTagSelected" />
     </div>
     <div class="Lister" @scroll="storePosition($event)">
-      <div
-        :key="question['id']"
-        v-for="question in questions"
-        class="QuestionBox"
-      >
-        <Question
-          @expand="$emit('expand')"
-          :showAnswerBox="this.true"
-          :question="question"
-          :background="background"
-          :primaryColor="primaryColor"
-          :secondaryColor="secondaryColor"
-          :primaryAccent="primaryAccent"
-          @comment="$emit('comment')"
-          @askView="$emit('askView')"
-        />
+      <div :key="question['id']" v-for="question in questions" class="QuestionBox">
+        <Question @expand="$emit('expand')" :showAnswerBox="true" :question="question" :background="background"
+          :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"
+          @comment="$emit('comment')" @askView="$emit('askView')" />
       </div>
     </div>
   </div>
@@ -51,8 +34,7 @@ export default {
       headerName: 'Questions',
       headerText: "Where all your friend's questions reside",
       questions: [],
-      true: true,
-      false: false,
+      tags: ['All', 'SMA', 'Immunization', 'Documents', 'Orientation'], // example tags
       scrollPositionY: 0,
     };
   },
@@ -62,9 +44,9 @@ export default {
   },
   methods: {
     storePosition(event) {
-      this.scrollPositionY= event.target.scrollTop;
+      this.scrollPositionY = event.target.scrollTop;
       localStorage.setItem('scrollPosition', this.scrollPositionY);
-  },
+    },
     scrollToPosition() {
       this.$nextTick(() => {
         const listerDiv = this.$el.querySelector('.Lister');
@@ -78,27 +60,40 @@ export default {
         }
       });
     },
-
-    async fetchQuestions() {
+    async fetchQuestions(tag = '') {
       const user_id = this.authStore.user_ID;
       const request = {
         user_ID: user_id,
       };
       const bearer = `Bearer ${this.authStore.accessToken}`;
 
-      console.log('bearer : ', bearer);
+      let url = `${import.meta.env.VITE_API_BASE}/question/otherQ`;
+      let options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        },
+        body: JSON.stringify(request),
+      };
 
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}/question/otherQ`,
-        {
-          method: 'PUT',
+      // Adjust URL and options based on tag selection
+      if (tag && tag !== 'All') {
+        url = `${import.meta.env.VITE_API_BASE}/taggedQ`;
+        options = {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: bearer,
           },
-          body: JSON.stringify(request),
-        }
-      );
+          body: JSON.stringify({ type: 'question', tag }),
+        };
+      }
+
+      console.log('bearer:', bearer);
+      console.log('fetching questions with URL:', url);
+
+      const res = await fetch(url, options);
 
       console.log('request sent');
 
@@ -115,24 +110,15 @@ export default {
 
           if (res.status === 200) {
             console.log('refreshed token');
-            const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer : ', bearer);
-            const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}/question/otherQ`,
-              {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: bearer,
-                },
-                body: JSON.stringify(request),
-              }
-            );
+            const newBearer = `Bearer ${this.authStore.accessToken}`;
+            console.log('new bearer:', newBearer);
+            options.headers.Authorization = newBearer;
+            const newRes = await fetch(url, options);
             console.log('new request sent');
-            const data = await res.json();
-            console.log(data);
-            this.listStore.SetList(data);
-            return data;
+            const newData = await newRes.json();
+            console.log(newData);
+            this.listStore.SetList(newData);
+            return newData;
           } else {
             console.log('refresh failed');
             await this.authStore.Logout();
@@ -141,6 +127,12 @@ export default {
           await this.authStore.Logout();
         }
       }
+    },
+    async handleTagSelected(tag) {
+      console.log('Selected tag:', tag);
+      await this.fetchQuestions(tag);
+      this.questions = this.listStore.list;
+      console.log(this.questions);
     },
   },
   async mounted() {
