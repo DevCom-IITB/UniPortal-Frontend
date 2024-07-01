@@ -180,7 +180,7 @@ export default {
       this.selectedImages.splice(index, 1);
     },
     connectWebSocket() {
-      this.socket = new WebSocket('ws://localhost:3000');
+      this.socket = new WebSocket('ws://localhost/newbee/ws');
 
       this.socket.addEventListener('open', (event) => {
         console.log('Connected to WebSocket server');
