@@ -18,113 +18,102 @@
     </div>
 
     <div class="sidebar-content" v-if="!showNotifications">
-    <div
-      class="Info"
-      v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)"
-    >
-      <div class="InfoText">
-        Welcome aboard! <br />
-        With the all new JEE Entrant's Portal NewBee, clear all your doubts about the admission process at IIT Bombay
-      </div>
+      <div class="Info" v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)">
+        <div class="InfoText">
+          Welcome aboard! <br />
+          With the all new JEE Entrant's Portal NewBee, clear all your doubts about the admission process at IIT Bombay
+        </div>
 
-      <div class="InfoLinks">
+        <div class="InfoLinks">
 
-      
-        <button
-          class="btn notif-btn" @click="notify"
-          @mouseover="hovering = 4"
-          @mouseleave="hovering = 0"
-          :style="
-            hovering == 4
+
+          <button class="btn notif-btn" @click="notify" @mouseover="hovering = 4" @mouseleave="hovering = 0" :style="hovering == 4
+            ? {
+              background: colourStore.active_hovering,
+              color: colourStore.emphasis_text,
+            }
+            : windowWidth > 750
               ? {
-                  background: colourStore.active_hovering,
-                  color: colourStore.emphasis_text,
-                }
-              : windowWidth > 750
-              ? {
-                  background: colourStore.sidebar,
-                  color: colourStore.emphasis_text,
-                }
+                background: colourStore.sidebar,
+                color: colourStore.emphasis_text,
+              }
               : { background: colourStore.sidebar }
-          "
-        >
-          <Bell /><span class ="notification-mid" >&nbsp;&nbsp;Notifications </span> <span v-if="notifs.notifications" class="notificationCount" >{{ (notifs.notifications.length) ? notifs.notifications.length : '' }}</span>
-        </button>
-        
+            ">
+            <Bell /><span class="notification-mid">&nbsp;&nbsp;Notifications </span> <span v-if="notifs.notifications"
+              class="notificationCount">{{ (notifs.notifications.length) ? notifs.notifications.length : '' }}</span>
+          </button>
 
-        <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="hovering == 1
-          ? {
-            background: colourStore.active_hovering,
-            color: colourStore.emphasis_text,
-          }
-          : windowWidth > 750
+
+          <button class="btn" @mouseover="hovering = 1" @mouseleave="hovering = 0" :style="hovering == 1
             ? {
-              background: colourStore.sidebar,
+              background: colourStore.active_hovering,
               color: colourStore.emphasis_text,
             }
-            : { background: colourStore.sidebar }
-          ">
-          <email />&nbsp;&nbsp;smpcs2024@gmail.com
+            : windowWidth > 750
+              ? {
+                background: colourStore.sidebar,
+                color: colourStore.emphasis_text,
+              }
+              : { background: colourStore.sidebar }
+            ">
+            <email />&nbsp;&nbsp;smpcs2024@gmail.com
 
-        </button>
+          </button>
 
-        <button class="btn" @click="toSMP" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="hovering == 2
-          ? {
-            background: colourStore.active_hovering,
-            color: colourStore.emphasis_text,
-          }
-          : windowWidth > 750
+          <button class="btn" @click="toSMP" @mouseover="hovering = 2" @mouseleave="hovering = 0" :style="hovering == 2
             ? {
-              background: colourStore.sidebar,
+              background: colourStore.active_hovering,
               color: colourStore.emphasis_text,
             }
-            : { background: colourStore.sidebar }
-          ">
-          <Globe />&nbsp;&nbsp;SMP Website
-        </button>
+            : windowWidth > 750
+              ? {
+                background: colourStore.sidebar,
+                color: colourStore.emphasis_text,
+              }
+              : { background: colourStore.sidebar }
+            ">
+            <Globe />&nbsp;&nbsp;SMP Website
+          </button>
 
-        <button class="btn" @click="insta" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="hovering == 3
-          ? {
-            background: colourStore.active_hovering,
-            color: colourStore.emphasis_text,
-          }
-          : windowWidth > 750
+          <button class="btn" @click="insta" @mouseover="hovering = 3" @mouseleave="hovering = 0" :style="hovering == 3
             ? {
-              background: colourStore.sidebar,
+              background: colourStore.active_hovering,
               color: colourStore.emphasis_text,
             }
-            : { background: colourStore.sidebar }
-          ">
-          <contact />&nbsp;&nbsp;smp.iitb
-        </button>
+            : windowWidth > 750
+              ? {
+                background: colourStore.sidebar,
+                color: colourStore.emphasis_text,
+              }
+              : { background: colourStore.sidebar }
+            ">
+            <contact />&nbsp;&nbsp;smp.iitb
+          </button>
 
-        
+
+        </div>
       </div>
-    </div>
-
-  </div>
-  <div class="notifications-content" v-if="(showNotifications && windowWidth > 750)">
-    <div class="back-notify"><arrow class="arrow" @click="notify"/>  Notifications</div>
-    <div class="notifs"  >
-      <div class="notif" 
-     v-for="notif in notifs.notifications" 
-     :key="notif._id"
-     @click="emitNotif(notif)"
-     :style="{ background: colourStore.primary }">
-      {{ notif.content.length > 16 ? notif.content.slice(0, 16) + '...' : notif.content }}
-</div>
 
     </div>
+    <div class="notifications-content"
+      v-if="(showNotifications && windowWidth > 750) || (showSidebar && showNotifications && windowWidth < 750)">
+      <div class="back-notify">
+        <arrow class="arrow" @click="notify" /> Notifications
+      </div>
+      <div class="notifs">
+        <div class="notif" v-for="notif in notifs.notifications" :key="notif._id" @click="emitNotif(notif)"
+          :style="{ background: colourStore.primary }">
+          {{ notif.content.length > 16 ? notif.content.slice(0, 16) + '...' : notif.content }}
+        </div>
 
-  
+      </div>
 
-    
-    
-  </div>
-    <div
-      class="Creds"
-      v-if="windowWidth > 750 || ( showSidebar && windowWidth < 750)"
-    >
+
+
+
+
+    </div>
+    <div class="Creds" v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)">
 
       <button class="credentials" :style="{ background: colourStore.sidebar }">
         <DC class="DevComLogo" @click="toDevCom" />
@@ -138,10 +127,10 @@
         Log out
       </button>
     </div>
-  
-  
-  
-</div>
+
+
+
+  </div>
 </template>
 
 
@@ -158,7 +147,7 @@ import Bell from "../icons/Bell.svg";
 
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "@/stores/colour";
-import { useQuestionStore} from '@/stores/question'
+import { useQuestionStore } from '@/stores/question'
 
 export default {
   name: "Sidebar",
@@ -183,7 +172,7 @@ export default {
       try {
         const user_id = authStore.user_ID;
         // console.log('user id : ', user_id);
-        
+
         const bearer = `Bearer ${authStore.accessToken}`;
         // console.log('bearer : ', bearer);
 
@@ -199,7 +188,7 @@ export default {
           // console.log('Received response');
           const data = await res.json();
           // console.log(data);
-          return data; 
+          return data;
         } else if (res.status === 403) {
           // console.log('Refreshing token');
           const refreshRes = await authStore.Refresh();
@@ -209,7 +198,7 @@ export default {
             const newBearer = `Bearer ${authStore.accessToken}`;
             // console.log('New bearer : ', newBearer);
 
-           
+
             const retryRes = await fetch(`${import.meta.env.VITE_API_BASE}/notification/get/${user_id}`, {
               method: 'GET',
               headers: {
@@ -222,22 +211,22 @@ export default {
               console.log('Received response after token refresh');
               const data = await retryRes.json();
               // console.log(data);
-              return data; 
+              return data;
             } else {
               console.error('Failed to fetch notifications after token refresh');
-              return []; 
+              return [];
             }
           } else {
             console.error('Failed to refresh token');
-            return []; 
+            return [];
           }
         } else {
           console.error('Failed to fetch notifications');
-          return []; 
+          return [];
         }
       } catch (error) {
         console.error('Error during fetch:', error);
-        return []; 
+        return [];
       }
     };
 
@@ -253,7 +242,7 @@ export default {
       windowWidth: window.innerWidth,
       showSidebar: false,
       showNotifications: false,
-      notifs: [], 
+      notifs: [],
     };
   },
   mounted() {
@@ -271,7 +260,7 @@ export default {
     },
     async loadNotifications() {
       try {
-        this.notifs = await this.fetchNotifs(); 
+        this.notifs = await this.fetchNotifs();
         this.notifs.notifications.reverse();
         // console.log('Loaded notifications:', this.notifs);
       } catch (error) {
@@ -302,6 +291,7 @@ export default {
       this.$emit('displaynotif', notif);
       console.log(notif);
       console.log('works');
+      this.Burger()
     },
     // async SetQuestionView() {
     //   await this.QuestionStore.SetQuestion(this.question);
@@ -390,12 +380,12 @@ export default {
   cursor: pointer;
 }
 
-.notif-btn{
+.notif-btn {
   display: flex;
 
 }
 
-.arrow{
+.arrow {
   cursor: pointer;
 }
 
@@ -406,11 +396,13 @@ export default {
   font-weight: 600;
   margin-right: 1rem;
 }
-.notification-mid{
+
+.notification-mid {
   margin-right: auto;
   font-size: 16px;
   font-weight: 600;
 }
+
 .back-notify {
   display: flex;
   gap: 0.5rem;
@@ -419,7 +411,8 @@ export default {
   justify-content: left;
   margin-bottom: 1em;
 }
-.notifications-content{
+
+.notifications-content {
   margin-bottom: auto;
   margin-top: 1rem;
   width: 90%;
@@ -431,11 +424,12 @@ export default {
   gap: 0.5rem;
   /* background-color: red; */
   max-height: 400px;
-  overflow-y: auto; 
+  overflow-y: auto;
 
 }
+
 .notif {
-  background-color: rgb(250,224,141);
+  background-color: rgb(250, 224, 141);
   padding: 1em;
   border-radius: 50px;
   font-size: 16px;

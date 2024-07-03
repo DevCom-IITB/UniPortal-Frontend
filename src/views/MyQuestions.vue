@@ -1,30 +1,13 @@
 <template>
   <div class="container">
     <div class="Header">
-      <Header
-        :headerName="headerName"
-        :headerText="headerText"
-        :background="background"
-        :primaryColor="primaryColor"
-      />
+      <Header :headerName="headerName" :headerText="headerText" :background="background" :primaryColor="primaryColor" />
     </div>
     <div class="Lister">
-      <div
-        :key="question['id']"
-        v-for="question in questions"
-        class="QuestionBox"
-      >
-        <Question
-          @expand="$emit('expand')"
-          :showAnswerBox="this.true"
-          :question="question"
-          :background="background"
-          :primaryColor="primaryColor"
-          :secondaryColor="secondaryColor"
-          :primaryAccent="primaryAccent"
-          @comment="$emit('comment')"
-          @askView="$emit('askView')"
-        />
+      <div :key="question['id']" v-for="question in questions" class="QuestionBox">
+        <Question @expand="$emit('expand')" :showAnswerBox="this.true" :question="question" :background="background"
+          :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"
+          @comment="$emit('comment')" @askView="$emit('askView')" />
       </div>
     </div>
   </div>
@@ -130,10 +113,11 @@ export default {
     },
   },
   async mounted() {
+    await this.colourStore.colourMyQuestions();
     await this.fetchQuestions();
     this.questions = this.listStore.list;
     console.log(this.questions);
-    await this.colourStore.colourMyQuestions();
+
   },
 };
 </script>
