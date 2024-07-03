@@ -180,7 +180,7 @@ export default {
       this.selectedImages.splice(index, 1);
     },
     connectWebSocket() {
-      this.socket = new WebSocket('ws://10.198.49.120/newbee/ws');
+      this.socket = new WebSocket('wss://gymkhana.iitb.ac.in/newbee/ws');
 
       this.socket.addEventListener('open', (event) => {
         console.log('Connected to WebSocket server');
