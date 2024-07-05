@@ -21,6 +21,35 @@ export const useQuestionStore = defineStore("question", {
   }),
   persist: true,
   actions: {
+    async sendQuery(query) {
+      try {
+        const authStore = useAuthStore();
+        const accessToken = authStore.accessToken;
+        const bearer = `Bearer ${accessToken}`;
+
+        const requestData = typeof query === 'string' ? query : query.toString();
+
+        const response = await fetch('http://localhost:5001/recommend', {
+          method: 'POST',
+          headers: {
+            Authorization: bearer,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Recommendation response:', data);
+          return data.map(item => ({ question: item.question, qid: item.qid }));
+        } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error sending query:', error);
+      }
+    },
+
     async SetQuestion(question) {
       console.log("we have entered the set question function in question.js");
       this.question = question;

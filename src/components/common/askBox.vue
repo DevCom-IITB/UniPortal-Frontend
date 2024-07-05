@@ -54,7 +54,15 @@ export default {
     const questionStore = useQuestionStore();
     const authStore = useAuthStore();
     const colourStore = useColourStore();
-    return { questionStore, authStore, colourStore };
+    const sendQuery = async (query) => {
+      try {
+        return await questionStore.sendQuery(query.text);
+      } catch (error) {
+        console.error('Error sending query:', error);
+        throw error;
+      }
+    };
+    return { questionStore, authStore, colourStore, sendQuery };
   },
   props: {
     editBody: {
@@ -79,19 +87,20 @@ export default {
       this.text = this.editBody;
     }
   },
-  created() {
-    if (this.authStore.role === 7669) {
-      this.connectWebSocket();
-    }
-  },
   watch: {
-    text(newText) {
+    async text(newText) {
       if (this.authStore.role === 7669) {
-        this.sendQuery(newText);
+        try {
+          const messages = await this.sendQuery({ text: newText });
+          this.messages = messages.map(item => ({ question: item.question, qid: item.qid }));
+        } catch (error) {
+          console.error('Error handling sendQuery response:', error);
+        }
       }
-    }
+    },
   },
   methods: {
+
     async OnSubmit(e) {
       e.preventDefault();
       if (!this.text && !posted) {
@@ -179,31 +188,7 @@ export default {
       this.previewImages.splice(index, 1);
       this.selectedImages.splice(index, 1);
     },
-    connectWebSocket() {
-      this.socket = new WebSocket('wss://gymkhana.iitb.ac.in/newbee/ws');
 
-      this.socket.addEventListener('open', (event) => {
-        console.log('Connected to WebSocket server');
-      });
-      this.socket.onmessage = (event) => {
-        const parsedData = JSON.parse(event.data);
-        console.log(typeof (parsedData))
-        this.messages.push(...parsedData)
-        console.log('Received message from WebSocket server:', this.messages);
-      };
-      this.socket.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed:', event)
-      })
-    },
-    sendQuery(query) {
-      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-        console.log("WebSocket is open. Ready state : ", this.socket.readyState)
-        this.socket.send(query);
-        this.messages = [];
-      } else {
-        console.error('WebSocket is not open. Ready state:', this.socket.readyState);
-      }
-    },
     async SetQuestionView(question) {
       await this.questionStore.SetQuestionID(question['qid']);
       this.$emit('discard');
