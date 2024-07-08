@@ -29,7 +29,7 @@ export const useQuestionStore = defineStore("question", {
 
         const requestData = typeof query === 'string' ? query : query.toString();
 
-        const response = await fetch('http://localhost:5001/recommend', {
+        const response = await fetch('http://localhost:5001/newbee/nlp/recommend', {
           method: 'POST',
           headers: {
             Authorization: bearer,
