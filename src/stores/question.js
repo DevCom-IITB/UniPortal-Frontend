@@ -17,7 +17,7 @@ export const useQuestionStore = defineStore("question", {
     ImageLink: "",
     showSnackbar: false,
     snackMessage: "",
-    action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question with student's original identity, 5 is for posting a infopost, 6 is for editing an infopost, 7 for posting a question anonymously by a student
+    action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question with student's original identity, 5 is for posting a infopost, 6 is for editing an infopost, 7 for posting a question anonymously by a student, 8 is for editing a answer by SMP
   }),
   persist: true,
   actions: {
@@ -1259,6 +1259,106 @@ export const useQuestionStore = defineStore("question", {
         }
       }
     },
+    async EditAnswer(body) {
+      const authStore = useAuthStore();
+      const listStore = useListStore();
+      const colourStore = useColourStore();
+      console.log("we have entered the edit answer function in question.js");
+      const uid = authStore.user_ID;
+      console.log("user id  parent function: ", uid);
+      const answerObj = {
+  answers: {        
+    user_ID: uid,
+    body: body
+  }
+};
+      console.log("answer object : ", answerObj);
+      const accessToken = authStore.accessToken;
+      const bearer = `Bearer ${accessToken}`;
+      console.log("bearer : ", bearer);
+      console.log("question id : ", this.question_ID);
+      console.log("Sending request");
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE}/question/editA/${this.question_ID}/${this.answer_ID}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: bearer,
+          },
+          body: JSON.stringify(answerObj),
+        }
+      )
+      // message for editing answer
+      this.showSnackbar = true;
+
+      if (res.status == 200) {
+        console.log("successfully edited answer :", this.answer_ID);
+        const data = await res.json();
+        console.log('data :', data);
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
+        await listStore.SetEditAnswer(
+
+          this.question_ID,
+          this.answer_ID,
+          body
+        );
+      } else {
+        if (res.status === 403) {
+          console.log("refreshing token");
+          const res = await this.authStore.Refresh()
+          // message for refreshing token
+          this.showSnackbar = true;
+          console.log("snackbar");
+          const data = await res.json();
+          console.log('data :', data);
+          this.snackMessage = data.message;
+          if (res.status === 200) {
+            console.log("refreshed token");
+            const bearer = `Bearer ${this.authStore.accessToken}`;
+            console.log("new bearer : ", bearer);
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/question/editA/${this.question_ID}/${this.answer_ID}`,
+              {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: bearer,
+                },
+                body: JSON.stringify(answerObj),
+              }
+            )
+            // message for editing answer
+            this.showSnackbar = true;
+
+            console.log("new request sent");
+            const data = await res.json();
+            console.log('data :', data);
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
+            await listStore.SetEditAnswer(
+              this.question_ID,
+              this.answer_ID,
+              body
+
+            );
+          } else {
+            console.log("refresh failed");
+            await this.authStore.Logout();
+          }
+        }
+        else {
+          this.showSnackbar = true;
+          console.log("snackbar");
+          colourStore.SetSnackColor(false);
+          this.snackMessage = "not enough permissions";
+          await this.authStore.Logout();
+        }
+      }
+    }
+    },
     async PostQuestionAnonymously(body, images) {
       const authStore = useAuthStore();
       const colourStore = useColourStore();
@@ -1342,4 +1442,4 @@ export const useQuestionStore = defineStore("question", {
       }
     },
   },
-});
+);

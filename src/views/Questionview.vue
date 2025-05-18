@@ -8,10 +8,23 @@
     </div>
     <div class="List" v-if="answers.length">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
-        <Question @expand="$emit('expand')" :isAnswer="this.true" :upvotes="answer['upvotes']"
-          :showAnswerBox="this.false" :comments="answer['comments']" :question="answer" :background="background"
-          :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"
-          @comment="$emit('comment')" @answer_id="CommentAnswer" @upvote="UpvoteAnswer" @hide="HideAnswer" />
+        <Question
+          @expand="$emit('expand')"
+          :isAnswer="this.true"
+          :upvotes="answer['upvotes']"
+          :showAnswerBox="this.false"
+          :comments="answer['comments']"
+          :question="answer"
+          :background="background"
+          :primaryColor="primaryColor"
+          :secondaryColor="secondaryColor"
+          :primaryAccent="primaryAccent"
+          @comment="$emit('comment')"
+          @answer_id="CommentAnswer"
+          @upvote="UpvoteAnswer"
+          @hide="HideAnswer"
+          @edit="EditAnswer"
+        />
       </div>
     </div>
   </div>
@@ -141,6 +154,11 @@ export default {
       );
       await this.questionStore.SetQuestionID(this.question["_id"]);
       await this.questionStore.HideAnswer();
+    },
+    async EditAnswer(answer) {
+      console.log('editing info');
+      console.log(answer);
+      this.$emit('edit', answer);
     },
   },
   async mounted() {

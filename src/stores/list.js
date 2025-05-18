@@ -72,5 +72,13 @@ export const useListStore = defineStore("list", {
       console.log("editing infopost in list : ", id);
       this.list.filter((item) => item["_id"] === id)[0].body = body;
     },
+    async SetEditAnswer(qid, aid, body) {
+  console.log("editing answer in list :", qid, aid);
+  const q = this.list.find(item => item._id === qid);
+  if (!q) return;
+
+  const answer = q.answers.find(a => a._id === aid);
+  if (answer) answer.body = body;
+}
   },
 });

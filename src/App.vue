@@ -231,6 +231,11 @@ export default {
       console.log("body:", body);
       this.editBody = body;
     },
+    async EditAnswer(body) {
+      this.askQuestion = true;
+      console.log("body:", body);
+      this.editBody = body;
+    },
     async toDevCom() {
       window.open("https://devcom-iitb.org/");
     },
