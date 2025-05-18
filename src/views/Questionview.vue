@@ -1,24 +1,10 @@
 <template>
   <div class="container">
-    <div
-      class="MainQuestion"
-      @click="test"
-      :style="{ borderBlockColor: secondaryColor }"
-    >
-      <Question
-        @expand="$emit('expand')"
-        v-if="question && Object.keys(question).length > 0"
-        :isAnswer="this.false"
-        :upvotes="question['upvotes']"
-        :showAnswerBox="this.true"
-        :comments="questionStore.comments"
-        :question="question"
-        :background="background"
-        :primaryColor="primaryColor"
-        :secondaryColor="secondaryColor"
-        :primaryAccent="primaryAccent"
-        @comment="$emit('comment')"
-      />
+    <div class="MainQuestion" @click="test" :style="{ borderBlockColor: secondaryColor }">
+      <Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false"
+        :upvotes="question['upvotes']" :showAnswerBox="this.true" :comments="questionStore.comments"
+        :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor"
+        :primaryAccent="primaryAccent" @comment="$emit('comment')" />
     </div>
     <div class="List" v-if="answers.length">
       <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
@@ -47,6 +33,7 @@
 <script>
 import Question from "../components/common/questionBoxMax.vue";
 
+import { useAuthStore } from '../stores/auth';
 import { useQuestionStore } from "../stores/question";
 import { useListStore } from "../stores/list";
 import { useColourStore } from "../stores/colour";
@@ -54,10 +41,11 @@ import { useColourStore } from "../stores/colour";
 export default {
   name: "Questionview",
   setup() {
+    const authStore = useAuthStore();
     const questionStore = useQuestionStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
-    return { questionStore, listStore, colourStore };
+    return { authStore, questionStore, listStore, colourStore };
   },
   data() {
     return {
@@ -82,6 +70,61 @@ export default {
   methods: {
     test() {
       console.log(this.question.comments);
+    },
+    async fetchQuestions() {
+      const user_id = this.authStore.user_ID;
+      const request = {
+        user_ID: user_id,
+      };
+      const bearer = `Bearer ${this.authStore.accessToken}`;
+
+      let url = `${import.meta.env.VITE_API_BASE}/question/otherQ`;
+      let options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        },
+        body: JSON.stringify(request),
+      };
+
+      console.log('bearer:', bearer);
+      console.log('fetching questions with URL:', url);
+
+      const res = await fetch(url, options);
+
+      console.log('request sent');
+
+      if (res.status === 200) {
+        console.log('received response');
+        const data = await res.json();
+        console.log(data);
+        this.listStore.SetList(data);
+        return data;
+      } else {
+        if (res.status === 403) {
+          console.log('refreshing token');
+          const res = await this.authStore.Refresh();
+
+          if (res.status === 200) {
+            console.log('refreshed token');
+            const newBearer = `Bearer ${this.authStore.accessToken}`;
+            console.log('new bearer:', newBearer);
+            options.headers.Authorization = newBearer;
+            const newRes = await fetch(url, options);
+            console.log('new request sent');
+            const newData = await newRes.json();
+            console.log(newData);
+            this.listStore.SetList(newData);
+            return newData;
+          } else {
+            console.log('refresh failed');
+            await this.authStore.Logout();
+          }
+        } else {
+          await this.authStore.Logout();
+        }
+      }
     },
     async CommentAnswer(answer_id) {
       console.log("answer_id : ", answer_id);
@@ -119,6 +162,7 @@ export default {
     },
   },
   async mounted() {
+    await this.fetchQuestions();
     console.log("we have enterd the question view");
     console.log("state question", this.questionStore.question);
     this.question = this.listStore.list.filter(
