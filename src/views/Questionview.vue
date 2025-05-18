@@ -37,6 +37,7 @@
           @answer_id="CommentAnswer"
           @upvote="UpvoteAnswer"
           @hide="HideAnswer"
+          @edit="EditAnswer"
         />
       </div>
     </div>
@@ -110,6 +111,11 @@ export default {
       );
       await this.questionStore.SetQuestionID(this.question["_id"]);
       await this.questionStore.HideAnswer();
+    },
+    async EditAnswer(answer) {
+      console.log('editing info');
+      console.log(answer);
+      this.$emit('edit', answer);
     },
   },
   async mounted() {

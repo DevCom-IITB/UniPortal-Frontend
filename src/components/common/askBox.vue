@@ -153,6 +153,10 @@ export default {
         await this.questionStore.PostQuestionAnonymously(this.text, this.selectedImages);
         // await this.questionStore.AddCommentComment(this.text)
       }
+      else if (decision == 8){
+        console.log("we will be editing an answer");
+        await this.questionStore.EditAnswer(this.text);
+      }
 
       this.$emit("discard");
     },
