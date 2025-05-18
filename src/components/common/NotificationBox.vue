@@ -7,21 +7,22 @@
             <div class="title">Notification</div>
             <div class="subtitle" :style="{ color: colourStore.grey }">Sent at {{ formatDate(notifP.sent_At) }}</div>
           </div>
-          <div class="body" :style="{ color : colourStore.grey }">
+          <div class="body" :style="{ color: colourStore.grey }">
             <div class="scrollable-content">
-              {{ notifP.content }} 
+              {{ notifP.content }}
             </div>
           </div>
           <div class="actions">
-            <button class="close-btn" @click="close" :style="{ borderColor : colourStore.grey, color : colourStore.grey}">Close</button>
-          
-
-    
-            <button class="open-btn" @click="open" :style="{ background : colourStore.primary}">Open</button> 
+            <button class="close-btn" @click="close"
+              :style="{ borderColor: colourStore.grey, color: colourStore.grey }">Close</button>
 
 
 
-        </div>
+            <button class="open-btn" @click="open" :style="{ background: colourStore.primary }">Open</button>
+
+
+
+          </div>
         </div>
       </div>
     </div>
@@ -37,7 +38,7 @@ import { useQuestionStore } from '../../stores/question';
 export default {
   name: 'NotificationBox',
   props: ['notifP'],
-  data(){
+  data() {
     return {
       questions: [],
       question: null
@@ -69,36 +70,37 @@ export default {
       this.$emit('closeNwindow');
     },
     async open() {
-    if (this.notifP.isquestion){
-      await this.$router.push(this.authStore.vite_base + '/myquestions');
-  
-      // this.colourStore.colourMyQuestions()
-      console.log('Fetching questions...');
-        
+      if (this.notifP.isquestion) {
+        await this.$router.push(this.authStore.vite_base + '/myquestions');
+
+        // this.colourStore.colourMyQuestions()
+        console.log('Fetching questions...');
+
         // this.colourStore.colourQuestionView()
-        await this.fetchQuestions(); 
+        await this.fetchQuestions();
         this.questions = this.listStore.list;
         console.log('Questions fetched:', this.questions);
 
-        
+
 
         console.log('Finding question with ID:', this.notifP.contentid);
         this.question = this.findQuestionById(this.notifP.contentid);
         console.log('Found question:', this.question);
-        
+
         await this.$router.push(this.authStore.vite_base + '/question');
- 
+
         // this.colourStore.colourQuestionView()
         this.$emit('openNwindow');
+        this.SetQuestionView();
         this.colourStore.colourQuestionView()
-        
-    }
-    else {
-      this.$router.push(this.authStore.vite_base + '/');
-      this.$emit('openNwindow');
-    }
+
+      }
+      else {
+        this.$router.push(this.authStore.vite_base + '/');
+        this.$emit('openNwindow');
+      }
     },
-    findQuestionById(questionId){
+    findQuestionById(questionId) {
       return this.questions.find(question => question._id === questionId);
     },
     formatDate(dateString) {
@@ -217,7 +219,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
 }
 
 .content {
@@ -228,7 +230,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 12px 16px;
-  background-color: white; 
+  background-color: white;
 }
 
 .inner-container {
@@ -258,11 +260,11 @@ export default {
 .body {
   width: 100%;
   height: 20%;
-  max-height: 200px; 
+  max-height: 200px;
   overflow-y: auto;
   margin-top: 16px;
   padding: 8px;
-  border: 1px solid; 
+  border: 1px solid;
   border-radius: 8px;
 }
 
@@ -300,6 +302,4 @@ button {
 .close-btn {
   border: 1px solid;
 }
-
-
 </style>
