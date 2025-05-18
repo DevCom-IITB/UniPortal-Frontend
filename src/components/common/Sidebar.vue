@@ -312,7 +312,7 @@ export default {
       await this.authStore.Logout();
     },
     async toDevCom() {
-      window.open("https://devcom-iitb.org/");
+      window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
