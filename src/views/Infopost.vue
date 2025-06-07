@@ -1,20 +1,13 @@
 <template>
   <div class="container">
     <div class="Header">
-      <Header
-        :headerName="headerName"
-        :headerText="headerText"
-        :background="background"
-        :color="color"
-      />
+      <Header :headerName="headerName" :headerText="headerText" :tags="tags" @tag-selected="handleTagSelected" :lang="lang"
+      @language-selected="handleLanguageSelected" 
+       />
     </div>
     <div class="Lister">
-      <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
-        <InfoBox
-          :infopost="infopost"
-          @expand="$emit('expand')"
-          @edit="EditInfo"
-        />
+      <div :key="`${infopost.id}-${currentLanguage}`" v-for="infopost in displayedInfoposts" class="InfoPostBox">
+        <InfoBox :infopost="getTranslatedPost(infopost)" @expand="$emit('expand')" @edit="EditInfo" />
       </div>
     </div>
   </div>
@@ -41,32 +34,66 @@ export default {
       headerName: 'Infopost',
       headerText: 'Infoposts from SMPCs',
       infoposts: [],
+      currentLanguage: 'en',
+      tags: ['All', 'SMA', 'Immunization', 'Documents', 'Orientation'], // example tags
+      lang: '1',
     };
+  },
+  computed: {
+    displayedInfoposts() {
+      return this.infoposts;
+    }
   },
   components: {
     Header,
     InfoBox,
   },
   methods: {
-    async fetchInfoPosts() {
+    getTranslatedPost(post) {
+      if (this.currentLanguage === 'en') {
+        return post;
+      }
+      
+      return {
+        ...post,
+        body: post.translations?.[this.currentLanguage] || post.body
+      };
+    },
+    handleLanguageSelected(language) {
+      this.currentLanguage = language;
+    },
+    async fetchInfoPosts(tag = '') {
       const bearer = `Bearer ${this.authStore.accessToken}`;
       const role = this.authStore.role;
       const get = role == 5980 || role == 1980 ? 'get' : 'getStu';
 
-      console.log('bearer : ', bearer);
-
-      console.log('fetching info posts');
-
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/${get}`, {
+      let url = `${import.meta.env.VITE_API_BASE}/info/${get}`;
+      let options = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Authorization: bearer,
         },
-      });
+      };
+
+      if (tag && tag != 'All') {
+        url = `${import.meta.env.VITE_API_BASE}/taggedQ`;
+        options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: bearer,
+          },
+          body: JSON.stringify({ type: 'infopost', tag }),
+        };
+      }
+
+      console.log('bearer : ', bearer);
+      console.log('fetching info posts with url: ', url);
+
+      const res = await fetch(url, options);
 
       console.log('response : ', res);
-
       console.log('request sent');
 
       if (res.status === 200) {
@@ -82,23 +109,15 @@ export default {
 
           if (res.status === 200) {
             console.log('refreshed token');
-            const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer : ', bearer);
-            const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}/info/${get}`,
-              {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: bearer,
-                },
-              }
-            );
+            const newBearer = `Bearer ${this.authStore.accessToken}`;
+            console.log('new bearer : ', newBearer);
+            options.headers.Authorization = newBearer;
+            const newRes = await fetch(url, options);
             console.log('new request sent');
-            const data = await res.json();
-            console.log(data);
-            this.listStore.SetList(data);
-            return data;
+            const newData = await newRes.json();
+            console.log(newData);
+            this.listStore.SetList(newData);
+            return newData;
           } else {
             console.log('refresh failed');
             await this.authStore.Logout();
@@ -112,6 +131,12 @@ export default {
       console.log('editing info');
       console.log(infopost);
       this.$emit('edit', infopost);
+    },
+    async handleTagSelected(tag) {
+      console.log('Selected tag:', tag);
+      await this.fetchInfoPosts(tag);
+      this.infoposts = this.listStore.list;
+      console.log(this.infoposts);
     },
   },
   async mounted() {
