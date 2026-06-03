@@ -279,7 +279,7 @@ export default {
       window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
     async toSMP() {
-      window.open("https://smp.gymkhana.iitb.ac.in/");
+      window.open("https://gymkhana.iitb.ac.in/~smp/");
     },
     async insta() {
       window.open("https://www.instagram.com/smp.iitb/");

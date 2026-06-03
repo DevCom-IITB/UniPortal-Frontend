@@ -15,6 +15,7 @@
               <div class="info">
                 <div class="name" :style="{ color: colourStore.emphasis_text }">
                   {{ showName }}
+                  <span v-if="question.verified">| SMP Team</span>
                 </div>
                 <div class="timestamp" :style="{ color: colourStore.grey }">
                   {{ timestamp }}
