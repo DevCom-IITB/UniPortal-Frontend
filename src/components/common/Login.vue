@@ -12,7 +12,7 @@
     </div>
     <div class="login">
       <input type="text" class="input" v-model="uid" placeholder="Enter your JEE Advanced / UCEED Roll Number" />
-      <input type="password" class="input" v-model="password" placeholder="Enter your DOB in ddmmyyyy" />
+      <input type="password" class="input" v-model="password" placeholder="Enter your DOB in dd-mm-yyyy" />
       <input type="submit" value="Login" class="button" @click="Auth.Login(uid, password, false)" />
     </div>
 
@@ -22,7 +22,7 @@
 
     <div class="headers">
       <p>If you have trouble signing up, contact
-        smpcs2024@gmail.com</p>
+        smpcs2025@gmail.com</p>
     </div>
 
 

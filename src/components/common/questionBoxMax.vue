@@ -14,7 +14,8 @@
             <div class="stamps">
               <div class="info">
                 <div class="name" :style="{ color: colourStore.emphasis_text }">
-                  {{ question["user_Name"] }}
+                  {{ showName }}
+                  <span v-if="question.verified">| SMP Team</span>
                 </div>
                 <div class="timestamp" :style="{ color: colourStore.grey }">
                   {{ timestamp }}
@@ -130,6 +131,21 @@
           @click = "alertClick"
         />
       </div>
+      <div v-if="             
+              (AuthStore.role == 5980 || AuthStore.role == 6311) && isAnswer
+            "
+            @click="EditAnswerClick"
+            class="EditAnswer"
+            :style="{
+              color: colourStore.emphasis_text,
+              background: colourStore.background,
+            }">
+        <edit
+          class="icon"
+          :svgColor="secondaryColor"
+          @click="EditAnswer"
+        />
+      </div>
     </div>
     <div class="Lister" v-if="showComments">
       <div :key="comment['id']" v-for="comment in comments" class="comment-box">
@@ -149,6 +165,7 @@ import eye from "../icons/visibility.svg";
 import closed_eye from "../icons/visibility_off.svg";
 import forum from "../icons/send.svg";
 import alert from "../icons/Alert.svg";
+import edit from "../icons/edit2.svg"; // Using same edit icon as InfoBox component
 
 import { useQuestionStore } from "@/stores/question";
 import { useAuthStore } from "@/stores/auth";
@@ -175,6 +192,7 @@ export default {
     viewcomments,
     forum,
     alert,
+    edit, // Added edit component
   },
   data() {
     return {
@@ -183,6 +201,7 @@ export default {
       windowWidth: window.innerWidth,
       images: [],
       timestamp: "",
+      showName:'',
     };
   },
   methods: {
@@ -208,6 +227,14 @@ export default {
       this.questionStore.SetAction(1);
       this.questionStore.SetAddImage(true);
       this.$emit("comment");
+    },
+    async EditAnswerClick() {
+      console.log("editing answer");
+      await this.questionStore.SetAnswerID(this.question["_id"]);
+      await this.questionStore.SetQuestion(this.question);
+      await this.questionStore.SetAction(8); // Action 8 is for edit answer
+      console.log("emitting edit :", this.question["body"]);
+      this.$emit("edit", this.question["body"]);
     },
     async CommentClick() {
       if (!this.isAnswer) {
@@ -255,6 +282,14 @@ export default {
         this.$emit("hide");
       }
     },
+    async EditAnswer() {
+      console.log("editing answer");
+      await this.questionStore.SetAnswerID(this.question["_id"]);
+      await this.questionStore.SetQuestion(this.question);
+      await this.questionStore.SetAction(8); // Action 8 is for edit answer
+      console.log("emitting edit :", this.question["body"]);
+      this.$emit("edit", this.question["body"]);
+    },
     Expand(image) {
       console.log("link is : ", image);
       this.questionStore.SetImageLink(image);
@@ -299,6 +334,19 @@ export default {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
+    if(this.question['is_Anonymous'] == true){
+        if(this.AuthStore.role == 5980 || this.AuthStore.role == 6311){
+          this.showName = this.question['user_Name'];
+          console.log(this.AuthStore.role)
+          console.log(this.AuthStore.name)
+        }
+        else{
+          this.showName = "Anonymous"
+        }
+      }
+      else{
+        this.showName = this.question['user_Name'];
+      }
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
@@ -548,7 +596,16 @@ p {
 
 .Hide {
   width: 2vw;
+  cursor: pointer;
+}
 
+.EditAnswer {
+  width: 2vw;
+  cursor: pointer;
+}
+
+.EditButton {
+  width: 2vw;
   cursor: pointer;
 }
 
@@ -658,6 +715,11 @@ p {
   }
 
   .Hide {
+    width: 8vw;
+    margin-left: 8px;
+  }
+  
+  .EditAnswer {
     width: 8vw;
     margin-left: 8px;
   }

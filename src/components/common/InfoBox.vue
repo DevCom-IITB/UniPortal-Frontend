@@ -15,7 +15,16 @@
             <img :src="image" />
           </div>
         </div>
-        <Markdown :source="infopost.body" />
+        <div class="markdown-wrapper collapsed" ref="markdownWrapper">
+          <div class="arrow-container">
+            <span>
+              <rightArrow class="arrow" :class="{ rotated: isRotated }" @click="toggleRotation"/>
+            </span>
+            <span>
+              <Markdown :source="getMarkdownContent()" />
+            </span>
+          </div>
+        </div>
       </div> 
       <div class="sizer" v-if="windowWidth <=750">
         <div
@@ -66,6 +75,7 @@ import { useAuthStore } from "@/stores/auth";
 import eye from "../icons/visibility.svg";
 import closed_eye from "../icons/visibility_off.svg";
 import edit from "../icons/edit2.svg";
+import rightArrow from "../icons/right-arrow.svg";
 import Markdown from "vue3-markdown-it";
 
 export default {
@@ -79,6 +89,7 @@ export default {
     infopost: Object,
   },
   components: {
+    rightArrow,
     eye,
     closed_eye,
     edit,
@@ -89,6 +100,7 @@ export default {
       images: [],
       windowWidth: window.innerWidth,
       timestamp: "",
+      isRotated: false,
     };
   },
   methods: {
@@ -98,6 +110,17 @@ export default {
       console.log("expanding");
       this.$emit("expand");
     },
+    toggleRotation() {
+    this.isRotated = !this.isRotated;
+    const markdownWrapper = this.$refs.markdownWrapper;
+    if (this.isRotated) {
+      markdownWrapper.classList.remove('collapsed');
+      markdownWrapper.classList.add('expanded');
+    } else {
+      markdownWrapper.classList.remove('expanded');
+      markdownWrapper.classList.add('collapsed');
+    }
+  },
     onResize() {
       this.windowWidth = window.innerWidth;
     },
@@ -113,6 +136,13 @@ export default {
       await this.questionStore.SetAction(6);
       console.log("emitting edit :", this.infopost["body"]);
       this.$emit("edit", this.infopost["body"]);
+    },
+    getMarkdownContent() {
+      if (!this.isRotated && this.infopost.body) {
+        const firstLineIndex = this.infopost.body.indexOf("\n");
+        return firstLineIndex !== -1 ? this.infopost.body.substring(0, firstLineIndex) : this.infopost.body;
+      }
+      return this.infopost.body;
     },
   },
   async mounted() {
@@ -205,6 +235,21 @@ p {
   white-space: pre-wrap;
 }
 
+.body-content{
+  display: flex;
+}
+
+.tag{
+  width: 100px;
+  height: 20px;
+  background-color: #FFEDB2;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
 .timestamp{
   font-size: x-small;
   font-weight: 400;
@@ -249,6 +294,45 @@ img {
   width: 2vw;
   cursor: pointer;
   
+}
+.arrow-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.markdown-wrapper.collapsed .arrow-container {
+  align-items: center;
+}
+
+.markdown-wrapper.expanded .arrow-container {
+  align-items: flex-start;
+}
+.arrow{
+  transform: rotate(90deg);
+  align-self: start;
+  width: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  margin-right: 0.5rem;
+}
+.rotated {
+  transform: rotate(-90deg);
+}
+.markdown-wrapper {
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: max-height 0.8s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.markdown-wrapper.collapsed {
+  max-height: 10rem;
+  padding-bottom: 0;
+}
+
+.markdown-wrapper.expanded {
+  max-height: 1000rem;
+  padding-bottom: 16px;
 }
 
 
