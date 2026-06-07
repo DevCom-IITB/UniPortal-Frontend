@@ -1,135 +1,69 @@
 <template>
-  <div class="navbar" :style="{ background: colourStore.unselected }">
-    <router-link
-      :to="authStore.vite_base + '/'"
-      class="btn"
-      id="info"
-      @click="selected1"
-      @hover="hover1"
-      :style="
-        colourStore.currentPage == 1
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">Infopost</div></router-link
-    >
-    <router-link
-      v-if="authStore.role == 1980 || authStore.role == 7669"
-      :to="authStore.vite_base + '/questions'"
-      class="btn"
-      @click="selected2"
-      @hover="hover2"
-      :style="
-        colourStore.currentPage == 2
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">Questions</div></router-link
-    >
-    <router-link
-      v-if="authStore.role == 1980 || authStore.role == 7669"
-      :to="authStore.vite_base + '/myquestions'"
-      class="btn"
-      @click="selected3"
-      @hover="hover3"
-      :style="
-        colourStore.currentPage == 3
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">My Questions</div></router-link
-    >
-    <router-link
-      v-if="
-        authStore.role == 5980 ||
-        authStore.role == 6311 ||
-        authStore.role == 1980
-      "
-      :to="authStore.vite_base + '/unanswered'"
-      class="btn"
-      @click="selected2"
-      @hover="hover2"
-      :style="
-        colourStore.currentPage == 2
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">UnAnswered</div></router-link
-    >
-    <router-link
-      v-if="
-        authStore.role == 5980 ||
-        authStore.role == 6311 ||
-        authStore.role == 1980
-      "
-      :to="authStore.vite_base + '/answered'"
-      class="btn"
-      @click="selected3"
-      @hover="hover3"
-      :style="
-        colourStore.currentPage == 3
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">Answered</div></router-link
-    >
+  <div class="navbar">
+    <div class="logo-container">
+      <Logo class="asterisk-logo" />
+      <div class="logo-text">NewBee</div>
+    </div>
+
+    <div class="center-icon">
+      <DC class="dc-logo" @click="toDevCom" />
+    </div>
+
+    <div class="right-links">
+      <button
+        type="button"
+        class="nav-icon bell-icon"
+        :class="{ active: notificationsOpen }"
+        @click="$emit('toggleNotifications')"
+        aria-label="Open notifications"
+      ></button>
+      <button type="button" class="nav-icon grid-icon" aria-label="Open menu">
+        <span v-for="dot in 9" :key="dot"></span>
+      </button>
+      <div class="user-profile">
+        <div class="user-avatar"></div>
+        <div class="user-info">
+          <div class="user-name">{{ displayName }}</div>
+          <div class="user-id">{{ displayId }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { useAuthStore } from '@/stores/auth';
-import { useColourStore } from '../../stores/colour';
+import DC from "../icons/DC.svg";
+import Logo from "../icons/Logo.svg";
+import { useAuthStore } from "@/stores/auth";
 
 export default {
-  name: 'Navbar',
+  name: "Navbar",
+  props: {
+    notificationsOpen: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ["toggleNotifications", "selected1", "selected2", "selected3"],
+  components: {
+    DC,
+    Logo,
+  },
   setup() {
     const authStore = useAuthStore();
-    const colourStore = useColourStore();
-    return { authStore, colourStore };
+    return { authStore };
   },
-  emits: ['selected1', 'selected2', 'selected3'],
-
-  data() {
-    return {
-      hovering: 0,
-    };
+  computed: {
+    displayName() {
+      return this.authStore.name || "Varada Gajare";
+    },
+    displayId() {
+      return this.authStore.user_ID || "24B3632";
+    },
   },
   methods: {
-    async selected1() {
-      this.$emit('selected1');
-      this.currentPage = 1;
-    },
-    async selected2() {
-      this.$emit('selected2');
-      this.currentPage = 2;
-    },
-    async selected3() {
-      this.$emit('selected3');
-      this.currentPage = 3;
-    },
-    async hover1() {
-      this.hovering = 1;
-    },
-    async hover2() {
-      this.hovering = 2;
-    },
-    async hover3() {
-      this.hovering = 3;
+    toDevCom() {
+      window.open("https://devcom-iitb.org/");
     },
   },
 };
@@ -138,42 +72,198 @@ export default {
 <style scoped>
 .navbar {
   width: 100%;
-
-  border-radius: 52px;
-  background: #faf4e1;
+  height: 76px;
+  padding: 0 18px;
   display: flex;
   flex-direction: row;
-  font-size: 18px;
-  justify-content: space-around;
-  align-items: stretch;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  background: #fceeb9;
 }
 
-.btn {
-  padding: 24px 0px;
-  width: 33.33%;
-  border-radius: 52px;
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+}
+
+.asterisk-logo {
+  width: 26px;
+  height: 28px;
+  display: block;
+}
+
+.logo-text {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+  font-family: Inter, sans-serif;
+  color: #000000;
+}
+
+.center-icon {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-decoration: none;
-  color: #ccb160;
-  padding: 10px 0px;
 }
 
-.route {
-  font-weight: 500;
+.dc-logo {
+  width: 88px;
+  height: auto;
+  cursor: pointer;
 }
 
-@media only screen and (max-width: 1150px) {
-  .navbar {
-    font-size: 16px;
-    height: 45%;
-  }
+.right-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+  flex: 1;
+}
+
+.nav-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bell-icon::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  width: 12px;
+  height: 14px;
+  border: 2px solid #000000;
+  border-bottom: none;
+  border-radius: 9px 9px 5px 5px;
+}
+
+.bell-icon::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  bottom: 5px;
+  width: 8px;
+  height: 5px;
+  border: 2px solid #000000;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.bell-icon.active {
+  background: #ffdf80;
+  border-radius: 9px;
+}
+
+.grid-icon {
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  grid-template-rows: repeat(3, 4px);
+  justify-content: center;
+  align-content: center;
+  gap: 5px;
+}
+
+.grid-icon span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #000000;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  background: #ffdf80;
+  width: 164px;
+  height: 46px;
+  padding: 5px 10px;
+  border-radius: 14px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #cfd3d8;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: #000000;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-id {
+  font-size: 11px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #000000;
 }
 
 @media only screen and (max-width: 750px) {
   .navbar {
-    font-size: 14px;
+    height: 64px;
+    padding: 0 12px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .asterisk-logo {
+    width: 22px;
+    height: 24px;
+  }
+
+  .center-icon {
+    display: none;
+  }
+
+  .right-links {
+    gap: 12px;
+  }
+
+  .grid-icon {
+    display: none;
+  }
+
+  .user-profile {
+    width: 124px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .user-name,
+  .user-id {
+    font-size: 10px;
   }
 }
 </style>

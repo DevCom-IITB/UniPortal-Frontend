@@ -1,94 +1,85 @@
 <template>
-  <div class="container" v-if="Auth.loggedIn" >
-    <div class="Sidebar" >
-      <Sidebar
-        @Burger="Burger"
-        :style="
-          !showSidebar && windowWidth < 750
-            ? { width: '0vw' }
-            : { width: '70vw' }
-        "
-        @displaynotif="showNotification2"
+  <div class="app-layout" v-if="Auth.loggedIn">
+    <div class="TopBar">
+      <Navbar
+        :notificationsOpen="showNotifications"
+        @selected1="ColorInfoPost"
+        @selected2="ColorQuestions"
+        @selected3="ColorMyQuestions"
+        @toggleNotifications="toggleNotifications"
       />
-    </div>    
-    <div
-      class="Content"
-      :style="windowWidth < 750 ? { width: '100vw' } : { width: '78.55vw' }"
-    >
-      <div class="Navbar">
-        <Navbar
-          @selected1="ColorInfoPost"
-          @selected2="ColorQuestions"
-          @selected3="ColorMyQuestions"
-          :grey="grey"
-          :unselected="unselected"
-          :primary="primary"
-          :emphasisText="emphasisText"
+    </div>
+    <div class="main-body">
+      <div class="Sidebar">
+        <Sidebar
+          @Burger="Burger"
+          :style="
+            !showSidebar && windowWidth < 750
+              ? { width: '0vw' }
+              : { width: '70vw' }
+          "
         />
-      </div>
-      <div class="RouterView">
-        <router-view
-          @comment="ask"
-          @askView="ColorQuestionView"
-          @expand="ExpandImage"
-          @edit="EditInfo"
-        ></router-view>
-      </div>
-      <div class="snackbar"
-        v-if="QuestionStore.showSnackbar == true">
-          <Snackbar /> 
       </div>
       <div
-        class="popup"
-        @click="postInfoQues"
-        v-if="ColourStore.askPopup && Auth.role != 6311"
+        class="Content"
+        :style="windowWidth < 750 ? { width: '100vw' } : {}"
       >
-        <popup :lightText="lightText" />
+        <div class="content-actions" v-if="Auth.role != 6311">
+          <button class="language-button" type="button">हिन्दी</button>
+          <button class="ask-button" type="button" @click="postInfoQues">
+            <span class="ask-button-icon">?</span>
+            <span>{{ actionLabel }}</span>
+          </button>
+        </div>
+        <div class="RouterView">
+          <router-view
+            @comment="ask"
+            @askView="ColorQuestionView"
+            @expand="ExpandImage"
+            @edit="EditInfo"
+          ></router-view>
+        </div>
+        <div class="snackbar"
+          v-if="QuestionStore.showSnackbar == true">
+            <Snackbar /> 
+        </div>
+        <section v-if="showNotifications" class="notification-panel" aria-label="Notifications">
+          <h2>Notifications</h2>
+          <article
+            v-for="item in notificationItems"
+            :key="item.id"
+            class="notification-card"
+          >
+            <p class="notification-kicker">{{ item.kicker }}</p>
+            <h3>{{ item.title }}</h3>
+            <p class="notification-body">{{ item.body }}</p>
+            <span class="notification-time">{{ item.time }}</span>
+          </article>
+        </section>
+        <div class="ask" v-if="askQuestion == true">
+          <askBox
+            :askQuestion="askQuestion"
+            @discard="ask"
+            @OnSubmit="ask"
+            :editBody="editBody"
+          />
+        </div>
+        <div class="ExpandedImg" v-if="expanded">
+          <div class="cancel" @click="CloseImg"></div>
+          <img :src="QuestionStore.ImageLink" alt="" />
+        </div>
       </div>
-      <div class="ask" v-if="askQuestion == true">
-        <askBox
-          :askQuestion="askQuestion"
-          @discard="handleDiscard"
-          @OnSubmit="ask"
-          :editBody="editBody"
-          :nameOfPoster="nameOfPoster"
-        />
-      </div>
-      <div class="anonymous" v-if="showAnonymousBox">
-        <anonymousBox @namedIdentityClick="postQueswithIdentity" @anonIdentityClick="postQueswithoutIdentity"/>
-      </div>
-      <div class="ask" v-if="notificationVisible == true">
-      <NotificationBox 
-      v-if="notificationVisible" 
-      :notifP="notif1"
-      @closeNwindow="handleClose" 
-      @openNwindow="handleOpen" 
-    />
-  </div>
-    
-      <div class="ExpandedImg" v-if="expanded">
-        <div class="cancel" @click="CloseImg"></div>
-        <img :src="QuestionStore.ImageLink" alt="" />
-      </div>
+      <div
+        class="glass"
+        v-if="askQuestion == true || glass == true"
+        @click="glassClick"
+        :style="
+          windowWidth <= 750
+            ? { background: ColourStore.background }
+            : { background: 'rgba(0, 0, 0, 0.5)' }
+        "
+      ></div>
     </div>
-    <div
-      class="glass-mobile"
-      v-if="glass-mobile == true || showAnonymousBox == true"
-      @click="glassMobileClick"
-      :style="{ background: 'rgba(0, 0, 0, 0.5)' }"
-    ></div>
-    <div
-      class="glass"
-      v-if="askQuestion == true || glass == true "
-      @click="glassClick"
-      :style="
-        windowWidth <= 750
-          ? { background: ColourStore.background }
-          : { background: 'rgba(0, 0, 0, 0.5)' }
-      "
-    ></div>
-    
-    
   </div>
   <div class="login" v-if="!Auth.loggedIn">
     <DC class="DC" @click="toDevCom"/>
@@ -106,37 +97,32 @@
 </template>
 
 <script>
-import NotificationBox from "./components/common/NotificationBox.vue";
 import Navbar from "./components/common/Navbar.vue";
 import Sidebar from "./components/common/Sidebar.vue";
-import popup from "./components/common/popup.vue";
 import askBox from "./components/common/askBox.vue";
-import Snackbar from "./components/common/snackbar.vue"
+import Snackbar from "./components/common/snackbar.vue";
 import login_background from "./components/background_images/Group 9.svg";
 import Login from "./components/common/Login.vue";
-import anonymousBox from "./components/common/anonymousBox.vue";
 import DC from "./components/icons/DC.svg";
 import SMP from "./components/icons/SMP_black.svg";
 
 import { useAuthStore } from "./stores/auth";
 import { useQuestionStore } from "./stores/question";
 import { useColourStore } from "./stores/colour";
+import { useListStore } from "./stores/list";
 
 
 export default {
   name: "App",
   components: {
-    NotificationBox,
     Navbar,
     Sidebar,
-    popup,
     askBox,
     login_background,
     Login,
     Snackbar,
     DC,
     SMP,
-    anonymousBox,
   },
   data() {
     return {
@@ -145,14 +131,43 @@ export default {
       showSidebar: false,
       accessToken: "",
       glass: false,
-      glassMobile: false,
       expanded: false,
       editBody: "",
-      showAnonymousBox: false,
-      nameOfPoster:this.Auth.name,
-      notificationVisible: false,
-      notif1: [],
+      showNotifications: false,
     };
+  },
+  computed: {
+    actionLabel() {
+      return this.Auth.role == 5980 ? "Post Infopost" : "Ask question";
+    },
+    notificationItems() {
+      const items = Array.isArray(this.ListStore.list) ? this.ListStore.list : [];
+      const fallbackTitle = "What are the best electives for first-year CS students?";
+      const fallbackBody =
+        "The answer will be here. The answer will be here. The answer will be here. The answer will be here. The answer will be here.";
+      const candidates = items.filter((item) => item && item.body).slice(0, 2);
+
+      if (!candidates.length) {
+        return [1, 2].map((id) => ({
+          id,
+          kicker: "Your question was answered by ISMP Priya",
+          title: fallbackTitle,
+          body: fallbackBody,
+          time: "12 May 26 07:45pm",
+        }));
+      }
+
+      return candidates.map((item, index) => ({
+        id: item._id || item.id || index,
+        kicker: "Your question was answered by ISMP Priya",
+        title: item.title || item.body || fallbackTitle,
+        body:
+          item.answers && item.answers.length
+            ? item.answers[0].body || fallbackBody
+            : fallbackBody,
+        time: this.formatShortDate(item.asked_At),
+      }));
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -173,13 +188,24 @@ export default {
     onResize() {
       this.windowWidth = window.innerWidth;
     },
+    toggleNotifications() {
+      this.showNotifications = !this.showNotifications;
+    },
     async Burger(value) {
       this.showSidebar = value;
       console.log(this.showSidebar);
     },
-    async askIdentity(){
-      this.showAnonymousBox = !this.showAnonymousBox;
-      console.log(this.Auth.role)
+    async ColorInfoPost() {
+      await this.ColourStore.colourInfopost();
+    },
+    async ColorQuestions() {
+      await this.ColourStore.colourQuestions();
+    },
+    async ColorMyQuestions() {
+      await this.ColourStore.colourMyQuestions();
+    },
+    async ColorQuestionView() {
+      await this.ColourStore.colourQuestionView();
     },
     async postInfoQues() {
       this.QuestionStore.SetAddImage(true);
@@ -210,21 +236,10 @@ export default {
       this.glass = false;
       this.expanded = false;
     },
-    async glassMobileClick() {
-      this.nameOfPoster = this.Auth.name;
-      this.glassMobile = false;
-      this.showAnonymousBox = false;
-    },
-    async handleDiscard(){
-      await this.ask();
-      this.nameOfPoster = this.Auth.name;
-    },
     async glassClick() {
       this.glass = false;
       this.askQuestion = false;
-      this.notificationVisible = false;
       this.expanded = false;
-      this.nameOfPoster = this.Auth.name;
     },
     async EditInfo(body) {
       this.askQuestion = true;
@@ -242,83 +257,97 @@ export default {
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
     },
-    showNotification() {
-      this.notificationVisible = true;
-      this.glass = true;
-      console.log('this is in app.vue')
-    },
-    handleOpen() {
-      // something about save
-      console.log('Open button clicked');
-      this.notificationVisible = false;
-      this.glass = false;
-    },
-    handleClose(){
-      this.notificationVisible = false;
-      this.glass = false;
-    },
-    showNotification2(notif){
-      this.notificationVisible = true;
-      this.glass = true;
-      this.notif1 = notif
-      console.log(notif)
+    formatShortDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return "12 May 26 07:45pm";
+      }
+      return date
+        .toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+        .replace(",", "")
+        .replace(" am", "am")
+        .replace(" pm", "pm");
     },
   },
   setup() {
     const Auth = useAuthStore();
     const QuestionStore = useQuestionStore();
     const ColourStore = useColourStore();
+    const ListStore = useListStore();
 
     return {
       Auth,
       QuestionStore,
       ColourStore,
+      ListStore,
     };
   },
 };
 </script>
 
 <style scoped>
-.container {
+.app-layout {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
-  flex-flow: row wrap;
-  overflow-y: hidden;
-  /* border: 5px solid red; */
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.TopBar {
+  width: 100%;
+  height: 76px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 6;
+}
+
+.main-body {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 76px);
+  min-height: 0;
 }
 
 .Sidebar {
-  width: 21.45%;
+  width: 280px;
+  min-width: 280px;
+  height: 100%;
   display: flex;
   justify-content: center;
+  padding: 24px 20px 16px;
 }
 
 .Content {
-  height: 100vh;
-  /* overflow-y: scroll; */
+  height: 100%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.Navbar {
-  height: 14.29%;
-  width: 66.58%;
-  margin-top: 1.56%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  padding: 28px 20px 0 12px;
+  overflow-y: auto;
+  position: relative;
 }
 
 .RouterView {
-  height: 85.71%;
-  width: 78.65%;
+  width: 100%;
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 0;
 }
 
 .snackbar {
@@ -328,33 +357,135 @@ export default {
   position: absolute;
   }
 
-  
-.popup {
-  position: fixed;
-  bottom: 18px;
-  width: 15.79%;
-  height: 10%;
+.content-actions {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-button,
+.ask-button {
+  border: none;
+  background: #ffdf80;
+  color: #111111;
   cursor: pointer;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.language-button {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  font-size: 15px;
+}
+
+.ask-button {
+  height: 58px;
+  min-width: 174px;
+  border-radius: 34px;
+  padding: 0 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.ask-button-icon {
+  width: 26px;
+  height: 26px;
+  border: 2px solid #111111;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.notification-panel {
+  position: fixed;
+  top: 96px;
+  right: 20px;
+  width: min(500px, calc(100vw - 40px));
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  z-index: 9;
+  background: #ffffff;
+  border-radius: 0 28px 28px 28px;
+  padding: 10px 14px 18px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.16);
+}
+
+.notification-panel h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #1c1b1f;
+}
+
+.notification-card {
+  background: #ededed;
+  border-radius: 12px;
+  padding: 14px 16px 12px;
+  margin-bottom: 14px;
+}
+
+.notification-card:last-child {
+  margin-bottom: 0;
+}
+
+.notification-kicker {
+  margin: 0 0 5px;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: #1c1b1f;
+}
+
+.notification-card h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #1c1b1f;
+}
+
+.notification-body {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.18;
+  font-weight: 400;
+  color: #1c1b1f;
+}
+
+.notification-time {
+  display: block;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 400;
+  color: #555555;
 }
 
 .ask {
   position: fixed;
-  width: 52.33vw;
-  top: 100px;
-  z-index: 1;
+  width: min(990px, calc(100vw - 220px));
+  min-height: 572px;
+  top: 102px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
   background: white;
-  border-radius: 24px;
-  padding: 16px 24px;
-}
-.anonymous{
-  position: fixed;
-  width: 375px;
-  height: 218px;
-  top: 35%;
-  z-index: 1;
-  background-color: #FCFCFC;
-  border-radius: 24px;
-  padding: 16px 24px;
+  border-radius: 28px;
+  padding: 42px;
 }
 
 .glass {
@@ -365,16 +496,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.glass-mobile{
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  top: 0;
+  left: 0;
+  z-index: 8;
 }
 
 .ExpandedImg {
@@ -453,24 +577,29 @@ export default {
 }
 
 @media only screen and (max-width: 750px) {
+  .TopBar {
+    height: 64px;
+  }
+
+  .main-body {
+    height: calc(100vh - 64px);
+  }
+
   .Sidebar {
     height: 100vh;
     z-index: 2;
     position: fixed;
     justify-content: start;
+    padding: 0;
   }
 
   .Content {
-    margin-top: 64px;
-    height: 92vh;
-  }
-
-  .Navbar {
-    width: 95vw;
+    height: 100%;
+    padding: 18px 12px 0;
   }
 
   .RouterView {
-    width: 95vw;
+    width: 100%;
   }
 
   .Sidebar {
@@ -480,16 +609,52 @@ export default {
   .snackbar {
     max-width: 95vw;
   }
-  .popup {
-    width: 40%;
-    height: 5%;
+  .content-actions {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 14px;
+  }
+
+  .language-button {
+    width: 46px;
+    height: 46px;
+    font-size: 13px;
+  }
+
+  .ask-button {
+    min-width: 142px;
+    height: 46px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .ask-button-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    font-size: 14px;
+  }
+
+  .notification-panel {
+    top: 72px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    border-radius: 22px;
+  }
+
+  .notification-panel h2 {
+    font-size: 24px;
   }
 
   .ask {
-    width: 100vw;
-    height: 90vh;
-    top: 100px;
-    padding: 16px 24px;
+    width: calc(100vw - 24px);
+    min-height: auto;
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    top: 76px;
+    padding: 28px 22px;
+    border-radius: 24px;
   }
 
   .ExpandedImg {

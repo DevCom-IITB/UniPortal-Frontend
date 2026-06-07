@@ -1,22 +1,10 @@
 <template>
-  <div class="sidebar" :style="windowWidth > 750
-    ? { background: colourStore.sidebar, color: colourStore.emphasis_text }
-    : showSidebar
-      ? { background: colourStore.sidebar }
-      : { width: '0px' }
-    ">
-    <div class="Logo" :style="windowWidth < 750
-      ? { background: colourStore.primary }
-      : { background: colourStore.sidebar }
-      ">
-      <div v-if="windowWidth < 750" class="burger" @click="Burger">
-        <burger />
-      </div>
-      <div class="Logoimg">
-        <Logo />
-      </div>
-    </div>
+  <aside class="sidebar">
+    <button v-if="windowWidth < 750" class="burger" type="button" @click="Burger" aria-label="Toggle menu">
+      <burger />
+    </button>
 
+<<<<<<< Updated upstream
     <div class="sidebar-content" v-if="!showNotifications">
       <div class="Info" v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)">
         <div class="InfoText">
@@ -118,32 +106,65 @@
       <button class="credentials" :style="{ background: colourStore.sidebar }">
         <DC class="DevComLogo" @click="toDevCom" />
         <SMP class="SMPLogo" @click="toSMP" />
+=======
+    <section class="welcome-section">
+      <Logo class="sidebar-mark" />
+      <h1>Welcome to<br />Newbee</h1>
+      <p>
+        Ask seniors anything before campus starts. Join 5,000+ freshmen getting
+        ready for the hive.
+      </p>
+    </section>
+
+    <section class="quick-links-section" v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)">
+      <div class="quick-links-header">
+        <open_in_new class="link-icon-header" />
+        <span>Quick Links</span>
+      </div>
+      <button class="link-row" type="button" @click="whatsapp">
+        <Globe class="link-icon" />
+        <span>Whatsapp Group</span>
+>>>>>>> Stashed changes
       </button>
-      <button class="logout" :style="{
-        background: colourStore.sidebar,
-        borderColor: colourStore.grey,
-        color: colourStore.grey,
-      }" @click="Logout">
-        Log out
+      <button class="link-row" type="button" @click="smpEmail">
+        <email class="link-icon" />
+        <span>SMP Email</span>
       </button>
+<<<<<<< Updated upstream
     </div>
 
 
 
   </div>
+=======
+      <button class="link-row" type="button" @click="toSMP">
+        <Globe class="link-icon" />
+        <span>SMP Website</span>
+      </button>
+      <button class="link-row" type="button" @click="insta">
+        <contact class="link-icon" />
+        <span>SMP Instagram</span>
+      </button>
+    </section>
+  </aside>
+>>>>>>> Stashed changes
 </template>
 
 
 <script>
-import Logo from "../icons/Logo.svg";
 import Globe from "../icons/web.svg";
 import email from "../icons/email.svg";
 import contact from "../icons/Insta.svg";
 import burger from "../icons/menu.svg";
+<<<<<<< Updated upstream
 import DC from "../icons/DC.svg";
 import SMP from "../icons/SMP_black.svg";
 import arrow from "../icons/arrow.svg";
 import Bell from "../icons/Bell.svg";
+=======
+import open_in_new from "../icons/open_in_new.svg";
+import Logo from "../icons/Logo.svg";
+>>>>>>> Stashed changes
 
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "@/stores/colour";
@@ -152,11 +173,11 @@ import { useQuestionStore } from '@/stores/question'
 export default {
   name: "Sidebar",
   components: {
-    Logo,
     Globe,
     email,
     contact,
     burger,
+<<<<<<< Updated upstream
     DC,
     SMP,
     arrow,
@@ -235,10 +256,13 @@ export default {
       colourStore,
       fetchNotifs,
     };
+=======
+    open_in_new,
+    Logo,
+>>>>>>> Stashed changes
   },
   data() {
     return {
-      hovering: 0,
       windowWidth: window.innerWidth,
       showSidebar: false,
       showNotifications: false,
@@ -272,18 +296,27 @@ export default {
       this.$emit("Burger", this.showSidebar);
     },
     async Logout() {
-      console.log("logout");
       await this.authStore.Logout();
     },
+<<<<<<< Updated upstream
     async toDevCom() {
       window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
+=======
+>>>>>>> Stashed changes
     async toSMP() {
       window.open("https://gymkhana.iitb.ac.in/~smp/");
+    },
+    async whatsapp() {
+      window.open("https://chat.whatsapp.com/");
+    },
+    async smpEmail() {
+      window.open("mailto:smp@iitb.ac.in");
     },
     async insta() {
       window.open("https://www.instagram.com/smp.iitb/");
     },
+<<<<<<< Updated upstream
     async notify() {
       this.showNotifications = !this.showNotifications;
     },
@@ -298,35 +331,125 @@ export default {
     //   await this.QuestionStore.SetQuestionID(this.question['_id']);
     // },
   }
+=======
+  },
+>>>>>>> Stashed changes
 };
 </script>
 
 <style scoped>
 .sidebar {
-  width: 92.38%;
-  margin-top: 4.12%;
-  margin-left: 4.12%;
-  margin-bottom: 4.12%;
-  padding-top: 5%;
-  padding-bottom: 5%;
-  border-radius: 24px;
+  width: 100%;
+  height: 100%;
+  padding: 26px 20px 20px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #fceeb9;
+  color: #000000;
 }
 
+<<<<<<< Updated upstream
 
 .Logo {
   height: 12.98%;
+=======
+.welcome-section {
+>>>>>>> Stashed changes
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-start;
+  width: 100%; /* Stretches the section container to match full sidebar width */
+}
+
+.sidebar-mark {
+  width: 65px;
+  height: 70px;
+  margin-bottom: 20px;
+  display: block;       /* Necessary for automatic margins to work */
+  margin-left: auto;    /* Centers the logo from the left */
+  margin-right: auto;   /* Centers the logo from the right */
+}
+
+.welcome-section h1 {
+  margin: 0 0 18px;
+  font-size: 32px;
+  line-height: 1.06;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: 0;
+}
+
+.welcome-section p {
+  margin: 0;
+  max-width: 205px;
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 400;
+  color: #1c1b1f;
+}
+
+.quick-links-section {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-bottom: 2px;
+}
+
+.quick-links-header {
+  display: flex;
   align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  color: #000000;
+}
+
+.quick-links-header span {
+  font-size: 19px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.link-icon-header {
+  width: 16px;
+  height: 16px;
+}
+
+.link-row {
+  border: none;
+  background: transparent;
+  width: 100%;
+  padding: 0 0 0 25px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000000;
+  cursor: pointer;
+  text-align: left;
+  font-family: Inter, sans-serif;
+}
+
+.link-row span {
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.link-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
 }
 
 .burger {
   position: fixed;
+<<<<<<< Updated upstream
   left: 16px;
   margin-top: 8px;
 }
@@ -367,12 +490,19 @@ export default {
 .btn {
   width: 100%;
   height: 48px;
+=======
+  left: 14px;
+  top: 14px;
+  z-index: 12;
+>>>>>>> Stashed changes
   border: none;
-  border-radius: 100px;
+  background: #ffdf80;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
   display: flex;
-  flex-direction: row;
-  justify-content: left;
   align-items: center;
+<<<<<<< Updated upstream
   font-size: 16px;
   font-weight: 600;
   padding-left: 7%;
@@ -443,23 +573,13 @@ export default {
   width: 87.63%;
   display: flex;
   flex-direction: column;
+=======
+>>>>>>> Stashed changes
   justify-content: center;
-  align-items: center;
-}
-
-.credentials {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  border: none;
-}
-
-.DevComLogo {
   cursor: pointer;
 }
 
+<<<<<<< Updated upstream
 .SMPLogo {
   cursor: pointer;
 }
@@ -513,46 +633,27 @@ export default {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 @media only screen and (max-width: 750px) {
   .sidebar {
-    width: 70%;
-    margin-top: 0px;
-    border-radius: 0%;
-    align-items: start;
+    width: 70vw;
+    height: 100vh;
+    border-radius: 0 20px 20px 0;
+    padding: 82px 24px 28px;
+    box-shadow: 12px 0 28px rgba(0, 0, 0, 0.14);
   }
 
-  .Logo {
-    height: 80px;
-    padding-top: 0%;
-    width: 100vw;
+  .sidebar-mark {
+    width: 54px;
+    height: 58px;
+    display: block;
+    margin-left: auto;   /* Centers logo on mobile sizing */
+    margin-right: auto;
   }
 
-  .Info {
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
-  }
-
-  .InfoText {
-    font-size: 16px;
-  }
-
-  .btn {
-    font-size: 16px;
-  }
-
-  .Creds {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-
-  .btn-1 {
-    justify-content: center;
-    font-size: 16px;
+  .welcome-section h1 {
+    font-size: 29px;
   }
 }
 </style>
