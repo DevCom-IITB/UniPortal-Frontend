@@ -126,6 +126,14 @@
           </div>
           <div class="comments">
             <button
+              class="translate-btn"
+              @click.prevent="translateText"
+              :style="{ color: colourStore.emphasis_text, background: colourStore.background }"
+            >
+              <span v-if="isTranslating">Translating...</span>
+              <span v-else>{{ isTranslated ? 'Show Original' : 'Translate' }}</span>
+            </button>
+            <button
               class="view-comments"
               @click="viewComments"
               :style="{ color: colourStore.emphasis_text }"
@@ -224,6 +232,9 @@ export default {
       timestamp: '',
       images: [],
       showName:'',
+      isTranslated: false,
+      isTranslating: false,
+      originalText: '',
     };
   },
   methods: {
@@ -277,6 +288,40 @@ export default {
         'This query may have already been answered in an InfoPost or on the Questions page. Please have a careful look!'
       );
     },
+    async translateText() {
+      if (this.isTranslated) {
+        this.isTranslated = false;
+        this.question.body = this.originalText;
+        return;
+      }
+
+      this.isTranslating = true;
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE}/translate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: this.question.body,
+            target_lang: 'hi' // Defaulting to Hindi for now as a demo
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          this.originalText = this.question.body;
+          this.question.body = data.translated_text || data.text;
+          this.isTranslated = true;
+        } else {
+          console.error('Translation failed');
+        }
+      } catch (error) {
+        console.error('Translation error:', error);
+      } finally {
+        this.isTranslating = false;
+      }
+    }
   },
   async mounted() {
     this.$nextTick(() => {

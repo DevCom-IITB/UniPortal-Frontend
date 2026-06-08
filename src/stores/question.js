@@ -50,6 +50,56 @@ export const useQuestionStore = defineStore("question", {
       }
     },
 
+    async SearchQuestions(query, limit = 5) {
+      try {
+        const authStore = useAuthStore();
+        const accessToken = authStore.accessToken;
+        const bearer = `Bearer ${accessToken}`;
+
+        const response = await fetch(`${import.meta.env.VITE_API_BASE}/search?q=${encodeURIComponent(query)}&limit=${limit}`, {        
+          method: 'GET',
+          headers: {
+            Authorization: bearer,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return data.results || [];
+        } else {
+          return [];
+        }
+      } catch (error) {
+        console.error('Error searching questions:', error);
+        return [];
+      }
+    },
+
+    async FetchQuestionById(questionId) {
+      try {
+        const authStore = useAuthStore();
+        const accessToken = authStore.accessToken;
+        const bearer = `Bearer ${accessToken}`;
+
+        const response = await fetch(`${import.meta.env.VITE_API_BASE}/search/question/${questionId}`, {
+          method: 'GET',
+          headers: {
+            Authorization: bearer,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          return data;
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error('Error fetching question by ID:', error);
+        return null;
+      }
+    },
+
     async SetQuestion(question) {
       console.log("we have entered the set question function in question.js");
       this.question = question;
@@ -98,7 +148,7 @@ export const useQuestionStore = defineStore("question", {
       this.snackMessage = snackMessage;
       console.log("snackMessage : ", this.snackMessage);
     },
-    async PostQuestion(body, images) {
+    async PostQuestion(body, images, tag) {
       const authStore = useAuthStore();
       const colourStore = useColourStore();
       console.log("we have entered the post question function in question.js");
@@ -108,6 +158,7 @@ export const useQuestionStore = defineStore("question", {
       const questionObj = new FormData();
       questionObj.append("user_ID", uid);
       questionObj.append("body", body);
+      if (tag) questionObj.append("tag", tag);
       questionObj.append("is_Anonymous", false);
       for (let i = 0; i < images.length; i++) {
         questionObj.append("images", images[i]);
@@ -137,6 +188,7 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
+        window.location.href = import.meta.env.VITE_BASE + "/questions";
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
@@ -167,6 +219,7 @@ export const useQuestionStore = defineStore("question", {
             const data = await res.json();
             console.log('data :', data);
             this.snackMessage = data.message;
+            window.location.href = import.meta.env.VITE_BASE + "/questions";
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
@@ -1359,7 +1412,7 @@ export const useQuestionStore = defineStore("question", {
       }
     }
     },
-    async PostQuestionAnonymously(body, images) {
+    async PostQuestionAnonymously(body, images, tag) {
       const authStore = useAuthStore();
       const colourStore = useColourStore();
       console.log("we have entered the post question function in question.js");
@@ -1369,6 +1422,7 @@ export const useQuestionStore = defineStore("question", {
       const questionObj = new FormData();
       questionObj.append("user_ID", uid);
       questionObj.append("body", body);
+      if (tag) questionObj.append("tag", tag);
       questionObj.append("is_Anonymous", true);
       for (let i = 0; i < images.length; i++) {
         questionObj.append("images", images[i]);
@@ -1398,6 +1452,7 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
+        window.location.href = import.meta.env.VITE_BASE + "/questions";
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
@@ -1428,6 +1483,7 @@ export const useQuestionStore = defineStore("question", {
             const data = await res.json();
             console.log('data :', data);
             this.snackMessage = data.message;
+            window.location.href = import.meta.env.VITE_BASE + "/questions";
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();

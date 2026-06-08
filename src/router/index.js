@@ -38,7 +38,7 @@ const routes = [
   },
 
   {
-    path: import.meta.env.VITE_BASE + "/question",
+    path: import.meta.env.VITE_BASE + "/question/:id?",
     name: "Questionview",
     component: Questionview,
     props: true,

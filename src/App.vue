@@ -70,6 +70,9 @@
         <div class="cancel" @click="CloseImg"></div>
         <img :src="QuestionStore.ImageLink" alt="" />
       </div>
+
+      <!-- Hidden Google Translate Element -->
+      <div id="google_translate_element" style="display: none;"></div>
     </div>
     <div
       class="glass-mobile"

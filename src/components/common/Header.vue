@@ -2,8 +2,18 @@
   <div class="cont" :style="{ color: colourStore.primary, background: colourStore.background }">
     <div class="background"><img :src="colourStore.headerImage" alt="" /></div>
     <div class="Header">
-      <div class="HeaderTitle" :style="{ color: colourStore.emphasis_text }">
-        {{ headerName }}
+      <div class="HeaderTop">
+        <div class="HeaderTitle" :style="{ color: colourStore.emphasis_text }">
+          {{ headerName }}
+        </div>
+        <div class="HeaderActions">
+          <button @click="toggleTranslate" class="translate-toggle">
+            <i class="fa-solid fa-language"></i>
+          </button>
+          <div class="search-wrapper">
+            <QuestionSearch />
+          </div>
+        </div>
       </div>
       <div class="HeaderText" :style="{ color: colourStore.emphasis_text }">
         {{ headerText }}
@@ -22,9 +32,13 @@
 <script>
 import { useColourStore } from "@/stores/colour";
 import { ref } from "vue";
+import QuestionSearch from "./QuestionSearch.vue";
 
 export default {
   name: "Header",
+  components: {
+    QuestionSearch
+  },
   setup(props, { emit }) {
     const colourStore = useColourStore();
     const selectedTag = ref(null); // Use ref for reactive selected tag
@@ -34,10 +48,18 @@ export default {
       emit('tag-selected', tag); // Emit an event if needed
     };
 
+    const toggleTranslate = () => {
+      const googleTranslateElement = document.getElementById('google_translate_element');
+      if (googleTranslateElement) {
+        googleTranslateElement.style.display = googleTranslateElement.style.display === 'none' ? 'block' : 'none';
+      }
+    };
+
     return {
       colourStore,
       selectedTag,
       selectTag,
+      toggleTranslate
     };
   },
   props: {
@@ -58,6 +80,7 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
 }
 
 .background {
@@ -66,6 +89,7 @@ export default {
   height: 100%;
   display: flex;
   justify-content: flex-end;
+  z-index: 0;
 }
 
 .background img {
@@ -78,6 +102,37 @@ export default {
   height: 74.36%;
   display: flex;
   flex-direction: column;
+  z-index: 1;
+}
+
+.HeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.HeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.translate-toggle {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-wrapper {
+  width: 300px;
 }
 
 .HeaderTitle {
