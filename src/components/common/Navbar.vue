@@ -20,11 +20,14 @@
       <button type="button" class="nav-icon grid-icon" aria-label="Open menu">
         <span v-for="dot in 9" :key="dot"></span>
       </button>
-      <div class="user-profile">
+      <div class="user-profile" @click="toggleLogoutMenu">
         <div class="user-avatar"></div>
         <div class="user-info">
           <div class="user-name">{{ displayName }}</div>
           <div class="user-id">{{ displayId }}</div>
+        </div>
+        <div v-if="showLogoutMenu" class="logout-menu">
+          <button type="button" class="logout-button" @click.stop="handleLogout">Logout</button>
         </div>
       </div>
     </div>
@@ -53,6 +56,11 @@ export default {
     const authStore = useAuthStore();
     return { authStore };
   },
+  data() {
+    return {
+      showLogoutMenu: false,
+    };
+  },
   computed: {
     displayName() {
       return this.authStore.name || "Varada Gajare";
@@ -63,7 +71,14 @@ export default {
   },
   methods: {
     toDevCom() {
-      window.open("https://devcom-iitb.org/");
+      window.open("https://devcom.gymkhana.iitb.ac.in/");
+    },
+    toggleLogoutMenu() {
+      this.showLogoutMenu = !this.showLogoutMenu;
+    },
+    async handleLogout() {
+      await this.authStore.Logout();
+      this.showLogoutMenu = false;
     },
   },
 };
@@ -180,6 +195,7 @@ export default {
 }
 
 .user-profile {
+  position: relative;
   display: flex;
   align-items: center;
   background: #ffdf80;
@@ -221,6 +237,37 @@ export default {
   line-height: 1.15;
   font-weight: 600;
   color: #000000;
+}
+
+.logout-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  min-width: 120px;
+  z-index: 100;
+}
+
+.logout-button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  font-family: Inter, sans-serif;
+}
+
+.logout-button:hover {
+  background: #f0f0f0;
 }
 
 @media only screen and (max-width: 750px) {

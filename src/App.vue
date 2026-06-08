@@ -25,7 +25,7 @@
         :style="windowWidth < 750 ? { width: '100vw' } : {}"
       >
         <div class="content-actions" v-if="Auth.role != 6311">
-          <button class="language-button" type="button">हिन्दी</button>
+          <button class="language-button" type="button" @click="toggleHindi">हिन्दी</button>
           <button class="ask-button" type="button" @click="postInfoQues">
             <span class="ask-button-icon">?</span>
             <span>{{ actionLabel }}</span>
@@ -90,10 +90,13 @@
     </div>
     <div class="snackbar"
         v-if="QuestionStore.showSnackbar == true">
-          <Snackbar /> 
+          <Snackbar />
     </div>
   </div>
-  
+
+  <!-- Hidden Google Translate Element -->
+  <div id="google_translate_element" style="display: none;"></div>
+
 </template>
 
 <script>
@@ -134,6 +137,7 @@ export default {
       expanded: false,
       editBody: "",
       showNotifications: false,
+      isHindi: false,
     };
   },
   computed: {
@@ -213,20 +217,9 @@ export default {
         await this.ask();
         await this.QuestionStore.SetAction(5);
       } else {
-        await this.askIdentity();
+        await this.ask();
+        await this.QuestionStore.SetAction(4);
       }
-    },
-    async postQueswithIdentity(){
-      await this.askIdentity();
-      this.nameOfPoster = this.Auth.name;
-      await this.ask();
-      await this.QuestionStore.SetAction(4);
-    },
-    async postQueswithoutIdentity(){
-      this.nameOfPoster = "Anonymous";
-      await this.askIdentity();
-      await this.ask();
-      await this.QuestionStore.SetAction(7);
     },
     async ExpandImage() {
       this.glass = true;
@@ -274,6 +267,52 @@ export default {
         .replace(",", "")
         .replace(" am", "am")
         .replace(" pm", "pm");
+    },
+    toggleHindi() {
+      this.isHindi = !this.isHindi;
+      if (this.isHindi) {
+        // Load Google Translate Element
+        if (!document.getElementById('google_translate_element')) {
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+          script.id = 'google_translate_script';
+          document.head.appendChild(script);
+
+          // Initialize Google Translate
+          window.googleTranslateElementInit = () => {
+            new window.google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'hi',
+              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+              autoDisplay: false
+            }, 'google_translate_element');
+            
+            // Trigger translation to Hindi
+            setTimeout(() => {
+              const selectElement = document.querySelector('.goog-te-combo');
+              if (selectElement) {
+                selectElement.value = 'hi';
+                selectElement.dispatchEvent(new Event('change'));
+              }
+            }, 500);
+          };
+        } else {
+          // If script already loaded, just change language
+          const selectElement = document.querySelector('.goog-te-combo');
+          if (selectElement) {
+            selectElement.value = 'hi';
+            selectElement.dispatchEvent(new Event('change'));
+          }
+        }
+      } else {
+        // Revert to English
+        const selectElement = document.querySelector('.goog-te-combo');
+        if (selectElement) {
+          selectElement.value = 'en';
+          selectElement.dispatchEvent(new Event('change'));
+        }
+      }
     },
   },
   setup() {

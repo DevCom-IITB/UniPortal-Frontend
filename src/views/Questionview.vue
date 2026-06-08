@@ -1,33 +1,6 @@
 <template>
-<<<<<<< Updated upstream
-  <div class="container">
-    <div class="MainQuestion" @click="test" :style="{ borderBlockColor: secondaryColor }">
-      <Question @expand="$emit('expand')" v-if="question && Object.keys(question).length > 0" :isAnswer="this.false"
-        :upvotes="question['upvotes']" :showAnswerBox="this.true" :comments="questionStore.comments"
-        :question="question" :background="background" :primaryColor="primaryColor" :secondaryColor="secondaryColor"
-        :primaryAccent="primaryAccent" @comment="$emit('comment')" />
-    </div>
-    <div class="List" v-if="answers.length">
-      <div :key="answer['id']" v-for="answer in answers" class="QuestionBox">
-        <Question
-          @expand="$emit('expand')"
-          :isAnswer="this.true"
-          :upvotes="answer['upvotes']"
-          :showAnswerBox="this.false"
-          :comments="answer['comments']"
-          :question="answer"
-          :background="background"
-          :primaryColor="primaryColor"
-          :secondaryColor="secondaryColor"
-          :primaryAccent="primaryAccent"
-          @comment="$emit('comment')"
-          @answer_id="CommentAnswer"
-          @upvote="UpvoteAnswer"
-          @hide="HideAnswer"
-          @edit="EditAnswer"
-        />
-=======
-  <div class="question-detail">
+  <div v-if="loading" class="loading-screen" style="text-align:center; padding: 40px; font-size: 18px; color:#555;">Loading question...</div>
+  <div v-else class="question-detail">
     <button class="go-back" type="button" @click="goBack">
       <span class="back-chevron"></span>
       <span>Go back</span>
@@ -41,7 +14,6 @@
         <span class="author">{{ userName }}</span>
         <span class="dot"></span>
         <span class="timestamp">{{ displayTimestamp }}</span>
->>>>>>> Stashed changes
       </div>
 
       <h1>{{ questionTitle }}</h1>
@@ -126,7 +98,6 @@ import { useAuthStore } from '../stores/auth';
 import { useQuestionStore } from "../stores/question";
 import { useListStore } from "../stores/list";
 import { useColourStore } from "../stores/colour";
-import { useAuthStore } from "../stores/auth";
 
 export default {
   name: "Questionview",
@@ -135,15 +106,16 @@ export default {
     const questionStore = useQuestionStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
-<<<<<<< Updated upstream
-    return { authStore, questionStore, listStore, colourStore };
-=======
     const AuthStore = useAuthStore();
     return { questionStore, listStore, colourStore, AuthStore };
   },
-  components: {
-    Logo,
->>>>>>> Stashed changes
+  components: { Logo },
+  watch: {
+    '$route.params.id': function (newId) {
+      if (newId) {
+        this.loadQuestion(newId);
+      }
+    }
   },
   data() {
     return {
@@ -151,6 +123,7 @@ export default {
       answers: [],
       comments: [],
       commentText: "",
+      loading: true,
     };
   },
   computed: {
@@ -161,13 +134,13 @@ export default {
       return this.answers[0] || {};
     },
     userName() {
-      return this.question.user_Name || this.question.User_name || "Rahul Sharma";
+      return this.question.user_Name || this.question.User_name || "Anonymous";
     },
     questionTitle() {
-      return this.question.title || this.question.body || "What are the best electives for first-year CS students?";
+      return this.question.title || this.question.body || "";
     },
     subjectLabel() {
-      const subject = this.question.subject || this.question.category;
+      const subject = this.question.tag || this.question.subject || this.question.category;
       if (!subject || subject === "subject1") return "Campus Life";
       return subject;
     },
@@ -181,19 +154,39 @@ export default {
       return this.formatShortDate(this.question.asked_At || this.question.timestamp);
     },
     answerAuthor() {
-      return this.primaryAnswer.user_Name || this.primaryAnswer.User_name || "Rahul Sharma";
+      return this.primaryAnswer.user_Name || this.primaryAnswer.User_name || "ISMP Mentor";
     },
     answerBody() {
-      return (
-        this.primaryAnswer.body ||
-        "The answer will be here. The answer will be here. The answer will be here. The answer will be here."
-      );
+      return this.primaryAnswer.body || "The answer will be here.";
     },
     answerTimestamp() {
       return this.formatShortDate(this.primaryAnswer.asked_At || this.primaryAnswer.timestamp);
     },
   },
   methods: {
+    loadQuestion(id) {
+      // Try the store first (set before navigation by questionBox)
+      let q = this.questionStore.question;
+
+      // If the store question doesn't match the route id, search the list
+      if (!q || !q._id || String(q._id) !== String(id)) {
+        const fromList = this.listStore.list.find(
+          (item) => String(item._id || item.id) === String(id)
+        );
+        if (fromList) {
+          q = fromList;
+          this.questionStore.SetQuestion(fromList);
+          this.questionStore.SetQuestionID(fromList._id);
+        }
+      }
+
+      if (q && q._id) {
+        this.question = q;
+        this.answers = Array.isArray(q.answers) ? q.answers : [];
+        this.comments = Array.isArray(q.comments) ? q.comments : [];
+      }
+      this.loading = false;
+    },
     formatShortDate(value) {
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) {
@@ -212,75 +205,8 @@ export default {
         .replace(" am", "am")
         .replace(" pm", "pm");
     },
-<<<<<<< Updated upstream
-    async fetchQuestions() {
-      const user_id = this.authStore.user_ID;
-      const request = {
-        user_ID: user_id,
-      };
-      const bearer = `Bearer ${this.authStore.accessToken}`;
-
-      let url = `${import.meta.env.VITE_API_BASE}/question/otherQ`;
-      let options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: bearer,
-        },
-        body: JSON.stringify(request),
-      };
-
-      console.log('bearer:', bearer);
-      console.log('fetching questions with URL:', url);
-
-      const res = await fetch(url, options);
-
-      console.log('request sent');
-
-      if (res.status === 200) {
-        console.log('received response');
-        const data = await res.json();
-        console.log(data);
-        this.listStore.SetList(data);
-        return data;
-      } else {
-        if (res.status === 403) {
-          console.log('refreshing token');
-          const res = await this.authStore.Refresh();
-
-          if (res.status === 200) {
-            console.log('refreshed token');
-            const newBearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer:', newBearer);
-            options.headers.Authorization = newBearer;
-            const newRes = await fetch(url, options);
-            console.log('new request sent');
-            const newData = await newRes.json();
-            console.log(newData);
-            this.listStore.SetList(newData);
-            return newData;
-          } else {
-            console.log('refresh failed');
-            await this.authStore.Logout();
-          }
-        } else {
-          await this.authStore.Logout();
-        }
-      }
-    },
-    async CommentAnswer(answer_id) {
-      console.log("answer_id : ", answer_id);
-      console.log("we will be commenting on this answer");
-      console.log("question id : ", this.question["_id"]);
-      console.log(
-        "we will be commenting on this answer with question id : ",
-        this.question["_id"]
-      );
-      await this.questionStore.SetQuestionID(this.question["_id"]);
-=======
     goBack() {
       this.$router.back();
->>>>>>> Stashed changes
     },
     async ensureQuestionSelected() {
       await this.questionStore.SetQuestion(this.question);
@@ -314,36 +240,20 @@ export default {
       this.$emit('edit', answer);
     },
   },
-  async mounted() {
-<<<<<<< Updated upstream
-    await this.fetchQuestions();
-    console.log("we have enterd the question view");
-    console.log("state question", this.questionStore.question);
-    this.question = this.listStore.list.filter(
-      (question) => question["_id"] === this.questionStore.question_ID
-    )[0];
-    console.log("question in question view :", this.question);
-    this.answers = this.listStore.list.filter(
-      (question) => question["_id"] === this.questionStore.question_ID
-    )[0]["answers"];
-    console.log("answers in question view :", this.answers);
-    this.comments = this.listStore.list.filter(
-      (question) => question["_id"] === this.questionStore.question_ID
-    )[0]["comments"];
-    console.log("comments in question view :", this.comments);
-=======
-    const selectedId = this.questionStore.question_ID;
-    const selectedFromList = this.listStore.list.find(
-      (question) => String(question._id || question.id) === String(selectedId)
-    );
-    this.question = selectedFromList || this.questionStore.question || {};
-    this.answers = Array.isArray(this.question.answers) ? this.question.answers : [];
-    this.comments = Array.isArray(this.question.comments) ? this.question.comments : [];
->>>>>>> Stashed changes
+  mounted() {
+    const routeId = this.$route.params.id;
+    if (routeId) {
+      this.loadQuestion(routeId);
+    } else {
+      // Fallback: no route id, read directly from store
+      const q = this.questionStore.question || {};
+      this.question = q;
+      this.answers = Array.isArray(q.answers) ? q.answers : [];
+      this.comments = Array.isArray(q.comments) ? q.comments : [];
+      this.loading = false;
+    }
     this.$emit("askView");
     this.colourStore.colourQuestionView();
-
-    // If navigated from a search result that is answered, scroll to answer
     if (this.$route && this.$route.hash === "#answer") {
       this.$nextTick(() => {
         const el = document.getElementById("answer-section");

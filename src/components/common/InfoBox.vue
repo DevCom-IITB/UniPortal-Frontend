@@ -5,63 +5,26 @@
       <span class="dot"></span>
       <span>{{ timestamp }}</span>
     </div>
-<<<<<<< Updated upstream
-    <div class="main-content">
-      <div class="container">
-        <div class="timestamp">{{ timestamp }}</div>
-        <div class="Images" v-if="infopost.images">
-          <div
-            v-for="image in images"
-            v-bind:key="image.id"
-            class="img"
-            @click="Expand(image)"
-          >
-            <img :src="image" />
-          </div>
-        </div>
-        <div class="markdown-wrapper collapsed" ref="markdownWrapper">
-          <div class="arrow-container">
-            <span>
-              <rightArrow class="arrow" :class="{ rotated: isRotated }" @click="toggleRotation"/>
-            </span>
-            <span>
-              <Markdown :source="getMarkdownContent()" />
-            </span>
-          </div>
-        </div>
-      </div> 
-      <div class="sizer" v-if="windowWidth <=750">
-        <div
-          class="hide"
-          v-if="(authStore.role == 5980 || authStore.role == 1980)"
-          @click="Hide"      
-        >
-          <eye v-if="!infopost['hidden']" class="icon" /><closed_eye
-            v-if="infopost['hidden']"
-            class="icon"
-          />
-        </div>
-        <div
-          class="edit"
-          v-if="authStore.role == 5980 || authStore.role == 1980"
-          @click="Edit"
-        >
-          <edit />
-        </div>
-      </div>
-=======
 
     <h2>{{ announcementTitle }}</h2>
 
     <div class="announcement-body">
-      <Markdown :source="announcementBody" />
->>>>>>> Stashed changes
+      <div ref="markdownWrapper" class="markdown-wrapper collapsed">
+        <div class="arrow-container" v-if="announcementBody.includes('\n')">
+          <rightArrow 
+            class="arrow" 
+            :class="{ rotated: isRotated }" 
+            @click="toggleRotation" 
+          />
+        </div>
+        <Markdown :source="getMarkdownContent()" />
+      </div>
     </div>
 
     <div class="Images" v-if="images.length">
       <button
         v-for="image in images"
-        v-bind:key="image"
+        :key="image"
         class="img"
         type="button"
         @click="Expand(image)"
@@ -137,16 +100,16 @@ export default {
       this.$emit("expand");
     },
     toggleRotation() {
-    this.isRotated = !this.isRotated;
-    const markdownWrapper = this.$refs.markdownWrapper;
-    if (this.isRotated) {
-      markdownWrapper.classList.remove('collapsed');
-      markdownWrapper.classList.add('expanded');
-    } else {
-      markdownWrapper.classList.remove('expanded');
-      markdownWrapper.classList.add('collapsed');
-    }
-  },
+      this.isRotated = !this.isRotated;
+      const markdownWrapper = this.$refs.markdownWrapper;
+      if (this.isRotated) {
+        markdownWrapper.classList.remove('collapsed');
+        markdownWrapper.classList.add('expanded');
+      } else {
+        markdownWrapper.classList.remove('expanded');
+        markdownWrapper.classList.add('collapsed');
+      }
+    },
     onResize() {
       this.windowWidth = window.innerWidth;
     },
@@ -271,32 +234,7 @@ h2 {
   font-size: 13px;
   line-height: 1.18;
   font-weight: 400;
-<<<<<<< Updated upstream
-  white-space: pre-wrap;
-}
-
-.body-content{
-  display: flex;
-}
-
-.tag{
-  width: 100px;
-  height: 20px;
-  background-color: #FFEDB2;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
-}
-
-.timestamp{
-  font-size: x-small;
-  font-weight: 400;
-  color: #ccb160;
-=======
   color: #1c1b1f;
->>>>>>> Stashed changes
 }
 
 .Images {
@@ -343,11 +281,22 @@ h2 {
   font-size: 12px;
   font-weight: 700;
 }
-.arrow-container{
+
+.arrow-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  float: left;
 }
+
+.markdown-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  overflow: hidden;
+  transition: max-height 0.8s ease-in-out, padding 0.3s ease-in-out;
+}
+
 .markdown-wrapper.collapsed .arrow-container {
   align-items: center;
 }
@@ -355,22 +304,18 @@ h2 {
 .markdown-wrapper.expanded .arrow-container {
   align-items: flex-start;
 }
-.arrow{
+
+.arrow {
   transform: rotate(90deg);
-  align-self: start;
   width: 0.8rem;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   margin-right: 0.5rem;
+  margin-top: 2px;
 }
-.rotated {
+
+.arrow.rotated {
   transform: rotate(-90deg);
-}
-.markdown-wrapper {
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  transition: max-height 0.8s ease-in-out, padding 0.3s ease-in-out;
 }
 
 .markdown-wrapper.collapsed {

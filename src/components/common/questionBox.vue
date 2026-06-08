@@ -12,7 +12,7 @@
             <span class="timestamp">{{ displayTimestamp }}</span>
           </div>
 
-          <h2 class="question-title">
+          <h2 class="question-title" aria-live="polite">
             <template v-for="(part, index) in titleParts" :key="index">
               <mark v-if="part.match">{{ part.text }}</mark>
               <span v-else>{{ part.text }}</span>
@@ -37,151 +37,11 @@
         <p>{{ answerPreview }}</p>
       </div>
 
-<<<<<<< Updated upstream
-      <div class="QuestionBox">
-        <div class="content" :style="{ background: colourStore.background }">
-          <router-link
-            :to="AuthStore.vite_base + '/question'"
-            class="questionRoute"
-            @comment="$emit('comment')"
-            @click="SetQuestionView"
-            @expand="$emit('expand')"
-          >
-            <div class="inner-container">
-              <div class="stamps">
-                <div class="info">
-                  <div
-                    class="name"
-                    :style="{ color: colourStore.emphasis_text }"
-                  >
-                    {{ showName }}
-                  </div>
-                  <div class="timestamp" :style="{ color: colourStore.grey }">
-                    {{ timestamp }}
-                  </div>
-                  <div
-                    class="attached"
-                    v-if="images.length > 0"
-                    :style="{ color: colourStore.grey }"
-                  >
-                    &nbsp;&nbsp;Images Attached
-                  </div>
-                </div>
-                <div
-                  v-if="question.answers.length > 0"
-                  class="verified"
-                  :style="{ color: colourStore.grey }"
-                >
-                  <verified class="icon" />&nbsp;
-                  <p>Answered</p>
-                </div>
-              </div>
-              <div class="text" :style="{ color: colourStore.emphasis_text }">
-                {{ question['body'] }}
-              </div>
-            </div>
-          </router-link>
-        </div>
-        <div class="box-footer">
-          <div
-            class="Upvote"
-            @click="Upvote"
-            v-if="
-              windowWidth <= 750 &&
-              (AuthStore.role == 7669 || AuthStore.role == 1980)
-            "
-          >
-            <upvote
-              :upvotes="question.upvotes"
-              :windowWidth="windowWidth"
-            />
-          </div>
-          <div
-            v-if="
-              showAnswerBox &&
-              (AuthStore.role == 5980 || AuthStore.role == 6311)
-            "
-            @click="AnswerClick"
-            class="answer"
-            :style="{
-              color: colourStore.emphasis_text,
-              background: colourStore.background,
-            }"
-          >
-            <forum class="icon" />&nbsp;
-            <p>Answer</p>
-          </div>
-          <router-link
-            :to="AuthStore.vite_base + '/question'"
-            @click="SetQuestionView"
-            class="expand-route"
-            @expand="$emit('expand')">
-            <div
-              v-if="
-                showAnswerBox &&
-                (AuthStore.role == 7669 || AuthStore.role == 1980)
-              "
-              class="expand"
-              :style="{
-                color: colourStore.emphasis_text,
-                background: colourStore.background,
-              }"
-            >
-              <open class="icon" />&nbsp;
-              <p>Answers</p>
-            </div>
-          </router-link>
-          <div class="Hide" v-if="windowWidth <= 750 && AuthStore.role == 5980" >
-            <eye
-              v-if="AuthStore.role == 5980 && !question['hidden']"
-              class="icon"
-              :svgColor="secondaryColor"
-              @click="Hide"
-            /><closed_eye
-              v-if="AuthStore.role == 5980 && question['hidden']"
-              class="icon"
-              :svgColor="secondaryColor"
-              @click="Hide"
-            />
-          </div>
-          <div class="alert" v-if="question['hidden']">
-            <alert
-              v-if="
-                question['hidden'] &&
-                AuthStore.role == 7669 &&
-                windowWidth <= 750
-              "
-              @click="alertClick"
-            />
-          </div>
-          <div class="comments">
-            <button
-              class="view-comments"
-              @click="viewComments"
-              :style="{ color: colourStore.emphasis_text }"
-            >
-              {{ commentbtn_text }} ({{ question.comments.length }})
-            </button>
-            <button
-              class="comment"
-              @click="CommentClick"
-              :style="{
-                color: colourStore.emphasis_text,
-                background: colourStore.background,
-              }"
-            >
-              <Uparrow class="icon" />&nbsp;
-              <p>Comment</p>
-            </button>
-          </div>
-        </div>
-=======
       <div v-if="AuthStore.role == 5980" class="moderation-actions">
         <button type="button" @click.stop="Hide">
           {{ question.hidden ? "Show" : "Hide" }}
         </button>
         <button type="button" @click.stop="AnswerClick">Answer</button>
->>>>>>> Stashed changes
       </div>
 
       <div v-if="showComments" class="comment-boxes">
@@ -248,13 +108,9 @@ export default {
       commentbtn_text: "View Comments",
       windowWidth: window.innerWidth,
       images: [],
-<<<<<<< Updated upstream
-      showName:'',
-=======
       isTranslated: false,
       isTranslating: false,
       translatedText: "",
->>>>>>> Stashed changes
     };
   },
   computed: {
@@ -276,7 +132,7 @@ export default {
         : this.question.title || this.question.body || "";
     },
     subjectLabel() {
-      const subject = this.question.subject || this.question.category;
+      const subject = this.question.tag || this.question.subject || this.question.category;
       if (!subject || subject === "subject1") return "Campus Life";
       return subject;
     },
@@ -414,7 +270,8 @@ export default {
     },
     async openQuestion() {
       await this.SetQuestionView();
-      this.$router.push(this.AuthStore.vite_base + "/question");
+      const qId = this.question._id || this.question.id;
+      this.$router.push(this.AuthStore.vite_base + "/question/" + qId);
     },
     async alertClick() {
       await this.QuestionStore.SetShowSnackBar(true);
@@ -428,35 +285,7 @@ export default {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
-<<<<<<< Updated upstream
-    const date = new Date(this.question['asked_At']);
-    const options = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    };
-    this.timestamp = date.toLocaleString(undefined, options);
-    this.images = this.question.images;
-    if(this.question['is_Anonymous'] == true){
-        if(this.AuthStore.role == 5980 || this.AuthStore.role == 6311){
-          this.showName = this.question['user_Name'];
-          console.log(this.AuthStore.role)
-          console.log(this.AuthStore.name)
-        }
-        else{
-          this.showName = "Anonymous"
-        }
-      }
-      else{
-        this.showName = this.question['user_Name'];
-      }
-=======
     this.images = this.question.images || [];
->>>>>>> Stashed changes
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
@@ -624,12 +453,14 @@ export default {
 }
 
 .comment-pill {
+  position: relative;
   min-width: 66px;
   gap: 8px;
   padding: 0 13px;
 }
 
 .comment-icon {
+  position: relative;
   width: 14px;
   height: 10px;
   border: 1.5px solid #1c1b1f;
@@ -707,6 +538,7 @@ export default {
 }
 
 .thumb-icon {
+  position: relative;
   width: 28px;
   height: 28px;
   border: 1.5px solid #1c1b1f;

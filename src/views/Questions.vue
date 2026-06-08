@@ -1,16 +1,4 @@
 <template>
-<<<<<<< Updated upstream
-  <div class="container">
-    <div class="Header">
-      <Header :headerName="headerName" :headerText="headerText" :tags="tags" @tag-selected="handleTagSelected" />
-    </div>
-    <div class="Lister" @scroll="storePosition($event)">
-      <div :key="question['id']" v-for="question in questions" class="QuestionBox">
-        <Question @expand="$emit('expand')" :showAnswerBox="true" :question="question" :background="background"
-          :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"
-          @comment="$emit('comment')" @askView="$emit('askView')" />
-      </div>
-=======
   <div class="questions-page">
     <div class="tabs-shell">
       <button class="tab-button" type="button" @click="goToAnnouncements">Announcements</button>
@@ -24,6 +12,7 @@
         type="button"
         class="category-pill"
         :class="{ selected: index === selectedCategoryIndex }"
+        @click="selectCategory(index)"
       >
         <span>{{ category }}</span>
         <span v-if="index === selectedCategoryIndex" class="close-mark">x</span>
@@ -66,19 +55,13 @@
         @comment="$emit('comment')"
         @askView="$emit('askView')"
       />
->>>>>>> Stashed changes
     </div>
   </div>
 </template>
 
 <script>
-<<<<<<< Updated upstream
-import Question from '../components/common/questionBox.vue';
-import Header from '../components/common/Header.vue';
-=======
 import Question from "../components/common/questionBox.vue";
 import Fuse from "fuse.js";
->>>>>>> Stashed changes
 
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
@@ -86,6 +69,9 @@ import { useColourStore } from "../stores/colour";
 
 export default {
   name: "Questions",
+  components: {
+    Question,
+  },
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
@@ -95,63 +81,77 @@ export default {
   data() {
     return {
       questions: [],
-<<<<<<< Updated upstream
-      tags: ['All', 'SMA', 'Immunization', 'Documents', 'Orientation'], // example tags
-      scrollPositionY: 0,
-    };
-  },
-=======
       searchQuery: "",
       categories: [
-        "Category (25)",
-        "Category (25)",
-        "Category (25)",
-        "Category (25)",
-        "Category (25)",
-        "Category (25)",
+        "Hostel",
+        "Admission",
+        "Placements",
+        "Academics",
+        "Campus Life",
+        "Clubs",
       ],
       filters: ["Answered", "Latest", "Most commented", "Most upvoted", "Unanswered"],
-      selectedCategoryIndex: 2,
+      selectedCategoryIndex: null,
       selectedFilters: ["Answered", "Latest"],
     };
   },
   computed: {
     filteredQuestions() {
-      if (!this.searchQuery.trim()) {
-        return this.questions;
+      let result = [...this.questions];
+
+      const wantsAnswered = this.selectedFilters.includes("Answered");
+      const wantsUnanswered = this.selectedFilters.includes("Unanswered");
+
+      if (wantsAnswered && !wantsUnanswered) {
+        result = result.filter((q) => q.status === true || (q.answers && q.answers.length > 0));
+      } else if (!wantsAnswered && wantsUnanswered) {
+        result = result.filter((q) => q.status === false && (!q.answers || q.answers.length === 0));
       }
-      const fuse = new Fuse(this.questions, {
-        keys: ["body", "title", "user_Name", "User_name", "subject"],
-        threshold: 0.45,
-      });
-      return fuse.search(this.searchQuery).map((result) => result.item);
+
+      if (this.selectedCategoryIndex !== null) {
+        const activeCategory = this.categories[this.selectedCategoryIndex];
+        
+        // Exact tag matches
+        const exactMatches = result.filter((q) => q.tag === activeCategory);
+        
+        // Fuzzy search for remaining items
+        const remaining = result.filter((q) => q.tag !== activeCategory);
+        const categoryFuse = new Fuse(remaining, {
+          keys: ["body", "title", "subject"],
+          threshold: 0.5,
+        });
+        const fuzzyMatches = categoryFuse.search(activeCategory).map((res) => res.item);
+        
+        result = [...exactMatches, ...fuzzyMatches];
+      }
+
+      if (this.selectedFilters.includes("Most upvoted")) {
+        result.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+      } else if (this.selectedFilters.includes("Most commented")) {
+        result.sort((a, b) => (b.comments ? b.comments.length : 0) - (a.comments ? a.comments.length : 0));
+      } else if (this.selectedFilters.includes("Latest")) {
+        result.sort((a, b) => new Date(b.asked_At) - new Date(a.asked_At));
+      }
+
+      if (this.searchQuery.trim()) {
+        const fuse = new Fuse(result, {
+          keys: ["body", "title", "user_Name", "User_name", "subject"],
+          threshold: 0.45,
+        });
+        result = fuse.search(this.searchQuery).map((res) => res.item);
+      }
+
+      return result;
     },
-  },
->>>>>>> Stashed changes
-  components: {
-    Question,
   },
   methods: {
-<<<<<<< Updated upstream
-    storePosition(event) {
-      this.scrollPositionY = event.target.scrollTop;
-      localStorage.setItem('scrollPosition', this.scrollPositionY);
+    selectCategory(index) {
+      if (this.selectedCategoryIndex === index) {
+        this.selectedCategoryIndex = null;
+      } else {
+        this.selectedCategoryIndex = index;
+      }
     },
-    scrollToPosition() {
-      this.$nextTick(() => {
-        const listerDiv = this.$el.querySelector('.Lister');
-        if (listerDiv) {
-          const storedPosition = localStorage.getItem('scrollPosition');
-          if (storedPosition) {
-            listerDiv.scrollTop = parseInt(storedPosition, 10);
-          }
-        } else {
-          console.error('Element with class "Lister" not found.');
-        }
-      });
-    },
-    async fetchQuestions(tag = '') {
-=======
     toggleFilter(filter) {
       if (this.selectedFilters.includes(filter)) {
         this.selectedFilters = this.selectedFilters.filter((item) => item !== filter);
@@ -162,97 +162,51 @@ export default {
     goToAnnouncements() {
       this.$router.push(this.authStore.vite_base + "/");
     },
-    async fetchQuestions() {
->>>>>>> Stashed changes
+    async fetchQuestions(tag = null) {
       const user_id = this.authStore.user_ID;
-      const request = {
+      const requestBody = {
         user_ID: user_id,
+        type: 'question',
       };
+      
+      if (tag) {
+        requestBody.tag = tag;
+      }
+
       const bearer = `Bearer ${this.authStore.accessToken}`;
+      const url = `${import.meta.env.VITE_API_BASE}/question/`;
 
-<<<<<<< Updated upstream
-      let url = `${import.meta.env.VITE_API_BASE}/question/otherQ`;
-      let options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: bearer,
-        },
-        body: JSON.stringify(request),
-      };
+      console.log('fetching questions with URL:', url);
 
-      // Adjust URL and options based on tag selection
-      if (tag && tag !== 'All') {
-        url = `${import.meta.env.VITE_API_BASE}/taggedQ`;
-        options = {
-          method: 'POST',
-=======
-      console.log("bearer : ", bearer);
-
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE}/question/otherQ`,
-        {
-          method: "PUT",
->>>>>>> Stashed changes
+      try {
+        const res = await fetch(url, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: bearer,
           },
-          body: JSON.stringify({ type: 'question', tag }),
-        };
-      }
+        });
 
-      console.log('bearer:', bearer);
-      console.log('fetching questions with URL:', url);
-
-      const res = await fetch(url, options);
-
-      console.log("request sent");
-
-      if (res.status === 200) {
-        console.log("received response");
-        const data = await res.json();
-        console.log(data);
-        this.listStore.SetList(data);
-        return data;
-      } else {
-        if (res.status === 403) {
+        if (res.status === 200) {
+          const data = await res.json();
+          this.listStore.SetList(data);
+          return data;
+        } else if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const refreshRes = await this.authStore.Refresh();
 
-          if (res.status === 200) {
-<<<<<<< Updated upstream
-            console.log('refreshed token');
+          if (refreshRes && refreshRes.status === 200) {
             const newBearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer:', newBearer);
-            options.headers.Authorization = newBearer;
-            const newRes = await fetch(url, options);
-            console.log('new request sent');
-            const newData = await newRes.json();
-            console.log(newData);
-            this.listStore.SetList(newData);
-            return newData;
-=======
-            console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log("new bearer : ", bearer);
-            const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}/question/otherQ`,
-              {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: bearer,
-                },
-                body: JSON.stringify(request),
-              }
-            );
-            console.log("new request sent");
-            const data = await res.json();
-            console.log(data);
+            const retryRes = await fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: newBearer,
+              },
+            });
+            const data = await retryRes.json();
             this.listStore.SetList(data);
             return data;
->>>>>>> Stashed changes
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
@@ -260,21 +214,23 @@ export default {
         } else {
           await this.authStore.Logout();
         }
+      } catch (error) {
+        console.error("Failed to fetch questions:", error);
       }
     },
     async handleTagSelected(tag) {
       console.log('Selected tag:', tag);
       await this.fetchQuestions(tag);
-      this.questions = this.listStore.list;
-      console.log(this.questions);
+      this.questions = this.listStore.list || [];
     },
   },
   async mounted() {
     await this.fetchQuestions();
-    this.questions = this.listStore.list;
-    console.log(this.questions);
+    this.questions = this.listStore.list || [];
     this.colourStore.colourQuestions();
-    this.scrollToPosition();
+    if (typeof this.scrollToPosition === "function") {
+      this.scrollToPosition();
+    }
   },
 };
 </script>
@@ -362,6 +318,7 @@ export default {
 }
 
 .feed-search {
+  position: relative;
   width: 100%;
   height: 42px;
   margin-top: 20px;
@@ -374,6 +331,7 @@ export default {
 }
 
 .search-icon {
+  position: relative;
   width: 15px;
   height: 15px;
   border: 1.7px solid #9b9b9b;
@@ -431,8 +389,6 @@ export default {
   width: 100%;
 }
 
-<<<<<<< Updated upstream
-=======
 @media only screen and (max-width: 900px) {
   .category-row {
     padding-right: 0;
@@ -440,7 +396,6 @@ export default {
   }
 }
 
->>>>>>> Stashed changes
 @media only screen and (max-width: 750px) {
   .questions-page {
     padding-bottom: 20px;

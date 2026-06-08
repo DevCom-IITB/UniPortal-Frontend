@@ -1,22 +1,22 @@
 <template>
-<<<<<<< Updated upstream
-  <div class="container">
-    <div class="Header">
-      <Header :headerName="headerName" :headerText="headerText" :tags="tags" @tag-selected="handleTagSelected" />
-    </div>
-    <div class="Lister">
-      <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
-        <InfoBox :infopost="infopost" @expand="$emit('expand')" @edit="EditInfo" />
-      </div>
-=======
   <div class="announcements-page">
     <div class="tabs-shell">
-      <button class="tab-button active" type="button">Announcements</button>
-      <button class="tab-button" type="button" @click="goToQuestions">Questions</button>
+      <button class="tab-button active" type="button">
+        Announcements
+      </button>
+
+      <button
+        class="tab-button"
+        type="button"
+        @click="goToQuestions"
+      >
+        Questions
+      </button>
     </div>
 
     <label class="feed-search">
       <span class="search-icon"></span>
+
       <input
         v-model="searchQuery"
         type="search"
@@ -39,7 +39,6 @@
         @expand="$emit('expand')"
         @edit="EditInfo"
       />
->>>>>>> Stashed changes
     </div>
   </div>
 </template>
@@ -54,162 +53,159 @@ import { useColourStore } from "../stores/colour";
 
 export default {
   name: "Infopost",
+
+  components: {
+    InfoBox,
+  },
+
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
-    return { authStore, listStore, colourStore };
+
+    return {
+      authStore,
+      listStore,
+      colourStore,
+    };
   },
+
   data() {
     return {
       infoposts: [],
-<<<<<<< Updated upstream
-      tags: ['All', 'SMA', 'Immunization', 'Documents', 'Orientation'], // example tags
-=======
       searchQuery: "",
->>>>>>> Stashed changes
     };
   },
+
   computed: {
     filteredInfoposts() {
       if (!this.searchQuery.trim()) {
         return this.infoposts;
       }
+
       const fuse = new Fuse(this.infoposts, {
         keys: ["body", "title", "user_Name", "User_name"],
         threshold: 0.45,
       });
+
       return fuse.search(this.searchQuery).map((result) => result.item);
     },
   },
-  components: {
-    InfoBox,
-  },
+
   methods: {
-<<<<<<< Updated upstream
-    async fetchInfoPosts(tag = '') {
-=======
     goToQuestions() {
       this.$router.push(this.authStore.vite_base + "/questions");
     },
+
     async fetchInfoPosts() {
->>>>>>> Stashed changes
-      const bearer = `Bearer ${this.authStore.accessToken}`;
-      const role = this.authStore.role;
-      const get = role == 5980 || role == 1980 ? "get" : "getStu";
+      try {
+        const bearer = `Bearer ${this.authStore.accessToken}`;
+        const role = this.authStore.role;
 
-<<<<<<< Updated upstream
-      let url = `${import.meta.env.VITE_API_BASE}/info/${get}`;
-      let options = {
-        method: 'GET',
-=======
-      console.log("bearer : ", bearer);
+        const get =
+          role == 5980 || role == 1980 ? "get" : "getStu";
 
-      console.log("fetching info posts");
+        console.log("bearer : ", bearer);
+        console.log("fetching info posts");
 
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/${get}`, {
-        method: "GET",
->>>>>>> Stashed changes
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: bearer,
-        },
-      };
+        let res = await fetch(
+          `${import.meta.env.VITE_API_BASE}/info/${get}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: bearer,
+            },
+          }
+        );
 
-      if (tag && tag != 'All') {
-        url = `${import.meta.env.VITE_API_BASE}/taggedQ`;
-        options = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: bearer,
-          },
-          body: JSON.stringify({ type: 'infopost', tag }),
-        };
-      }
+        console.log("response : ", res);
+        console.log("request sent");
 
-      console.log('bearer : ', bearer);
-      console.log('fetching info posts with url: ', url);
+        if (res.status === 200) {
+          console.log("received response");
 
-      const res = await fetch(url, options);
+          const data = await res.json();
 
-<<<<<<< Updated upstream
-      console.log('response : ', res);
-      console.log('request sent');
-=======
-      console.log("response : ", res);
+          console.log(data);
 
-      console.log("request sent");
->>>>>>> Stashed changes
+          this.listStore.SetList(data);
 
-      if (res.status === 200) {
-        console.log("received response");
-        const data = await res.json();
-        console.log(data);
-        this.listStore.SetList(data);
-        return data;
-      } else {
+          return data;
+        }
+
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
 
-          if (res.status === 200) {
-<<<<<<< Updated upstream
-            console.log('refreshed token');
-            const newBearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer : ', newBearer);
-            options.headers.Authorization = newBearer;
-            const newRes = await fetch(url, options);
-            console.log('new request sent');
-            const newData = await newRes.json();
-            console.log(newData);
-            this.listStore.SetList(newData);
-            return newData;
-=======
+          const refreshRes = await this.authStore.Refresh();
+
+          if (refreshRes.status === 200) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log("new bearer : ", bearer);
-            const res = await fetch(
+
+            const newBearer = `Bearer ${this.authStore.accessToken}`;
+
+            console.log("new bearer : ", newBearer);
+
+            res = await fetch(
               `${import.meta.env.VITE_API_BASE}/info/${get}`,
               {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: bearer,
+                  Authorization: newBearer,
                 },
               }
             );
+
             console.log("new request sent");
+
             const data = await res.json();
+
             console.log(data);
+
             this.listStore.SetList(data);
+
             return data;
->>>>>>> Stashed changes
-          } else {
-            console.log("refresh failed");
-            await this.authStore.Logout();
           }
-        } else {
+
+          console.log("refresh failed");
+
           await this.authStore.Logout();
+
+          return;
         }
+
+        await this.authStore.Logout();
+      } catch (error) {
+        console.error("Error fetching info posts:", error);
       }
     },
+
     async EditInfo(infopost) {
       console.log("editing info");
       console.log(infopost);
+
       this.$emit("edit", infopost);
     },
+
     async handleTagSelected(tag) {
-      console.log('Selected tag:', tag);
+      console.log("Selected tag:", tag);
+
       await this.fetchInfoPosts(tag);
+
       this.infoposts = this.listStore.list;
+
       console.log(this.infoposts);
     },
   },
+
   async mounted() {
     await this.fetchInfoPosts();
+
     this.infoposts = this.listStore.list;
+
     console.log(this.infoposts);
+
     await this.colourStore.colourInfopost();
   },
 };
@@ -263,6 +259,7 @@ export default {
   align-items: center;
   gap: 14px;
   padding: 0 22px;
+  position: relative;
 }
 
 .search-icon {
@@ -271,6 +268,7 @@ export default {
   border: 2px solid #9b9b9b;
   border-radius: 50%;
   flex-shrink: 0;
+  position: relative;
 }
 
 .search-icon::after {
@@ -318,6 +316,7 @@ export default {
 .sort-icon {
   width: 16px;
   height: 12px;
+  position: relative;
 }
 
 .sort-icon::before,

@@ -1,16 +1,4 @@
 <template>
-<<<<<<< Updated upstream
-  <div class="container">
-    <div class="Header">
-      <Header :headerName="headerName" :headerText="headerText" :background="background" :primaryColor="primaryColor" />
-    </div>
-    <div class="Lister">
-      <div :key="question['id']" v-for="question in questions" class="QuestionBox">
-        <Question @expand="$emit('expand')" :showAnswerBox="this.true" :question="question" :background="background"
-          :primaryColor="primaryColor" :secondaryColor="secondaryColor" :primaryAccent="primaryAccent"
-          @comment="$emit('comment')" @askView="$emit('askView')" />
-      </div>
-=======
   <div class="questions-page">
     <div class="tabs-shell">
       <button class="tab-button" type="button" @click="goToAnnouncements">Announcements</button>
@@ -44,19 +32,13 @@
         @comment="$emit('comment')"
         @askView="$emit('askView')"
       />
->>>>>>> Stashed changes
     </div>
   </div>
 </template>
 
 <script>
-<<<<<<< Updated upstream
-import Question from '../components/common/questionBox.vue';
-import Header from '../components/common/Header.vue';
-=======
 import Question from "../components/common/questionBox.vue";
 import Fuse from "fuse.js";
->>>>>>> Stashed changes
 
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
@@ -64,6 +46,9 @@ import { useColourStore } from "../stores/colour";
 
 export default {
   name: "MyQuestions",
+  components: {
+    Question,
+  },
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
@@ -73,16 +58,6 @@ export default {
   data() {
     return {
       questions: [],
-<<<<<<< Updated upstream
-      // background: '#F6F5FF',
-      // primaryColor : '#201E2F',
-      // secondaryColor : '#8D87B3',
-      // primaryAccent : '#D4BDFF',
-      true: true,
-      false: false,
-    };
-  },
-=======
       searchQuery: "",
     };
   },
@@ -98,10 +73,6 @@ export default {
       return fuse.search(this.searchQuery).map((result) => result.item);
     },
   },
->>>>>>> Stashed changes
-  components: {
-    Question,
-  },
   methods: {
     goToAnnouncements() {
       this.$router.push(this.authStore.vite_base + "/");
@@ -116,49 +87,45 @@ export default {
       console.log("body : ", request);
 
       const bearer = `Bearer ${this.authStore.accessToken}`;
-
       console.log("bearer : ", bearer);
 
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/myQ`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: bearer,
-        },
-        body: JSON.stringify(request),
-      });
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/myQ`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: bearer,
+          },
+          body: JSON.stringify(request),
+        });
 
-      console.log("request sent");
+        console.log("request sent");
 
-      if (res.status === 200) {
-        console.log("received response");
-        const data = await res.json();
-        console.log(data);
-        this.listStore.SetList(data);
-        return data;
-      } else {
-        if (res.status === 403) {
+        if (res.status === 200) {
+          console.log("received response");
+          const data = await res.json();
+          this.listStore.SetList(data);
+          return data;
+        } else if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh();
+          const refreshRes = await this.authStore.Refresh();
 
-          if (res.status === 200) {
+          if (refreshRes && refreshRes.status === 200) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log("new bearer : ", bearer);
-            const res = await fetch(
-              `${import.meta.env.VITE_API_BASE}/question/myQ`,
-              {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: bearer,
-                },
-                body: JSON.stringify(request),
-              }
-            );
+            const newBearer = `Bearer ${this.authStore.accessToken}`;
+            console.log("new bearer : ", newBearer);
+            
+            const retryRes = await fetch(`${import.meta.env.VITE_API_BASE}/question/myQ`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: newBearer,
+              },
+              body: JSON.stringify(request),
+            });
+            
             console.log("new request sent");
-            const data = await res.json();
-            console.log(data);
+            const data = await retryRes.json();
             this.listStore.SetList(data);
             return data;
           } else {
@@ -168,15 +135,16 @@ export default {
         } else {
           await this.authStore.Logout();
         }
+      } catch (error) {
+        console.error("Error fetching my questions:", error);
       }
     },
   },
   async mounted() {
     await this.colourStore.colourMyQuestions();
     await this.fetchQuestions();
-    this.questions = this.listStore.list;
+    this.questions = this.listStore.list || [];
     console.log(this.questions);
-
   },
 };
 </script>
@@ -220,6 +188,7 @@ export default {
 }
 
 .feed-search {
+  position: relative;
   width: 100%;
   height: 42px;
   margin-top: 72px;
@@ -232,6 +201,7 @@ export default {
 }
 
 .search-icon {
+  position: relative;
   width: 15px;
   height: 15px;
   border: 1.7px solid #9b9b9b;
@@ -290,14 +260,9 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-<<<<<<< Updated upstream
-  justify-content: center;
-  align-items: center;
-=======
   gap: 20px;
   margin-top: 20px;
   padding-bottom: 28px;
->>>>>>> Stashed changes
 }
 
 @media only screen and (max-width: 750px) {

@@ -2,46 +2,6 @@
   <form class="asker" @submit.prevent="decide">
     <h2>{{ dialogTitle }}</h2>
 
-<<<<<<< Updated upstream
-
-  <form class="asker" @submit="OnSubmit" :style="{
-    height: selectedImages.length === 0 && messages.length === 0 ? '25vh' : (messages.length > 0 && selectedImages.length > 0 ? '50vh' : (selectedImages.length > 0 || messages.length > 0 ? '38vh' : '30vh'))
-  }">
-    <div class="name">{{ nameOfPoster }}</div>
-    <textarea class="text" :style="{ borderColor: colourStore.grey }" v-model="text" type="text"
-      placeholder="Please be considerate of others when typing in your queries"></textarea>
-    <div class="preview" v-if="selectedImages.length > 0">
-      <div v-for="(image, index) in previewImages" :key="index" class="PreImage">
-        <div class="cancel" @click="RemoveImage(index)" />
-        <img :src="image" alt="Preview Image">
-      </div>
-    </div>
-    <div class="actions">
-      <div class="decision">
-        <div class="discard" :style="{ color: colourStore.grey }" @click="$emit('discard')">Discard</div>
-        <input class="post" :style="{ background: colourStore.primary }" value="Post" type="submit" @click="decide" />
-      </div>
-      <div v-if="questionStore.addImage" class="photo" :style="{ background: colourStore.background }"
-        @click="AddImages">
-        <input type="file" id="fileInput" @change="SelectingFiles" multiple />
-        <add />&nbsp;&nbsp;
-        <p>Add photo</p>
-      </div>
-    </div>
-    <ul v-if="text.length != 0 && authStore.role == 7669" class="similarQues">
-      <p> Click to view similar questions</p>
-      <transition-group name="message-transition" tag="div">
-        <li class="question" v-for="(msg, index) in messages" :key=index>
-          <router-link :to="authStore.vite_base + '/question'" class="questionRoute" @click="SetQuestionView(msg)">
-            {{ msg.question }}
-          </router-link>
-        </li>
-      </transition-group>
-
-    </ul>
-  </form>
-
-=======
     <div v-if="showIdentityControls" class="form-group compact">
       <label>How do you prefer to identify?</label>
       <div class="segmented-control">
@@ -133,7 +93,6 @@
       <button class="discard" type="button" @click="$emit('discard')">Cancel</button>
     </div>
   </form>
->>>>>>> Stashed changes
 </template>
 
 <script>
@@ -141,18 +100,16 @@ import add from "../icons/add_circle.svg";
 import { useQuestionStore } from "@/stores/question";
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "../../stores/colour";
+import { useListStore } from "@/stores/list";
 let posted = false;
 
 export default {
   name: "askBox",
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   setup() {
     const questionStore = useQuestionStore();
     const authStore = useAuthStore();
     const colourStore = useColourStore();
+    const listStore = useListStore();
     const sendQuery = async (query) => {
       try {
         return await questionStore.sendQuery(query.text);
@@ -161,16 +118,12 @@ export default {
         throw error;
       }
     };
-    return { questionStore, authStore, colourStore, sendQuery };
+    return { questionStore, authStore, colourStore, listStore, sendQuery };
   },
   props: {
     editBody: {
       type: String,
       default: "",
-    },
-    nameOfPoster: {
-      type: String,
-      required: true,
     },
   },
   data() {
@@ -178,16 +131,12 @@ export default {
       text: "",
       selectedImages: [],
       previewImages: [],
-<<<<<<< Updated upstream
-      messages: [],
-=======
       similarResults: [],
       similarDebounce: null,
       selectedIdentity: "Name",
       identityOptions: ["Name", "Anonymous"],
       selectedCategory: "Hostel",
       categories: ["Hostel", "Admission", "Placements", "Academics", "Campus Life", "Clubs"],
->>>>>>> Stashed changes
     };
   },
   computed: {
@@ -234,7 +183,6 @@ export default {
     },
   },
   methods: {
-
     async OnSubmit(e) {
       e.preventDefault();
       if (!this.text && !posted) {
@@ -279,7 +227,11 @@ export default {
       } else if (decision == 4) {
         console.log("we will be posting a new question");
         console.log("selected images are : ", this.selectedImages);
-        await this.questionStore.PostQuestion(this.text, this.selectedImages);
+        if (this.selectedIdentity === "Anonymous") {
+          await this.questionStore.PostQuestionAnonymously(this.text, this.selectedImages, this.selectedCategory);
+        } else {
+          await this.questionStore.PostQuestion(this.text, this.selectedImages, this.selectedCategory);
+        }
       } else if (decision == 5) {
         console.log("we will be posting info post");
         await this.questionStore.PostInfoPost(this.text, this.selectedImages);
@@ -292,10 +244,8 @@ export default {
       } else if (decision == 7) {
         console.log("we will be posting a new question Anonymously");
         console.log("selected images are : ", this.selectedImages);
-        await this.questionStore.PostQuestionAnonymously(this.text, this.selectedImages);
-        // await this.questionStore.AddCommentComment(this.text)
-      }
-      else if (decision == 8){
+        await this.questionStore.PostQuestionAnonymously(this.text, this.selectedImages, this.selectedCategory);
+      } else if (decision == 8){
         console.log("we will be editing an answer");
         await this.questionStore.EditAnswer(this.text);
       }
@@ -324,17 +274,14 @@ export default {
       this.previewImages.splice(index, 1);
       this.selectedImages.splice(index, 1);
     },
-
-<<<<<<< Updated upstream
-    async SetQuestionView(question) {
-      await this.questionStore.SetQuestionID(question['qid']);
-      this.$emit('discard');
-=======
+    onQuestionTextInput() {
       const q = this.text.trim();
       if (q.length < 3) {
         this.similarResults = [];
         return;
       }
+
+      if (this.similarDebounce) clearTimeout(this.similarDebounce);
 
       this.similarDebounce = setTimeout(async () => {
         this.similarResults = await this.questionStore.SearchQuestions(q, 5);
@@ -358,8 +305,7 @@ export default {
       await this.questionStore.SetQuestion(full);
       await this.questionStore.SetQuestionID(full._id);
       this.$emit("discard");
-      this.$router.push(this.authStore.vite_base + "/question");
->>>>>>> Stashed changes
+      this.$router.push(this.authStore.vite_base + "/question/" + item._id);
     },
   },
   components: {
@@ -375,15 +321,8 @@ export default {
   min-height: 488px;
   display: flex;
   flex-direction: column;
-<<<<<<< Updated upstream
-  justify-content: space-between;
-  align-items: start;
-  margin: 8px 0;
-  min-height: 210px;
-=======
   align-items: flex-start;
   color: #1c1b1f;
->>>>>>> Stashed changes
 }
 
 h2 {
@@ -391,28 +330,11 @@ h2 {
   font-size: 28px;
   line-height: 1;
   font-weight: 600;
-<<<<<<< Updated upstream
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 8px;
-  /* border: 1px solid; */
-=======
   letter-spacing: 0;
->>>>>>> Stashed changes
 }
 
 .form-group {
   width: 100%;
-<<<<<<< Updated upstream
-  height: 80px;
-  max-height: 80px;
-  border: 1px solid;
-  border-radius: 10px;
-  padding: 8px 8px;
-  resize: none;
-  margin: 8px 0;
-=======
   margin-bottom: 21px;
 }
 
@@ -511,6 +433,7 @@ input[type="file"] {
 }
 
 .attachment-button {
+  position: relative;
   width: fit-content;
   height: 32px;
   border: 1px solid #1c1b1f;
@@ -528,6 +451,7 @@ input[type="file"] {
 }
 
 .attachment-icon {
+  position: relative;
   width: 14px;
   height: 14px;
   border: 1.5px solid #1c1b1f;
@@ -543,17 +467,17 @@ input[type="file"] {
 }
 
 .attachment-icon::before {
-  width: 8px;
+  width: 6px;
   height: 1.5px;
-  left: 3px;
-  top: 6px;
+  left: 2.5px;
+  top: 5px;
 }
 
 .attachment-icon::after {
   width: 1.5px;
-  height: 8px;
-  left: 6px;
-  top: 3px;
+  height: 6px;
+  left: 5px;
+  top: 2.5px;
 }
 
 .similar-panel {
@@ -641,7 +565,6 @@ input[type="file"] {
   background: #ffeef2;
   color: #d63864;
   border: 1px solid #ffb8cb;
->>>>>>> Stashed changes
 }
 
 .preview {
@@ -654,6 +577,7 @@ input[type="file"] {
 }
 
 .PreImage {
+  position: relative;
   width: 88px;
   height: 88px;
   border-radius: 10px;
@@ -704,22 +628,6 @@ input[type="file"] {
   margin-top: auto;
   padding-top: 44px;
   display: flex;
-<<<<<<< Updated upstream
-  flex-direction: row-reverse;
-  justify-content: space-between;
-  align-items: end;
-  margin: 8px 0;
-}
-
-.photo {
-  height: 100%;
-  border-radius: 50px;
-  padding-left: 8px;
-  padding-right: 8px;
-  display: flex;
-  justify-content: center;
-=======
->>>>>>> Stashed changes
   align-items: center;
   gap: 14px;
 }
@@ -741,44 +649,15 @@ input[type="file"] {
   color: #1c1b1f;
 }
 
-<<<<<<< Updated upstream
-.similarQues {
-  list-style: none;
-  width: 100%;
-  margin: 0;
-  padding-left: 8px;
-  overflow-y: auto;
-  transition: height 0.3s ease;
-}
-
-.question {
-  margin: 8px 0;
-}
-
-.question a {
-  text-decoration: none;
-  color: #000;
-}
-
-.message-transition-enter-active,
-.message-transition-leave-active {
-  transition: all 0.2s ease;
-=======
 .discard {
   border: 1.5px solid #c98e00;
   background: #ffffff;
   color: #1c1b1f;
->>>>>>> Stashed changes
 }
 
 @media only screen and (max-width: 750px) {
   .asker {
-<<<<<<< Updated upstream
-    justify-content: space-between;
-    height: fit-content;
-=======
     min-height: auto;
->>>>>>> Stashed changes
   }
 
   h2 {
