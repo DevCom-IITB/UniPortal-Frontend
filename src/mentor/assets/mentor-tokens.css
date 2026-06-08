@@ -1,0 +1,87 @@
+/*  ============================================================
+    ISMP Mentor Portal — Design Tokens
+    Extracted from Figma (Desktop-37 / Desktop-38 / header39)
+    ============================================================ */
+
+/* Override global styles when mentor portal is active.
+   Using .mentor-portal-active class added by MentorApp.vue
+   instead of :has() for broader browser compatibility. */
+body.mentor-portal-active,
+body.mentor-portal-active #app {
+  background: #FFFFFF !important;
+  height: auto !important;
+  font-family: 'Inter', 'Zilla Slab', sans-serif !important;
+}
+
+:root {
+  /* ---- Backgrounds ---- */
+  --mentor-bg-dark: #FFFFFF;
+  --mentor-bg-cream: #FCEEB9;
+  --mentor-bg-white: #FFFFFF;
+  --mentor-bg-sidebar: #FCEEB9;
+
+  /* ---- Primary / Accent ---- */
+  --mentor-primary: #FFE687;
+  --mentor-primary-light: #FFF1A8;
+  --mentor-primary-pale: #FFF9E4;
+  --mentor-primary-hover: #FFD95F;
+  --mentor-answered-bg: #DDF7DF;
+  --mentor-answered-text: #0A8F38;
+
+  /* ---- Text ---- */
+  --mentor-text-primary: #1A1A1A;
+  --mentor-text-secondary: #888888;
+  --mentor-text-emphasis: #211D12;
+  --mentor-text-light: #52492E;
+  --mentor-text-answered: #0A8F38;
+
+  /* ---- Borders / Dividers ---- */
+  --mentor-border: #E5E5E5;
+  --mentor-border-card: #E8E4DA;
+  --mentor-chip-border: #D0D0D0;
+
+  /* ---- Radii ---- */
+  --mentor-radius-card: 12px;
+  --mentor-radius-chip: 20px;
+  --mentor-radius-sidebar: 16px;
+  --mentor-radius-button: 24px;
+  --mentor-radius-navbar: 0px;
+  --mentor-radius-input: 8px;
+
+  /* ---- Typography ---- */
+  --mentor-font-family: 'Inter', 'Zilla Slab', sans-serif;
+  --mentor-font-size-xs: 0.75rem;
+  /* 12px */
+  --mentor-font-size-sm: 0.8125rem;
+  /* 13px */
+  --mentor-font-size-base: 0.875rem;
+  /* 14px */
+  --mentor-font-size-md: 1rem;
+  /* 16px */
+  --mentor-font-size-lg: 1.125rem;
+  /* 18px */
+  --mentor-font-size-xl: 1.5rem;
+  /* 24px */
+  --mentor-font-size-2xl: 2.25rem;
+  /* 36px */
+
+  /* ---- Spacing ---- */
+  --mentor-spacing-xs: 0.25rem;
+  /* 4px */
+  --mentor-spacing-sm: 0.5rem;
+  /* 8px */
+  --mentor-spacing-md: 1rem;
+  /* 16px */
+  --mentor-spacing-lg: 1.5rem;
+  /* 24px */
+  --mentor-spacing-xl: 2rem;
+  /* 32px */
+
+  /* ---- Shadows ---- */
+  --mentor-shadow-card: 0px 1px 3px rgba(0, 0, 0, 0.08);
+  --mentor-shadow-sidebar: 0px 4px 12px rgba(0, 0, 0, 0.05);
+
+  /* ---- Transitions ---- */
+  --mentor-transition-fast: 150ms ease;
+  --mentor-transition-base: 250ms ease;
+}

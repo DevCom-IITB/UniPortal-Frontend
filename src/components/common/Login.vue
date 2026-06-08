@@ -1,32 +1,25 @@
 <template>
   <div class="form">
+    <input type="button" class="sso" @click="redirectToExternalRoute" value="Login as a Mentor" />
 
     <div class="logo">
       <Logo />
     </div>
     <div class="headers">
-      <h2>Welcome NewBee</h2>
-      <h3>
-        Your companion to help you sail smooth through the admission process
-      </h3>
+      <h2>Welcome to Newbee</h2>
     </div>
     <div class="login">
-      <input type="text" class="input" v-model="uid" placeholder="Enter your JEE Advanced / UCEED Roll Number" />
-      <input type="password" class="input" v-model="password" placeholder="Enter your DOB in ddmmyyyy" />
+      <label for="roll-no">Roll No</label>
+      <input id="roll-no" type="text" class="input" v-model="uid" placeholder="JEE/UCEED Roll No" />
+      <label for="date-birth">Date of Birth</label>
+      <input id="date-birth" type="password" class="input" v-model="password" placeholder="DD/MM/YYYY" />
       <input type="submit" value="Login" class="button" @click="Auth.Login(uid, password, false)" />
     </div>
 
-    <input type="button" class="sso" @click="redirectToExternalRoute" value="Login as Mentor" />
-
-
-
-    <div class="headers">
+    <div class="headers help-text">
       <p>If you have trouble signing up, contact
-        smpcs2024@gmail.com</p>
+        <a href="mailto:smpcs2025@gmail.com">smpcs2025@gmail.com</a></p>
     </div>
-
-
-
   </div>
 </template>
 
@@ -83,69 +76,99 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   z-index: 1;
+  position: relative;
+  padding: 52px 11%;
+  color: #000000;
 }
 
 .headers {
-  width: 80%;
-  text-align: center;
+  width: 100%;
+  text-align: left;
 }
 
 .headers h2 {
+  margin: 18px 0 58px;
+  font-size: 34px;
+  line-height: 1.1;
   font-weight: 600;
 }
 
 .login {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  height: 40%;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
 }
 
 .login .input {
-  width: 30vw;
-  height: 20%;
-  border: 1px solid #ccb1607b;
-  border-radius: 10px;
-  padding-left: 10px;
+  width: 100%;
+  height: 38px;
+  border: 1px solid #000000;
+  border-radius: 14px;
+  padding: 0 14px;
+  font-size: 12px;
 }
 
 .login .input::placeholder {
-  color: #ccb160;
+  color: #8f8f8f;
+}
+
+.login label {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .login .button {
-  width: 10vw;
-  height: 20%;
+  width: 120px;
+  height: 46px;
+  margin-top: 12px;
   border: none;
-  border-radius: 10px;
-  background-color: #211d12;
-  color: white;
-  font-size: large;
-  font-weight: 500;
+  border-radius: 999px;
+  background-color: #ffe27b;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
 }
 
 
 .sso {
-  width: 15vw;
-  border-radius: 10px;
+  position: absolute;
+  top: 46px;
+  right: 48px;
+  width: 134px;
+  min-height: 36px;
+  border-radius: 999px;
   background-color: transparent;
-  color: black;
-  font-size: medium;
+  color: #b27a00;
+  font-size: 11px;
   font-weight: 500;
   text-align: center;
-  padding: 12px;
-  border: none;
+  padding: 0 14px;
+  border: 1px solid #d49a16;
   cursor: pointer;
-  text-decoration: underline;
-
-
+  text-decoration: none;
 }
 
+.logo svg {
+  width: 108px;
+  height: 116px;
+}
+
+.help-text {
+  margin-top: 68px;
+  font-size: 12px;
+}
+
+.help-text a {
+  color: #0070ff;
+  font-weight: 600;
+}
 
 
 @media only screen and (max-width: 1150px) {
@@ -164,27 +187,23 @@ export default {
 
 @media only screen and (max-width: 750px) {
   .login .input {
-    width: 80vw;
+    width: 100%;
   }
 
   .login .button {
-    width: 20vw;
-    font-size: medium;
+    width: 120px;
   }
 
   .sso {
-    width: 40vw;
-    font-size: medium;
+    width: 134px;
   }
 
   .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 24px;
-    background: #ffedb2;
+    margin-top: 42px;
+  }
+
+  .form {
+    padding: 36px 8%;
   }
 }
 </style>

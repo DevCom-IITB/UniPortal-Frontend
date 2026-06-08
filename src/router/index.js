@@ -5,6 +5,7 @@ import UnAnswered from "../views/UnAnswered.vue";
 import Answered from "../views/Answered.vue";
 import Infopost from "../views/Infopost.vue";
 import Questionview from "../views/Questionview.vue";
+import mentorRoutes from "@/mentor/router/mentorRoutes";
 
 const routes = [
   {
@@ -43,6 +44,9 @@ const routes = [
     component: Questionview,
     props: true,
   },
+
+  // Mentor portal routes (dev auth bypass included)
+  ...mentorRoutes,
 ];
 
 const router = createRouter({

@@ -1,5 +1,8 @@
 <template>
-  <div class="container" v-if="Auth.loggedIn">
+  <!-- Mentor routes get their own layout — skip student wrapper -->
+  <router-view v-if="isMentorRoute" />
+
+  <div class="container" v-else-if="Auth.loggedIn">
     <div class="Sidebar">
       <Sidebar
         @Burger="Burger"
@@ -68,12 +71,32 @@
       "
     ></div>
   </div>
-  <div class="login" v-if="!Auth.loggedIn">
-    <DC class="DC" @click="toDevCom"/>
+  <div class="login" v-else>
     <SMP class="SMP" @click="toSMP"/>
-    <login_background class="login-background" />
-    <div class="login-form">
-      <Login :loggedIn="loggedIn" @loggedIn="Login" />
+    <DC class="DC" @click="toDevCom"/>
+    <div class="login-shell">
+      <section class="login-visual">
+        <button class="login-arrow" type="button" aria-label="Previous slide" @click="prevLoginSlide">&lsaquo;</button>
+        <div class="login-visual__content">
+          <h1>{{ loginSlides[activeLoginSlide].title }}</h1>
+          <p>{{ loginSlides[activeLoginSlide].subtitle }}</p>
+          <img class="login-visual__art" :src="loginSlides[activeLoginSlide].image" alt="" />
+          <div class="login-dots" aria-hidden="true">
+            <button
+              v-for="(_, index) in loginSlides"
+              :key="index"
+              class="login-dot"
+              :class="{ 'login-dot--active': activeLoginSlide === index }"
+              type="button"
+              @click="activeLoginSlide = index"
+            ></button>
+          </div>
+        </div>
+        <button class="login-arrow" type="button" aria-label="Next slide" @click="nextLoginSlide">&rsaquo;</button>
+      </section>
+      <div class="login-form">
+        <Login :loggedIn="loggedIn" @loggedIn="Login" />
+      </div>
     </div>
     <div class="snackbar"
         v-if="QuestionStore.showSnackbar == true">
@@ -88,7 +111,6 @@ import Sidebar from "./components/common/Sidebar.vue";
 import popup from "./components/common/popup.vue";
 import askBox from "./components/common/askBox.vue";
 import Snackbar from "./components/common/snackbar.vue"
-import login_background from "./components/background_images/Group 9.svg";
 import Login from "./components/common/Login.vue";
 import DC from "./components/icons/DC.svg";
 import SMP from "./components/icons/SMP_black.svg";
@@ -96,6 +118,7 @@ import SMP from "./components/icons/SMP_black.svg";
 import { useAuthStore } from "./stores/auth";
 import { useQuestionStore } from "./stores/question";
 import { useColourStore } from "./stores/colour";
+import { useRoute } from "vue-router";
 
 export default {
   name: "App",
@@ -104,7 +127,6 @@ export default {
     Sidebar,
     popup,
     askBox,
-    login_background,
     Login,
     Snackbar,
     DC,
@@ -119,6 +141,34 @@ export default {
       glass: false,
       expanded: false,
       editBody: "",
+      activeLoginSlide: 0,
+      loginSlides: [
+        {
+          title: "Have Questions?",
+          subtitle: "Get answers before you arrive.",
+          image: new URL("./components/background_images/login-slide-questions.svg", import.meta.url).href,
+        },
+        {
+          title: "Connect With Mentors,",
+          subtitle: "Learn from experienced students.",
+          image: new URL("./components/background_images/NewBee_login_image_2/Vector-14.svg", import.meta.url).href,
+        },
+        {
+          title: "Ask Anything,",
+          subtitle: "From admissions to campus life.",
+          image: new URL("./components/background_images/NewBee_login_image_3/Vector-50.svg", import.meta.url).href,
+        },
+        {
+          title: "Get Answers,",
+          subtitle: "Trusted guidance from official mentors.",
+          image: new URL("./components/background_images/NewBee_login_image_4/Vector-74.svg", import.meta.url).href,
+        },
+        {
+          title: "Join Confidently,",
+          subtitle: "Start your college journey prepared.",
+          image: new URL("./components/background_images/NewBee_login_image_5/Vector-156.svg", import.meta.url).href,
+        },
+      ],
     };
   },
   mounted() {
@@ -177,6 +227,18 @@ export default {
     },
     async toSMP() {
       window.open("https://smp.gymkhana.iitb.ac.in/");
+    },
+    nextLoginSlide() {
+      this.activeLoginSlide = (this.activeLoginSlide + 1) % this.loginSlides.length;
+    },
+    prevLoginSlide() {
+      this.activeLoginSlide =
+        (this.activeLoginSlide - 1 + this.loginSlides.length) % this.loginSlides.length;
+    },
+  },
+  computed: {
+    isMentorRoute() {
+      return this.$route.path.startsWith(this.Auth.vite_base + '/mentor');
     },
   },
   setup() {
@@ -307,38 +369,131 @@ export default {
 .login {
   width: 100vw;
   height: 100vh;
-  background: #fff9e5;
+  background: linear-gradient(90deg, #ffffff 0 50%, #fff1bb 50% 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.login-background {
-  position: fixed;
+  position: relative;
+  overflow: hidden;
 }
 
 .DC {
-  left: 10px;
-  top: 0px;
+  right: 28px;
+  top: 22px;
   z-index: 1;
   position: fixed;
+  width: 44px;
+  height: auto;
 }
 
 .SMP {
-  right: 30px;
+  left: 28px;
   top: 20px;
   z-index: 1;
   position: fixed;
+  width: 57px;
+  height: auto;
+}
+
+.login-shell {
+  width: min(84vw, 1440px);
+  height: min(72vh, 720px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: linear-gradient(90deg, #ffffff 0 50%, #fff1bb 50% 100%);
+  transform: translateY(-2vh);
+}
+
+.login-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.login-visual__content {
+  position: relative;
+  width: 100%;
+  height: 86%;
+  border-radius: 24px 0 0 24px;
+  background: #fff1bb;
+  text-align: center;
+  overflow: hidden;
+  padding: 50px 28px 58px;
+}
+
+.login-visual__content h1 {
+  margin: 0;
+  color: #050031;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.login-visual__content p {
+  margin: 6px 0 8px;
+  color: #050031;
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.login-visual__art {
+  display: block;
+  width: 86%;
+  max-height: 70%;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.login-arrow {
+  position: absolute;
+  z-index: 2;
+  border: 0;
+  background: transparent;
+  color: #6c644f;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.login-arrow:first-child {
+  left: 18px;
+}
+
+.login-arrow:last-child {
+  right: 18px;
+}
+
+.login-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  display: inline-flex;
+  gap: 4px;
+  transform: translateX(-50%);
+}
+
+.login-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.login-dot--active {
+  background: #f6cf59;
 }
 
 .login-form {
   background: #fff;
-  border-radius: 24px;
-  width: 38vw;
-  height: 85vh;
-  box-shadow: 20px 20px 60px #d9d4c3, -20px -20px 60px #fff9e5;
+  border-radius: 0 24px 24px 0;
+  width: 100%;
+  height: 86%;
+  align-self: center;
   z-index: 1;
-  padding: 24px 24px;
+  padding: 0;
 }
 
 @media only screen and (max-width: 950px) {
@@ -392,8 +547,21 @@ export default {
   }
 
   .login-form {
-    width: 95vw;
-    height: 95vh;
+    border-radius: 24px;
+    height: auto;
+    min-height: 560px;
+  }
+
+  .login-shell {
+    width: 94vw;
+    height: auto;
+    grid-template-columns: 1fr;
+    padding: 72px 0 24px;
+    background: #fff1bb;
+  }
+
+  .login-visual {
+    display: none;
   }
 }
 </style>

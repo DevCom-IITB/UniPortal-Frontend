@@ -1,0 +1,71 @@
+<svg width="620" height="390" viewBox="70 110 620 390" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#070707" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M165 470H595"/>
+    <path d="M334 462V354"/>
+    <path d="M469 462V354"/>
+    <path d="M333 462H470"/>
+  </g>
+  <g transform="translate(262 166)">
+    <path d="M120 296C120 245 120 196 120 151C120 112 150 82 188 82C225 82 255 112 255 151V296H120Z" fill="#FFD75F" stroke="#070707" stroke-width="5"/>
+    <path d="M121 177C98 210 82 247 75 289" stroke="#070707" stroke-width="5" stroke-linecap="round"/>
+    <path d="M255 177C278 210 294 247 301 289" stroke="#070707" stroke-width="5" stroke-linecap="round"/>
+    <path d="M151 296C153 246 154 205 154 173" stroke="#070707" stroke-width="4" stroke-linecap="round"/>
+    <path d="M224 172C236 216 246 254 255 296" stroke="#070707" stroke-width="4" stroke-linecap="round"/>
+    <path d="M188 95C155 95 129 68 129 37C144 48 164 52 188 52C212 52 232 48 247 37C247 68 221 95 188 95Z" fill="#FFFCF1" stroke="#070707" stroke-width="5"/>
+    <path d="M130 42C132 19 151 5 174 9C181 -3 203 -3 210 9C233 5 252 19 254 42C229 32 205 34 188 44C171 34 147 32 130 42Z" fill="#070707" stroke="#070707" stroke-width="5"/>
+    <circle cx="166" cy="60" r="4" fill="#070707"/>
+    <circle cx="211" cy="60" r="4" fill="#070707"/>
+    <path d="M183 67L178 86H190" stroke="#070707" stroke-width="4" stroke-linecap="round"/>
+    <path d="M170 103C180 112 199 112 208 103" stroke="#070707" stroke-width="4" stroke-linecap="round"/>
+    <path d="M155 233L203 233L211 310H147L155 233Z" fill="#070707" stroke="#070707" stroke-width="5"/>
+    <rect x="167" y="220" width="38" height="70" rx="7" fill="#070707" stroke="#070707" stroke-width="5"/>
+    <circle cx="186" cy="234" r="3" fill="#FFFCF1"/>
+    <path d="M118 288C106 292 99 301 105 311C113 323 137 318 147 303" fill="#FFFCF1"/>
+    <path d="M118 288C106 292 99 301 105 311C113 323 137 318 147 303" stroke="#070707" stroke-width="5" stroke-linecap="round"/>
+    <path d="M258 286C271 289 279 298 274 309C268 323 242 320 231 305" fill="#FFFCF1"/>
+    <path d="M258 286C271 289 279 298 274 309C268 323 242 320 231 305" stroke="#070707" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g font-family="Inter, Arial, sans-serif" font-size="54" font-weight="800" fill="#070707">
+    <text x="134" y="190">?</text>
+    <text x="590" y="184">?</text>
+    <text x="318" y="136">?</text>
+    <text x="492" y="298">?</text>
+    <text x="196" y="362">?</text>
+  </g>
+  <g stroke="#070707" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(110 256) rotate(-14)">
+      <rect x="0" y="0" width="120" height="82" fill="#070707"/>
+      <path d="M-10 82H132L108 104H10L-10 82Z" fill="#FFFCF1"/>
+      <path d="M26 92H94"/>
+    </g>
+    <g transform="translate(210 126) rotate(-18)">
+      <rect x="0" y="0" width="78" height="100" fill="#FFFCF1"/>
+      <path d="M14 25H58M14 42H58M14 59H48"/>
+      <circle cx="66" cy="72" r="17" fill="#FFD75F"/>
+      <path d="M58 72L64 78L76 64"/>
+    </g>
+    <g transform="translate(515 126) rotate(12)">
+      <path d="M0 70L20 20L88 0L126 22L100 83L36 97L0 70Z" fill="#FFFCF1"/>
+      <path d="M20 20L62 48L126 22M36 97L62 48"/>
+      <path d="M48 34L83 24L106 38" fill="#FFD75F"/>
+    </g>
+    <g transform="translate(528 250) rotate(8)">
+      <rect x="0" y="18" width="116" height="82" rx="8" fill="#FFD75F"/>
+      <path d="M0 40H116"/>
+      <path d="M27 0V28M89 0V28"/>
+      <circle cx="38" cy="70" r="21" fill="#FFFCF1"/>
+      <path d="M38 58V72L50 77"/>
+      <path d="M72 62H102V100H72Z" fill="#FFFCF1"/>
+    </g>
+    <g transform="translate(162 404)">
+      <circle cx="34" cy="34" r="34" fill="#FFFCF1"/>
+      <path d="M34 0V68M0 34H68M10 12L58 56M58 12L10 56"/>
+      <path d="M34 0L52 12L58 34L52 56L34 68L16 56L10 34L16 12L34 0Z" fill="#FFD75F" fill-opacity=".55"/>
+    </g>
+    <g transform="translate(570 344)">
+      <rect x="18" y="28" width="44" height="82" rx="6" fill="#FFFCF1"/>
+      <path d="M10 28H70M20 12H60M25 0H55"/>
+      <path d="M24 48H56"/>
+    </g>
+  </g>
+</svg>
