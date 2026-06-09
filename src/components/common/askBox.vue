@@ -87,15 +87,22 @@ export default {
       this.text = this.editBody;
     }
   },
-  watch: {
+    watch: {
     async text(newText) {
-      if (this.authStore.role === 7669) {
+      if (this.authStore.role === 7669 && newText.length > 2) {
         try {
-          const messages = await this.sendQuery({ text: newText });
-          this.messages = messages.map(item => ({ question: item.question, qid: item.qid }));
+          // Using the new optimized backend search
+          const results = await this.questionStore.SearchQuestions(newText, 5);
+          this.messages = results.map(item => ({ 
+            question: item.body, 
+            qid: item._id,
+            type: item.type
+          }));
         } catch (error) {
-          console.error('Error handling sendQuery response:', error);
+          console.error('Error handling SearchQuestions response:', error);
         }
+      } else {
+        this.messages = [];
       }
     },
   },

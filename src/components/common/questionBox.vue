@@ -125,6 +125,7 @@
             />
           </div>
           <div class="comments">
+
             <button
               class="view-comments"
               @click="viewComments"
@@ -276,7 +277,7 @@ export default {
       await this.QuestionStore.SetSnackMessage(
         'This query may have already been answered in an InfoPost or on the Questions page. Please have a careful look!'
       );
-    },
+    }
   },
   async mounted() {
     this.$nextTick(() => {

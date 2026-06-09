@@ -12,9 +12,21 @@
   <script async src="https://devcom.gymkhana.iitb.ac.in/umami/script.js"
     data-website-id="a5b9006c-9434-45b5-b2c6-39c0e97e4790"></script>
   <title>NewBee</title>
+  <style>
+    body { top: 0 !important; }
+    .skiptranslate iframe { display: none !important; }
+    #goog-gt-tt { display: none !important; }
+  </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'hi,en' }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 
 <body>
+  <div id="google_translate_element" style="position: absolute; left: -9999px; top: -9999px;"></div>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>

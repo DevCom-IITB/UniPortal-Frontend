@@ -22,7 +22,7 @@
 
     <div class="headers">
       <p>If you have trouble signing up, contact
-        smpcs2025@gmail.com</p>
+        smpcs2026@gmail.com</p>
     </div>
 
 

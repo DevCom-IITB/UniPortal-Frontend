@@ -88,6 +88,12 @@
       "
       ><div class="route">Answered</div></router-link
     >
+
+    <div class="translate-container">
+      <button @click="toggleTranslateGlobal" class="global-translate-btn notranslate" :style="{ borderColor: colourStore.primary, color: '#000' }">
+        {{ isTranslated ? 'English' : 'Hindi' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -95,12 +101,49 @@
 import { useAuthStore } from '@/stores/auth';
 import { useColourStore } from '../../stores/colour';
 
+import { ref } from 'vue';
+
 export default {
   name: 'Navbar',
   setup() {
     const authStore = useAuthStore();
     const colourStore = useColourStore();
-    return { authStore, colourStore };
+
+    const getCookie = (name) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      if (match) return decodeURIComponent(match[2]);
+      return '';
+    };
+
+    const isTranslated = ref(getCookie('googtrans').includes('/hi'));
+
+    const toggleTranslateGlobal = () => {
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        if (isTranslated.value) {
+          select.value = 'en';
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          isTranslated.value = false;
+        } else {
+          select.value = 'hi';
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          isTranslated.value = true;
+        }
+      } else {
+        if (isTranslated.value) {
+          document.cookie = "googtrans=/en/en; path=/";
+          document.cookie = "googtrans=/en/en; domain=" + window.location.hostname + "; path=/";
+          isTranslated.value = false;
+        } else {
+          document.cookie = "googtrans=/en/hi; path=/";
+          document.cookie = "googtrans=/en/hi; domain=" + window.location.hostname + "; path=/";
+          isTranslated.value = true;
+        }
+        window.location.reload();
+      }
+    };
+
+    return { authStore, colourStore, isTranslated, toggleTranslateGlobal };
   },
   emits: ['selected1', 'selected2', 'selected3'],
 
@@ -137,15 +180,43 @@ export default {
 
 <style scoped>
 .navbar {
+  position: relative;
   width: 100%;
-
   border-radius: 52px;
   background: #faf4e1;
   display: flex;
   flex-direction: row;
   font-size: 18px;
   justify-content: space-around;
-  align-items: stretch;
+  align-items: center;
+}
+
+.translate-container {
+  position: absolute;
+  right: -170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.global-translate-btn {
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 52px;
+  padding: 12px 24px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.global-translate-btn:hover {
+  background: #fdfdfd;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
 }
 
 .btn {
@@ -169,11 +240,25 @@ export default {
     font-size: 16px;
     height: 45%;
   }
+  .translate-container {
+    right: -130px;
+  }
 }
 
 @media only screen and (max-width: 750px) {
   .navbar {
     font-size: 14px;
+  }
+  .translate-container {
+    position: fixed;
+    top: 22px;
+    right: 16px;
+    z-index: 10000;
+  }
+  .global-translate-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-color: white !important;
   }
 }
 </style>

@@ -3,6 +3,9 @@
     <div class="Header">
       <Header :headerName="headerName" :headerText="headerText" :tags="tags" @tag-selected="handleTagSelected" />
     </div>
+    <div class="search-container">
+      <QuestionSearch />
+    </div>
     <div class="Lister">
       <div :key="infopost.id" v-for="infopost in infoposts" class="InfoPostBox">
         <InfoBox :infopost="infopost" @expand="$emit('expand')" @edit="EditInfo" />
@@ -14,6 +17,7 @@
 <script>
 import Header from '../components/common/Header.vue';
 import InfoBox from '../components/common/InfoBox.vue';
+import QuestionSearch from '../components/common/QuestionSearch.vue';
 
 import { useAuthStore } from '../stores/auth';
 import { useListStore } from '../stores/list';
@@ -38,6 +42,7 @@ export default {
   components: {
     Header,
     InfoBox,
+    QuestionSearch,
   },
   methods: {
     async fetchInfoPosts(tag = '') {
@@ -132,13 +137,21 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
 }
 
 .Header {
   height: 35.96%;
   width: 84.98%;
+}
+
+.search-container {
+  width: 84.98%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  z-index: 10;
 }
 
 .Lister {
@@ -182,6 +195,10 @@ export default {
   .Header {
     width: 100%;
     height: 30%;
+  }
+
+  .search-container {
+    width: 90%;
   }
 
   .Lister::-webkit-scrollbar {

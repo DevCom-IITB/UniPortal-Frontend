@@ -2,8 +2,10 @@
   <div class="cont" :style="{ color: colourStore.primary, background: colourStore.background }">
     <div class="background"><img :src="colourStore.headerImage" alt="" /></div>
     <div class="Header">
-      <div class="HeaderTitle" :style="{ color: colourStore.emphasis_text }">
-        {{ headerName }}
+      <div class="HeaderTop">
+        <div class="HeaderTitle" :style="{ color: colourStore.emphasis_text }">
+          {{ headerName }}
+        </div>
       </div>
       <div class="HeaderText" :style="{ color: colourStore.emphasis_text }">
         {{ headerText }}
@@ -23,8 +25,11 @@
 import { useColourStore } from "@/stores/colour";
 import { ref } from "vue";
 
+
 export default {
   name: "Header",
+  components: {
+  },
   setup(props, { emit }) {
     const colourStore = useColourStore();
     const selectedTag = ref(null); // Use ref for reactive selected tag
@@ -37,7 +42,7 @@ export default {
     return {
       colourStore,
       selectedTag,
-      selectTag,
+      selectTag
     };
   },
   props: {
@@ -58,6 +63,7 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
 }
 
 .background {
@@ -66,6 +72,7 @@ export default {
   height: 100%;
   display: flex;
   justify-content: flex-end;
+  z-index: 0;
 }
 
 .background img {
@@ -78,7 +85,17 @@ export default {
   height: 74.36%;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
+
+.HeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+
 
 .HeaderTitle {
   font-size: 60px;
