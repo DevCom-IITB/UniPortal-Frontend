@@ -56,7 +56,7 @@
               }
               : { background: colourStore.sidebar }
             ">
-            <email />&nbsp;&nbsp;smpcs2025@gmail.com
+            <email />&nbsp;&nbsp;smpcs2026@gmail.com
 
           </button>
 

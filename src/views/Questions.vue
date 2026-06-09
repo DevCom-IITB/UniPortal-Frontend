@@ -3,6 +3,9 @@
     <div class="Header">
       <Header :headerName="headerName" :headerText="headerText" :tags="tags" @tag-selected="handleTagSelected" />
     </div>
+    <div class="search-container">
+      <QuestionSearch />
+    </div>
     <div class="Lister" @scroll="storePosition($event)">
       <div :key="question['id']" v-for="question in questions" class="QuestionBox">
         <Question @expand="$emit('expand')" :showAnswerBox="true" :question="question" :background="background"
@@ -16,6 +19,7 @@
 <script>
 import Question from '../components/common/questionBox.vue';
 import Header from '../components/common/Header.vue';
+import QuestionSearch from '../components/common/QuestionSearch.vue';
 
 import { useAuthStore } from '../stores/auth';
 import { useListStore } from '../stores/list';
@@ -41,6 +45,7 @@ export default {
   components: {
     Question,
     Header,
+    QuestionSearch,
   },
   methods: {
     storePosition(event) {
@@ -157,6 +162,13 @@ export default {
 .Header {
   height: 35.96%;
   width: 84.98%;
+}
+
+.search-container {
+  width: 84.98%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  z-index: 10;
 }
 
 .Lister {

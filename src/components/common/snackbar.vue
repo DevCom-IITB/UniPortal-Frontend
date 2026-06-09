@@ -14,6 +14,7 @@ export default {
     name: "Snackbar",
     data: () => ({
       text: 'Welcome aboard With the all new freshers portal clear all your doubts regarding the admission process, Welcome aboard With the all new freshers portal ',
+      timer: null
     }),
     setup() {
       const QuestionStore = useQuestionStore();
@@ -23,8 +24,32 @@ export default {
         ColourStore
       }
     },
+    mounted() {
+      this.startTimer();
+    },
+    beforeUnmount() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+    },
+    watch: {
+      'QuestionStore.snackMessage': function() {
+        this.startTimer();
+      }
+    },
     methods: {
+      startTimer() {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+          this.QuestionStore.showSnackbar = false;
+        }, 5000);
+      },
       Cancel() {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
         this.QuestionStore.showSnackbar = false;
       }
     }

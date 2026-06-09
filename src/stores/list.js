@@ -11,6 +11,14 @@ export const useListStore = defineStore("list", {
       this.list = list;
       console.log("List was set : ", this.list);
     },
+    async UpsertQuestion(question) {
+      const idx = this.list.findIndex(q => q._id === question._id);
+      if (idx !== -1) {
+        this.list[idx] = question;
+      } else {
+        this.list.unshift(question);
+      }
+    },
     async AddCommentQuestion(qid, comment) {
       console.log("adding comment to question in list : ", qid);
       this.list.filter((item) => item["_id"] === qid)[0].comments.push(comment);

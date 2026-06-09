@@ -71,61 +71,7 @@ export default {
     test() {
       console.log(this.question.comments);
     },
-    async fetchQuestions() {
-      const user_id = this.authStore.user_ID;
-      const request = {
-        user_ID: user_id,
-      };
-      const bearer = `Bearer ${this.authStore.accessToken}`;
 
-      let url = `${import.meta.env.VITE_API_BASE}/question/otherQ`;
-      let options = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: bearer,
-        },
-        body: JSON.stringify(request),
-      };
-
-      console.log('bearer:', bearer);
-      console.log('fetching questions with URL:', url);
-
-      const res = await fetch(url, options);
-
-      console.log('request sent');
-
-      if (res.status === 200) {
-        console.log('received response');
-        const data = await res.json();
-        console.log(data);
-        this.listStore.SetList(data);
-        return data;
-      } else {
-        if (res.status === 403) {
-          console.log('refreshing token');
-          const res = await this.authStore.Refresh();
-
-          if (res.status === 200) {
-            console.log('refreshed token');
-            const newBearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer:', newBearer);
-            options.headers.Authorization = newBearer;
-            const newRes = await fetch(url, options);
-            console.log('new request sent');
-            const newData = await newRes.json();
-            console.log(newData);
-            this.listStore.SetList(newData);
-            return newData;
-          } else {
-            console.log('refresh failed');
-            await this.authStore.Logout();
-          }
-        } else {
-          await this.authStore.Logout();
-        }
-      }
-    },
     async CommentAnswer(answer_id) {
       console.log("answer_id : ", answer_id);
       console.log("we will be commenting on this answer");
@@ -161,22 +107,20 @@ export default {
       this.$emit('edit', answer);
     },
   },
-  async mounted() {
-    await this.fetchQuestions();
+  watch: {
+    'questionStore.question_ID': {
+      handler(newId) {
+        if (newId) {
+          this.question = this.questionStore.question;
+          this.answers = this.question.answers || [];
+          this.comments = this.question.comments || [];
+        }
+      },
+      immediate: true
+    }
+  },
+  mounted() {
     console.log("we have enterd the question view");
-    console.log("state question", this.questionStore.question);
-    this.question = this.listStore.list.filter(
-      (question) => question["_id"] === this.questionStore.question_ID
-    )[0];
-    console.log("question in question view :", this.question);
-    this.answers = this.listStore.list.filter(
-      (question) => question["_id"] === this.questionStore.question_ID
-    )[0]["answers"];
-    console.log("answers in question view :", this.answers);
-    this.comments = this.listStore.list.filter(
-      (question) => question["_id"] === this.questionStore.question_ID
-    )[0]["comments"];
-    console.log("comments in question view :", this.comments);
     this.$emit("askView");
     this.colourStore.colourQuestionView();
   },

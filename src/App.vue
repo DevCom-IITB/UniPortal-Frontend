@@ -70,9 +70,6 @@
         <div class="cancel" @click="CloseImg"></div>
         <img :src="QuestionStore.ImageLink" alt="" />
       </div>
-
-      <!-- Hidden Google Translate Element -->
-      <div id="google_translate_element" style="display: none;"></div>
     </div>
     <div
       class="glass-mobile"
@@ -344,7 +341,7 @@ export default {
   position: fixed;
   width: 52.33vw;
   top: 100px;
-  z-index: 1;
+  z-index: 9001;
   background: white;
   border-radius: 24px;
   padding: 16px 24px;
@@ -354,7 +351,7 @@ export default {
   width: 375px;
   height: 218px;
   top: 35%;
-  z-index: 1;
+  z-index: 9001;
   background-color: #FCFCFC;
   border-radius: 24px;
   padding: 16px 24px;
@@ -364,6 +361,7 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
+  z-index: 9000;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -374,6 +372,7 @@ export default {
   position: fixed;
   width: 100vw;
   height: 100vh;
+  z-index: 9000;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -384,7 +383,7 @@ export default {
   position: fixed;
   background: white;
   height: 400px;
-  z-index: 1;
+  z-index: 9001;
   overflow: hidden;
   display: flex;
   flex-direction: row-reverse;
@@ -394,7 +393,7 @@ export default {
 
 .cancel {
   position: fixed;
-  z-index: 1;
+  z-index: 9002;
   width: 15px;
   height: 15px;
   border-radius: 50px;
@@ -458,7 +457,7 @@ export default {
 @media only screen and (max-width: 750px) {
   .Sidebar {
     height: 100vh;
-    z-index: 2;
+    z-index: 9999;
     position: fixed;
     justify-content: start;
   }

@@ -8,6 +8,9 @@
         :primaryColor="primaryColor"
       />
     </div>
+    <div class="search-container">
+      <QuestionSearch />
+    </div>
     <div class="Lister">
       <div
         :key="question['id']"
@@ -33,6 +36,7 @@
 <script>
 import Question from '../components/common/questionBox.vue';
 import Header from '../components/common/Header.vue';
+import QuestionSearch from '../components/common/QuestionSearch.vue';
 
 import { useAuthStore } from '../stores/auth';
 import { useListStore } from '../stores/list';
@@ -62,6 +66,7 @@ export default {
   components: {
     Question,
     Header,
+    QuestionSearch,
   },
   methods: {
     async fetchQuestions() {
@@ -146,6 +151,13 @@ export default {
   width: 84.98%;
 }
 
+.search-container {
+  width: 84.98%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  z-index: 10;
+}
+
 .Lister {
   height: 64.04%;
   width: 100%;
@@ -186,6 +198,10 @@ export default {
   .Header {
     width: 100%;
     height: 30%;
+  }
+
+  .search-container {
+    width: 90%;
   }
 
   .Lister::-webkit-scrollbar {
