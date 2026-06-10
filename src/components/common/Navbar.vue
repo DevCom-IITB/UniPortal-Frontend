@@ -118,28 +118,23 @@ export default {
     const isTranslated = ref(getCookie('googtrans').includes('/hi'));
 
     const toggleTranslateGlobal = () => {
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        if (isTranslated.value) {
-          select.value = 'en';
-          select.dispatchEvent(new Event('change', { bubbles: true }));
-          isTranslated.value = false;
-        } else {
+      if (isTranslated.value) {
+        // Hindi → English: clear GT cookies and reload the original page
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + window.location.hostname + "; path=/";
+        window.location.reload();
+      } else {
+        // English → Hindi: use GT widget if available, else cookie + reload
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
           select.value = 'hi';
           select.dispatchEvent(new Event('change', { bubbles: true }));
           isTranslated.value = true;
-        }
-      } else {
-        if (isTranslated.value) {
-          document.cookie = "googtrans=/en/en; path=/";
-          document.cookie = "googtrans=/en/en; domain=" + window.location.hostname + "; path=/";
-          isTranslated.value = false;
         } else {
           document.cookie = "googtrans=/en/hi; path=/";
           document.cookie = "googtrans=/en/hi; domain=" + window.location.hostname + "; path=/";
-          isTranslated.value = true;
+          window.location.reload();
         }
-        window.location.reload();
       }
     };
 
