@@ -2,6 +2,18 @@
   <form class="asker" @submit.prevent="decide">
     <h2>{{ dialogTitle }}</h2>
 
+    <div v-if="isAnnouncementMode" class="form-group">
+      <label class="title-label">Title</label>
+      <div class="title-field">
+        <input
+          v-model="announcementTitle"
+          type="text"
+          placeholder="Add the title"
+          class="title-input"
+        />
+      </div>
+    </div>
+
     <div v-if="showIdentityControls" class="form-group compact">
       <label>How do you prefer to identify?</label>
       <div class="segmented-control">
@@ -44,7 +56,10 @@
         type="button"
         @click="AddImages"
       >
-        <span class="attachment-icon"></span>
+        <svg v-if="isAnnouncementMode" class="attachment-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+        </svg>
+        <span v-else class="attachment-icon"></span>
         <span>Add attachment</span>
       </button>
       <input
@@ -101,6 +116,7 @@ import { useQuestionStore } from "@/stores/question";
 import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "../../stores/colour";
 import { useListStore } from "@/stores/list";
+import Fuse from "fuse.js";
 let posted = false;
 
 export default {
@@ -125,18 +141,22 @@ export default {
       type: String,
       default: "",
     },
+    editTitle: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
       text: "",
+      announcementTitle: "",
       selectedImages: [],
       previewImages: [],
       similarResults: [],
-      similarDebounce: null,
       selectedIdentity: "Name",
       identityOptions: ["Name", "Anonymous"],
       selectedCategory: "Hostel",
-      categories: ["Hostel", "Admission", "Placements", "Academics", "Campus Life", "Clubs"],
+      categories: ["Hostel", "Admission", "Placements", "Academics", "Campus Life", "Clubs", "Orientation", "Miscellaneous"],
     };
   },
   computed: {
@@ -144,15 +164,18 @@ export default {
       const action = this.questionStore.action;
       if (action == 1) return "Answer question";
       if (action == 2 || action == 3) return "Add comment";
-      if (action == 5) return "Post announcement";
+      if (action == 5) return "Create an announcement";
       if (action == 6) return "Edit announcement";
       return "Ask a question";
+    },
+    isAnnouncementMode() {
+      return this.questionStore.action == 5 || this.questionStore.action == 6;
     },
     placeholderText() {
       const action = this.questionStore.action;
       if (action == 1) return "Write an answer";
       if (action == 2 || action == 3) return "Join the conversation";
-      if (action == 5 || action == 6) return "Write an announcement";
+      if (action == 5 || action == 6) return "Create announcement";
       return "Ask a question";
     },
     primaryActionLabel() {
@@ -168,6 +191,7 @@ export default {
   mounted() {
     if (this.editBody && this.questionStore.action == 6) {
       this.text = this.editBody;
+      this.announcementTitle = this.editTitle;
     }
   },
   watch: {
@@ -180,6 +204,7 @@ export default {
           console.error('Error handling sendQuery response:', error);
         }
       }
+      this.onQuestionTextInput();
     },
   },
   methods: {
@@ -234,13 +259,13 @@ export default {
         }
       } else if (decision == 5) {
         console.log("we will be posting info post");
-        await this.questionStore.PostInfoPost(this.text, this.selectedImages);
+        await this.questionStore.PostInfoPost(this.announcementTitle, this.text, this.selectedImages);
       } else if (decision == 6) {
         console.log(
           "we will be editing the infopost with id : ",
           this.questionStore.info_ID
         );
-        await this.questionStore.EditInfoPost(this.text);
+        await this.questionStore.EditInfoPost(this.announcementTitle, this.text);
       } else if (decision == 7) {
         console.log("we will be posting a new question Anonymously");
         console.log("selected images are : ", this.selectedImages);
@@ -276,36 +301,67 @@ export default {
     },
     onQuestionTextInput() {
       const q = this.text.trim();
+      console.log("Searching for:", q, "List size:", this.listStore.list ? this.listStore.list.length : 0);
+      
       if (q.length < 3) {
         this.similarResults = [];
+        console.log("Query too short, clearing results.");
         return;
       }
 
-      if (this.similarDebounce) clearTimeout(this.similarDebounce);
+      // Client-side fuzzy search using Fuse.js
+      const options = {
+        keys: ["body", "title", "subject"],
+        threshold: 0.4,
+      };
 
-      this.similarDebounce = setTimeout(async () => {
-        this.similarResults = await this.questionStore.SearchQuestions(q, 5);
-      }, 350);
+      const fuse = new Fuse(this.listStore.list || [], options);
+      const results = fuse.search(q);
+      console.log("Fuse search results:", results);
+      
+      this.similarResults = results.slice(0, 5).map(res => {
+        const item = res.item;
+        return {
+          ...item,
+          answered: Boolean(item.status || (item.answers && item.answers.length > 0))
+        };
+      });
+      console.log("Final similarResults:", this.similarResults);
     },
     truncate(text, max = 100) {
       if (!text) return "";
       return text.length > max ? `${text.slice(0, max)}...` : text;
     },
     async openSimilar(item) {
-      if (item.type === "infopost") {
-        this.$emit("discard");
-        this.$router.push(this.authStore.vite_base + "/");
+      const id = item._id || item.id;
+      console.log("Navigating to similar question. ID:", id, "Item:", item);
+      
+      if (!id) {
+        console.error("No ID found for item:", item);
         return;
       }
 
-      const full = await this.questionStore.FetchQuestionById(item._id);
-      if (!full) return;
+      if (item.type === "infopost") {
+        this.$emit("discard");
+        this.$router.push({ name: "Infopost" });
+        return;
+      }
+
+      const full = await this.questionStore.FetchQuestionById(id);
+      if (!full) {
+        console.error("Failed to fetch full question details for id:", id);
+        return;
+      }
 
       this.listStore.UpsertQuestion(full);
       await this.questionStore.SetQuestion(full);
-      await this.questionStore.SetQuestionID(full._id);
+      await this.questionStore.SetQuestionID(id);
       this.$emit("discard");
-      this.$router.push(this.authStore.vite_base + "/question/" + item._id);
+      
+      console.log("Pushing to router named Questionview with params:", { id: id });
+      this.$router.push({ name: "Questionview", params: { id: id } })
+        .then(() => console.log("Navigation successful"))
+        .catch(err => console.error("Navigation failed:", err));
     },
   },
   components: {
@@ -653,6 +709,45 @@ input[type="file"] {
   border: 1.5px solid #c98e00;
   background: #ffffff;
   color: #1c1b1f;
+}
+
+.title-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 500;
+  color: #1c1b1f;
+}
+
+.title-field {
+  width: 100%;
+  height: 50px;
+  border-radius: 22px;
+  background: #eeeeee;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+}
+
+.title-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1c1b1f;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.title-input::placeholder {
+  color: #b1b1b1;
+}
+
+.attachment-icon-svg {
+  color: #1c1b1f;
+  flex-shrink: 0;
 }
 
 @media only screen and (max-width: 750px) {

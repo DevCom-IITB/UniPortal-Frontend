@@ -1,6 +1,11 @@
 <template>
   <div class="navbar">
     <div class="logo-container">
+      <button v-if="isMobile" class="mobile-burger" @click="$emit('toggleSidebar')" aria-label="Toggle sidebar">
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+      </button>
       <Logo class="asterisk-logo" />
       <div class="logo-text">NewBee</div>
     </div>
@@ -59,9 +64,19 @@ export default {
   data() {
     return {
       showLogoutMenu: false,
+      windowWidth: window.innerWidth,
     };
   },
+  mounted() {
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  },
   computed: {
+    isMobile() {
+      return this.windowWidth < 768;
+    },
     displayName() {
       return this.authStore.name || "Varada Gajare";
     },
@@ -70,6 +85,9 @@ export default {
     },
   },
   methods: {
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+    },
     toDevCom() {
       window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
@@ -100,8 +118,28 @@ export default {
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 12px;
   flex: 1;
+}
+
+.mobile-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.burger-bar {
+  width: 100%;
+  height: 2.5px;
+  background-color: #000000;
+  border-radius: 10px;
 }
 
 .asterisk-logo {

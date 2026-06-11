@@ -281,12 +281,12 @@ export default {
 .search-input-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: #ffffff;
   border: 1.5px solid #e0ddd5;
   border-radius: 52px;
-  padding: 8px 14px;
-  min-height: 42px;
+  padding: 10px 18px;
+  min-height: 52px;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -302,12 +302,17 @@ export default {
   flex-shrink: 0;
 }
 
+.search-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
 .search-input {
   flex: 1;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #1c1b1f;
   min-width: 0;

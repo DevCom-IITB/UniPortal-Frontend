@@ -251,21 +251,22 @@ export default {
 
 .feed-search {
   width: 100%;
-  height: 54px;
+  height: 64px;       /* Increased desktop search bar height */
   margin-top: 46px;
   border-radius: 999px;
   background: #eeeeee;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 0 22px;
+  gap: 16px;          /* More space between icon and text */
+  padding: 0 32px;    /* Extra breathing room on the outer edges */
   position: relative;
+  box-sizing: border-box;
 }
 
 .search-icon {
-  width: 19px;
-  height: 19px;
-  border: 2px solid #9b9b9b;
+  width: 24px;        /* Scaled up desktop search icon size */
+  height: 24px;
+  border: 2.5px solid #9b9b9b;
   border-radius: 50%;
   flex-shrink: 0;
   position: relative;
@@ -274,11 +275,11 @@ export default {
 .search-icon::after {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 2px;
+  width: 10px;       /* Made icon tail proportional to scale */
+  height: 2.5px;
   background: #9b9b9b;
-  right: -6px;
-  bottom: 1px;
+  right: -7px;
+  bottom: 2px;
   transform: rotate(45deg);
   border-radius: 999px;
 }
@@ -288,20 +289,21 @@ export default {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 15px;
+  font-size: 18px;    /* Enlarged text typing size */
   font-weight: 500;
   font-family: Inter, sans-serif;
   color: #1c1b1f;
+  padding: 12px 4px;  /* Generous vertical typing cushion */
 }
 
 .sort-pill {
   width: fit-content;
-  height: 30px;
-  margin-top: 9px;
+  height: 34px;
+  margin-top: 12px;
   border: none;
   border-radius: 999px;
   background: #faeebb;
-  padding: 0 14px;
+  padding: 0 16px;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -360,8 +362,18 @@ export default {
 
   .feed-search {
     margin-top: 28px;
-    height: 48px;
-    padding: 0 18px;
+    height: 58px;     /* Much bigger, finger-friendly search box on mobile */
+    padding: 0 24px;
+  }
+
+  .search-icon {
+    width: 22px;      /* Mid-scale icon balancing for mobile viewports */
+    height: 22px;
+  }
+
+  .feed-search input {
+    padding: 10px 4px;
+    font-size: 16px;  /* Accessible mobile reading text size */
   }
 }
 </style>

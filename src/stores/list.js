@@ -68,9 +68,13 @@ export const useListStore = defineStore("list", {
       this.list.filter((item) => item["_id"] === id)[0].hidden =
         !this.list.filter((item) => item["_id"] === id)[0].hidden;
     },
-    async SetEditInfoPost(id, body) {
+    async SetEditInfoPost(id, title, body) {
       console.log("editing infopost in list : ", id);
-      this.list.filter((item) => item["_id"] === id)[0].body = body;
+      const post = this.list.find((item) => item["_id"] === id);
+      if (post) {
+        post.title = title;
+        post.body = body;
+      }
     },
     async SetEditAnswer(qid, aid, body) {
   console.log("editing answer in list :", qid, aid);

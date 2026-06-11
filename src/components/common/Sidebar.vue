@@ -7,11 +7,21 @@
     <div class="sidebar-content" v-if="!showNotifications">
       <section class="welcome-section">
         <Logo class="sidebar-mark" />
-        <h1>Welcome to<br />Newbee</h1>
-        <p>
+        <h1 v-if="!isAdmin">Welcome to<br />Newbee</h1>
+        <h1 v-else>NewBee</h1>
+        <p v-if="!isAdmin">
           Ask seniors anything before campus starts. Join 5,000+ freshmen getting
           ready for the hive.
         </p>
+        <p v-else class="admin-subtitle">ISMP Portal</p>
+
+        <button v-if="isAdmin" class="pending-card" type="button" @click="goToUnanswered">
+          <span class="pending-label">
+            Pending questions
+            <span class="pending-chevron">&#8250;</span>
+          </span>
+          <span class="pending-count">{{ questionStore.pendingCount }}</span>
+        </button>
       </section>
 
       <section class="quick-links-section" v-if="windowWidth > 750 || (showSidebar && windowWidth < 750)">
@@ -92,14 +102,25 @@ export default {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
       this.loadNotifications();
+      if (this.isAdmin) {
+        this.questionStore.FetchUnansweredCount();
+      }
     });
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
   },
+  computed: {
+    isAdmin() {
+      return this.authStore.role === 5980 || this.authStore.role === 6311;
+    },
+  },
   methods: {
     onResize() {
       this.windowWidth = window.innerWidth;
+    },
+    goToUnanswered() {
+      this.$router.push(this.authStore.vite_base + '/unanswered');
     },
     async loadNotifications() {
       try {
@@ -192,6 +213,59 @@ export default {
   line-height: 1.45;
   font-weight: 400;
   color: #1c1b1f;
+}
+
+.admin-subtitle {
+  font-size: 15px;
+  font-weight: 500;
+  color: #52492e;
+  margin: 0 0 18px;
+}
+
+.pending-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  cursor: pointer;
+  font-family: Inter, sans-serif;
+  transition: background 0.2s ease, transform 0.15s ease;
+  text-align: left;
+}
+
+.pending-card:hover {
+  background: rgba(255, 255, 255, 0.65);
+  transform: translateY(-1px);
+}
+
+.pending-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pending-chevron {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000000;
+}
+
+.pending-count {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #000000;
+  letter-spacing: -1px;
 }
 
 .quick-links-section {

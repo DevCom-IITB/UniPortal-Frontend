@@ -17,10 +17,59 @@ export const useQuestionStore = defineStore("question", {
     ImageLink: "",
     showSnackbar: false,
     snackMessage: "",
+    pendingCount: 0,
     action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question with student's original identity, 5 is for posting a infopost, 6 is for editing an infopost, 7 for posting a question anonymously by a student, 8 is for editing a answer by SMP
   }),
   persist: true,
   actions: {
+    async FetchUnansweredCount() {
+      try {
+        const authStore = useAuthStore();
+        const accessToken = authStore.accessToken;
+        const bearer = `Bearer ${accessToken}`;
+
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE}/question/unansweredQ`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: bearer,
+            },
+          }
+        );
+
+        if (res.status === 200) {
+          const data = await res.json();
+          this.pendingCount = Array.isArray(data) ? data.length : 0;
+          return this.pendingCount;
+        } else if (res.status === 403) {
+          await authStore.Refresh();
+          if (authStore.loggedIn) {
+            const newBearer = `Bearer ${authStore.accessToken}`;
+            const retryRes = await fetch(
+              `${import.meta.env.VITE_API_BASE}/question/unansweredQ`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: newBearer,
+                },
+              }
+            );
+            if (retryRes.status === 200) {
+              const data = await retryRes.json();
+              this.pendingCount = Array.isArray(data) ? data.length : 0;
+              return this.pendingCount;
+            }
+          }
+        }
+        return this.pendingCount;
+      } catch (error) {
+        console.error('Error fetching unanswered count:', error);
+        return this.pendingCount;
+      }
+    },
     async sendQuery(query) {
       try {
         const authStore = useAuthStore();
@@ -90,9 +139,25 @@ export const useQuestionStore = defineStore("question", {
         if (response.ok) {
           const data = await response.json();
           return data;
-        } else {
-          return null;
+        } else if (response.status === 403) {
+          console.log("Token expired, refreshing...");
+          const refreshRes = await authStore.Refresh();
+          
+          if (authStore.loggedIn) {
+            const newBearer = `Bearer ${authStore.accessToken}`;
+            const retryResponse = await fetch(`${import.meta.env.VITE_API_BASE}/question/${questionId}`, {
+              method: 'GET',
+              headers: {
+                Authorization: newBearer,
+              },
+            });
+            
+            if (retryResponse.ok) {
+              return await retryResponse.json();
+            }
+          }
         }
+        return null;
       } catch (error) {
         console.error('Error fetching question by ID:', error);
         return null;
@@ -191,17 +256,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/post`, {
               method: "POST",
@@ -232,12 +291,13 @@ export const useQuestionStore = defineStore("question", {
         }
       }
     },
-    async PostInfoPost(body, images) {
+    async PostInfoPost(title, body, images) {
       const colourStore = useColourStore();
       console.log("we have entered the post infopost function in question.js");
       const authStore = useAuthStore();
       console.log("images : ", images);
       const infoPostObj = new FormData();
+      infoPostObj.append("title", title);
       infoPostObj.append("body", body);
       for (let i = 0; i < images.length; i++) {
         infoPostObj.append("images", images[i]);
@@ -273,16 +333,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/post`, {
               method: "POST",
@@ -359,17 +414,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/answerQ/${this.question["_id"]}`,
@@ -460,17 +509,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/commentQ/${this.question["_id"]}`,
@@ -576,17 +619,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/commentA/${this.question_ID}/${this.answer_ID}`,
@@ -677,17 +714,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/upvoteQ/${this.question["_id"]}`,
@@ -767,17 +798,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/upvoteA/${this.question_ID}/${this.answer_ID}`,
@@ -846,17 +871,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/hideQ/${this.question["_id"]}`,
@@ -930,17 +949,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/hideA/${this.question_ID}/${this.answer_ID}`,
@@ -1019,17 +1032,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/hideC/${this.question_ID}/${this.comment_ID}`,
@@ -1108,17 +1115,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/hideAC/${this.question_ID}/${this.answer_ID}/${this.comment_ID}`,
@@ -1192,17 +1193,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/hide/${this.info_ID}`, {
               method: "PUT",
@@ -1233,12 +1228,13 @@ export const useQuestionStore = defineStore("question", {
         }
       }
     },
-    async EditInfoPost(body) {
+    async EditInfoPost(title, body) {
       console.log("we have entered the post infopost function in question.js");
       const authStore = useAuthStore();
       const listStore = useListStore();
       const colourStore = useColourStore();
       const infoPostObj = {
+        title: title,
         body: body,
       };
       console.log("infopost object : ", infoPostObj);
@@ -1266,21 +1262,15 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
-        listStore.SetEditInfoPost(this.info_ID, body);
+        listStore.SetEditInfoPost(this.info_ID, title, body);
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/edit/${this.info_ID}`, {
               method: "PATCH",
@@ -1297,7 +1287,7 @@ export const useQuestionStore = defineStore("question", {
             console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
-            await listStore.SetEditInfoPost(this.info_ID, body);
+            await listStore.SetEditInfoPost(this.info_ID, title, body);
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
@@ -1360,16 +1350,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          // message for refreshing token
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
-          if (res.status === 200) {
+          await authStore.Refresh()
+
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/editA/${this.question_ID}/${this.answer_ID}`,
@@ -1409,7 +1394,6 @@ export const useQuestionStore = defineStore("question", {
           await this.authStore.Logout();
         }
       }
-    }
     },
     async PostQuestionAnonymously(body, images, tag) {
       const authStore = useAuthStore();
@@ -1455,17 +1439,11 @@ export const useQuestionStore = defineStore("question", {
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
-          const res = await this.authStore.Refresh()
-          this.showSnackbar = true;
-          console.log("snackbar");
-          const data = await res.json();
-          console.log('data :', data);
-          this.snackMessage = data.message;
+          await authStore.Refresh()
 
-
-          if (res.status === 200) {
+          if (authStore.loggedIn) {
             console.log("refreshed token");
-            const bearer = `Bearer ${this.authStore.accessToken}`;
+            const bearer = `Bearer ${authStore.accessToken}`;
             console.log("new bearer : ", bearer);
             const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/post`, {
               method: "POST",
@@ -1497,4 +1475,4 @@ export const useQuestionStore = defineStore("question", {
       }
     },
   },
-);
+});

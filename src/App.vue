@@ -7,17 +7,13 @@
         @selected2="ColorQuestions"
         @selected3="ColorMyQuestions"
         @toggleNotifications="toggleNotifications"
+        @toggleSidebar="showSidebar = !showSidebar"
       />
     </div>
     <div class="main-body">
-      <div class="Sidebar">
+      <div class="Sidebar" :class="{ 'hidden': windowWidth < 750 && !showSidebar }">
         <Sidebar
           @Burger="Burger"
-          :style="
-            !showSidebar && windowWidth < 750
-              ? { width: '0vw' }
-              : { width: '70vw' }
-          "
         />
       </div>
       <div
@@ -25,7 +21,9 @@
         :style="windowWidth < 750 ? { width: '100vw' } : {}"
       >
         <div class="content-actions" v-if="Auth.role != 6311">
-          <button class="language-button" type="button" @click="toggleHindi">हिन्दी</button>
+          <button class="language-button notranslate" type="button" @click="triggerHindiTranslation">
+            {{ isCurrentlyHindi ? 'Eng' : 'Hindi' }}
+          </button>
           <button class="ask-button" type="button" @click="postInfoQues">
             <span class="ask-button-icon">?</span>
             <span>{{ actionLabel }}</span>
@@ -39,10 +37,11 @@
             @edit="EditInfo"
           ></router-view>
         </div>
-        <div class="snackbar"
-          v-if="QuestionStore.showSnackbar == true">
+
+        <div class="snackbar" v-if="isSnackbarVisible" :key="snackbarKey">
             <Snackbar /> 
         </div>
+
         <section v-if="showNotifications" class="notification-panel" aria-label="Notifications">
           <h2>Notifications</h2>
           <article
@@ -56,12 +55,13 @@
             <span class="notification-time">{{ item.time }}</span>
           </article>
         </section>
-        <div class="ask" v-if="askQuestion == true">
+        <div class="ask" v-if="askQuestion">
           <askBox
             :askQuestion="askQuestion"
             @discard="ask"
             @OnSubmit="ask"
             :editBody="editBody"
+            :editTitle="editTitle"
           />
         </div>
         <div class="ExpandedImg" v-if="expanded">
@@ -88,15 +88,10 @@
     <div class="login-form">
       <Login :loggedIn="loggedIn" @loggedIn="Login" />
     </div>
-    <div class="snackbar"
-        v-if="QuestionStore.showSnackbar == true">
-          <Snackbar />
+    <div class="snackbar" v-if="isSnackbarVisible" :key="snackbarKey">
+          <Snackbar /> 
     </div>
   </div>
-
-  <!-- Hidden Google Translate Element -->
-  <div id="google_translate_element" style="display: none;"></div>
-
 </template>
 
 <script>
@@ -136,13 +131,21 @@ export default {
       glass: false,
       expanded: false,
       editBody: "",
+      editTitle: "",
       showNotifications: false,
-      isHindi: false,
+      isCurrentlyHindi: false, 
+      localSnackbarOverride: false,
+      snackbarKey: 0,
+      observer: null
     };
   },
   computed: {
+    isSnackbarVisible() {
+      if (this.localSnackbarOverride) return false;
+      return this.QuestionStore.showSnackbar === true;
+    },
     actionLabel() {
-      return this.Auth.role == 5980 ? "Post Infopost" : "Ask question";
+      return this.Auth.role == 5980 ? "Create Announcement" : "Ask question";
     },
     notificationItems() {
       const items = Array.isArray(this.ListStore.list) ? this.ListStore.list : [];
@@ -173,21 +176,91 @@ export default {
       }));
     },
   },
+  
+  watch: {
+    "QuestionStore.showSnackbar"(newValue) {
+      if (newValue === true) {
+        this.localSnackbarOverride = false;
+        
+        setTimeout(() => {
+          this.QuestionStore.showSnackbar = false;
+          if (typeof this.QuestionStore.SetSnackbar === "function") this.QuestionStore.SetSnackbar(false);
+          if (typeof this.QuestionStore.setSnackbar === "function") this.QuestionStore.setSnackbar(false);
+          
+          this.localSnackbarOverride = true;
+          this.snackbarKey += 1; 
+        }, 3000);
+      } else {
+        this.localSnackbarOverride = false;
+      }
+    }
+  },
+
   mounted() {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
+      this.checkGoogleTranslateState();
     });
+
+    this.observer = new MutationObserver(() => {
+      this.checkGoogleTranslateState();
+    });
+    this.observer.observe(document.documentElement, { attributes: true });
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
+    if (this.observer) this.observer.disconnect();
   },
   methods: {
+    checkGoogleTranslateState() {
+      const htmlEl = document.documentElement;
+      const hasTranslatedClass = htmlEl.classList.contains('translated-ltr') || htmlEl.classList.contains('translated-rtl');
+      const isHindiLang = htmlEl.getAttribute('lang') === 'hi';
+      
+      const selectElement = document.querySelector('.goog-te-combo');
+      const selectIsHindi = selectElement && selectElement.value === 'hi';
+
+      this.isCurrentlyHindi = !!(hasTranslatedClass || isHindiLang || selectIsHindi);
+    },
+
     async OnSubmit() {
       this.askQuestion = false;
     },
 
     async ask() {
+      console.log("Ask toggled, current state:", this.askQuestion);
       this.askQuestion = !this.askQuestion;
+    },
+    
+    // FIXED: Uses native restore widget handlers & cookie resets to cleanly skip the middle step entirely
+    triggerHindiTranslation() {
+      this.checkGoogleTranslateState();
+
+      if (this.isCurrentlyHindi) {
+        // Alternative approach: Find Google's native 'Show Original' skip button in its iframe wrappers
+        const restoreButton = document.querySelector('.goog-te-banner-frame')?.contentWindow?.document?.querySelector('.goog-te-button button');
+        
+        if (restoreButton) {
+          restoreButton.click();
+        } else {
+          // If the button is inaccessible inside the iframe cross-origin context, clear the cookie and refresh to guarantee baseline state
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
+          location.reload();
+          return;
+        }
+      } else {
+        // Forward translation: Directly target the dropdown combo box
+        const selectElement = document.querySelector('.goog-te-combo');
+        if (selectElement) {
+          selectElement.value = 'hi';
+          selectElement.dispatchEvent(new Event('change'));
+        } else {
+          console.warn("Google Translate combo element missing.");
+        }
+      }
+
+      this.isCurrentlyHindi = !this.isCurrentlyHindi;
     },
     onResize() {
       this.windowWidth = window.innerWidth;
@@ -212,6 +285,7 @@ export default {
       await this.ColourStore.colourQuestionView();
     },
     async postInfoQues() {
+      console.log("Post button clicked, role:", this.Auth.role);
       this.QuestionStore.SetAddImage(true);
       if (this.Auth.role == 5980 || this.Auth.role == 6311) {
         await this.ask();
@@ -234,10 +308,16 @@ export default {
       this.askQuestion = false;
       this.expanded = false;
     },
-    async EditInfo(body) {
+    async EditInfo(infopost) {
       this.askQuestion = true;
-      console.log("body:", body);
-      this.editBody = body;
+      console.log("editing infopost:", infopost);
+      if (infopost && typeof infopost === "object") {
+        this.editBody = infopost.body || "";
+        this.editTitle = infopost.title || "";
+      } else {
+        this.editBody = infopost || "";
+        this.editTitle = "";
+      }
     },
     async EditAnswer(body) {
       this.askQuestion = true;
@@ -267,52 +347,6 @@ export default {
         .replace(",", "")
         .replace(" am", "am")
         .replace(" pm", "pm");
-    },
-    toggleHindi() {
-      this.isHindi = !this.isHindi;
-      if (this.isHindi) {
-        // Load Google Translate Element
-        if (!document.getElementById('google_translate_element')) {
-          const script = document.createElement('script');
-          script.type = 'text/javascript';
-          script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-          script.id = 'google_translate_script';
-          document.head.appendChild(script);
-
-          // Initialize Google Translate
-          window.googleTranslateElementInit = () => {
-            new window.google.translate.TranslateElement({
-              pageLanguage: 'en',
-              includedLanguages: 'hi',
-              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-              autoDisplay: false
-            }, 'google_translate_element');
-            
-            // Trigger translation to Hindi
-            setTimeout(() => {
-              const selectElement = document.querySelector('.goog-te-combo');
-              if (selectElement) {
-                selectElement.value = 'hi';
-                selectElement.dispatchEvent(new Event('change'));
-              }
-            }, 500);
-          };
-        } else {
-          // If script already loaded, just change language
-          const selectElement = document.querySelector('.goog-te-combo');
-          if (selectElement) {
-            selectElement.value = 'hi';
-            selectElement.dispatchEvent(new Event('change'));
-          }
-        }
-      } else {
-        // Revert to English
-        const selectElement = document.querySelector('.goog-te-combo');
-        if (selectElement) {
-          selectElement.value = 'en';
-          selectElement.dispatchEvent(new Event('change'));
-        }
-      }
     },
   },
   setup() {
@@ -368,6 +402,10 @@ export default {
   padding: 24px 20px 16px;
 }
 
+.Sidebar.hidden {
+  display: none;
+}
+
 .Content {
   height: 100%;
   flex: 1;
@@ -394,7 +432,7 @@ export default {
   bottom: 40px;
   max-width: 66.58%;
   position: absolute;
-  }
+}
 
 .content-actions {
   position: absolute;
@@ -648,6 +686,7 @@ export default {
   .snackbar {
     max-width: 95vw;
   }
+  
   .content-actions {
     position: static;
     align-self: flex-end;
@@ -704,5 +743,24 @@ export default {
     width: 95vw;
     height: 95vh;
   }
+}
+</style>
+
+<style>
+/* Global rules to cleanly hide the Google Translate widget header elements */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-menu-value,
+#goog-gt-tt,
+.skiptranslate,
+iframe[id*=":1.container"],
+iframe[id*=":2.container"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
 }
 </style>

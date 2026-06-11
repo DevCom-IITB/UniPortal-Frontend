@@ -134,6 +134,7 @@ export default {
       return this.answers[0] || {};
     },
     userName() {
+      if (this.question.is_Anonymous) return "Anonymous";
       return this.question.user_Name || this.question.User_name || "Anonymous";
     },
     questionTitle() {

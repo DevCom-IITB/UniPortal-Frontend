@@ -177,32 +177,33 @@ export default {
 
 .feed-search {
   width: 100%;
-  height: 42px;
+  height: 54px;
   margin-top: 72px;
   border-radius: 999px;
   background: #eeeeee;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 16px;
+  gap: 12px;
+  padding: 0 24px;
 }
 
 .search-icon {
-  width: 15px;
-  height: 15px;
-  border: 1.7px solid #9b9b9b;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #9b9b9b;
   border-radius: 50%;
   flex-shrink: 0;
+  position: relative;
 }
 
 .search-icon::after {
   content: "";
   position: absolute;
-  width: 6px;
-  height: 1.7px;
+  width: 8px;
+  height: 2px;
   background: #9b9b9b;
-  right: -4px;
-  bottom: 0;
+  right: -6px;
+  bottom: 1px;
   transform: rotate(45deg);
   border-radius: 999px;
 }
@@ -212,7 +213,7 @@ export default {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 500;
   font-family: Inter, sans-serif;
   color: #1c1b1f;

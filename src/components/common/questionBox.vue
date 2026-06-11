@@ -124,6 +124,7 @@ export default {
       return Boolean(this.question.answered || this.answersList.length > 0);
     },
     userName() {
+      if (this.question.is_Anonymous) return "Anonymous";
       return this.question.user_Name || this.question.User_name || "Rahul Sharma";
     },
     questionText() {

@@ -123,8 +123,8 @@ export default {
       console.log("editing");
       await this.questionStore.SetInfoID(this.infopost._id || this.infopost.id);
       await this.questionStore.SetAction(6);
-      console.log("emitting edit :", this.infopost.body);
-      this.$emit("edit", this.infopost.body);
+      console.log("emitting edit :", this.infopost);
+      this.$emit("edit", this.infopost);
     },
     formatShortDate(value) {
       const date = new Date(value);

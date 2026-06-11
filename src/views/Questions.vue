@@ -89,10 +89,12 @@ export default {
         "Academics",
         "Campus Life",
         "Clubs",
+        "Orientation",
+        "Miscellaneous",
       ],
       filters: ["Answered", "Latest", "Most commented", "Most upvoted", "Unanswered"],
       selectedCategoryIndex: null,
-      selectedFilters: ["Answered", "Latest"],
+      selectedFilters: [],
     };
   },
   computed: {
@@ -110,18 +112,13 @@ export default {
 
       if (this.selectedCategoryIndex !== null) {
         const activeCategory = this.categories[this.selectedCategoryIndex];
-        
-        // Exact tag matches
         const exactMatches = result.filter((q) => q.tag === activeCategory);
-        
-        // Fuzzy search for remaining items
         const remaining = result.filter((q) => q.tag !== activeCategory);
         const categoryFuse = new Fuse(remaining, {
           keys: ["body", "title", "subject"],
           threshold: 0.5,
         });
         const fuzzyMatches = categoryFuse.search(activeCategory).map((res) => res.item);
-        
         result = [...exactMatches, ...fuzzyMatches];
       }
 
@@ -145,12 +142,10 @@ export default {
     },
   },
   methods: {
+    getCategoryLabel(category) { return category; },
+    getFilterLabel(filter) { return filter; },
     selectCategory(index) {
-      if (this.selectedCategoryIndex === index) {
-        this.selectedCategoryIndex = null;
-      } else {
-        this.selectedCategoryIndex = index;
-      }
+      this.selectedCategoryIndex = this.selectedCategoryIndex === index ? null : index;
     },
     toggleFilter(filter) {
       if (this.selectedFilters.includes(filter)) {
@@ -164,27 +159,16 @@ export default {
     },
     async fetchQuestions(tag = null) {
       const user_id = this.authStore.user_ID;
-      const requestBody = {
-        user_ID: user_id,
-        type: 'question',
-      };
-      
-      if (tag) {
-        requestBody.tag = tag;
-      }
+      const requestBody = { user_ID: user_id, type: 'question' };
+      if (tag) requestBody.tag = tag;
 
       const bearer = `Bearer ${this.authStore.accessToken}`;
       const url = `${import.meta.env.VITE_API_BASE}/question/`;
 
-      console.log('fetching questions with URL:', url);
-
       try {
         const res = await fetch(url, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: bearer,
-          },
+          headers: { "Content-Type": "application/json", Authorization: bearer },
         });
 
         if (res.status === 200) {
@@ -192,23 +176,17 @@ export default {
           this.listStore.SetList(data);
           return data;
         } else if (res.status === 403) {
-          console.log("refreshing token");
           const refreshRes = await this.authStore.Refresh();
-
           if (refreshRes && refreshRes.status === 200) {
             const newBearer = `Bearer ${this.authStore.accessToken}`;
             const retryRes = await fetch(url, {
               method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: newBearer,
-              },
+              headers: { "Content-Type": "application/json", Authorization: newBearer },
             });
             const data = await retryRes.json();
             this.listStore.SetList(data);
             return data;
           } else {
-            console.log("refresh failed");
             await this.authStore.Logout();
           }
         } else {
@@ -219,7 +197,6 @@ export default {
       }
     },
     async handleTagSelected(tag) {
-      console.log('Selected tag:', tag);
       await this.fetchQuestions(tag);
       this.questions = this.listStore.list || [];
     },
@@ -228,9 +205,6 @@ export default {
     await this.fetchQuestions();
     this.questions = this.listStore.list || [];
     this.colourStore.colourQuestions();
-    if (typeof this.scrollToPosition === "function") {
-      this.scrollToPosition();
-    }
   },
 };
 </script>
@@ -238,11 +212,19 @@ export default {
 <style scoped>
 .questions-page {
   width: 100%;
+  max-width: 100%;
   min-height: 100%;
-  padding-right: 0;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   color: #1c1b1f;
+  scrollbar-gutter: stable;
+}
+
+.questions-page *,
+.questions-page *::before,
+.questions-page *::after {
+  box-sizing: border-box;
 }
 
 .tabs-shell {
@@ -255,6 +237,7 @@ export default {
   align-items: center;
   gap: 5px;
   box-shadow: 0 0 9px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
 }
 
 .tab-button {
@@ -279,7 +262,7 @@ export default {
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 64px;
-  padding-right: 260px;
+  width: 100%;
 }
 
 .category-pill,
@@ -317,24 +300,28 @@ export default {
   font-weight: 800;
 }
 
+/* FIXED & OPTIMIZED: Strict width boundaries with a sleek, compact container layout */
 .feed-search {
-  position: relative;
-  width: 100%;
-  height: 42px;
+  display: flex;
+  align-items: center;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  height: 54px; /* Reduced from 90px to a cleaner profile */
   margin-top: 20px;
   border-radius: 999px;
   background: #eeeeee;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 16px;
+  gap: 14px; 
+  padding: 0 24px; /* Streamlined horizontal padding */
+  flex-shrink: 0;
 }
 
+/* Clear upscale profile for higher resolution rendering */
 .search-icon {
   position: relative;
-  width: 15px;
-  height: 15px;
-  border: 1.7px solid #9b9b9b;
+  width: 24px;
+  height: 24px;
+  border: 2.5px solid #8e8e8e;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -342,31 +329,39 @@ export default {
 .search-icon::after {
   content: "";
   position: absolute;
-  width: 6px;
-  height: 1.7px;
-  background: #9b9b9b;
-  right: -4px;
-  bottom: 0;
+  width: 9px;
+  height: 2.5px;
+  background: #8e8e8e;
+  right: -6px;
+  bottom: 0px;
   transform: rotate(45deg);
   border-radius: 999px;
 }
 
 .feed-search input {
+  flex: 1;
   width: 100%;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 18px; 
+  font-weight: 600; 
   font-family: Inter, sans-serif;
   color: #1c1b1f;
+}
+
+.feed-search input::placeholder {
+  color: #8e8e8e;
+  font-weight: 500;
+  opacity: 1;
 }
 
 .filter-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 20px;
+  width: 100%;
 }
 
 .filter-pill {
@@ -391,7 +386,6 @@ export default {
 
 @media only screen and (max-width: 900px) {
   .category-row {
-    padding-right: 0;
     margin-top: 24px;
   }
 }
@@ -414,6 +408,27 @@ export default {
     height: 32px;
     padding: 0 14px;
     font-size: 12px;
+  }
+
+  .feed-search {
+    height: 48px;
+    padding: 0 20px;
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
+  .search-icon::after {
+    width: 7px;
+    height: 2px;
+    right: -4px;
+  }
+
+  .feed-search input {
+    font-size: 16px;
   }
 
   .filter-pill {
