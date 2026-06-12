@@ -9,3 +9,13 @@
   background: white;
   font-weight: normal;
 }
+
+/* Hide Google Translate top bar */
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
+}
+

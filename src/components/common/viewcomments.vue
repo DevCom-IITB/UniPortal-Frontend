@@ -19,7 +19,15 @@
       </div>
     </div>
     <div class="qtext">
-      {{ comment["body"] }}
+      {{ isTranslated ? translatedText : comment["body"] }}
+    </div>
+    <div
+      class="translate-btn"
+      @click.prevent="translateText"
+      :style="{ color: colourStore.grey, cursor: 'pointer', fontSize: '10px', marginTop: '4px' }"
+    >
+      <span v-if="isTranslating">Translating...</span>
+      <span v-else>{{ isTranslated ? 'Show Original' : 'Translate' }}</span>
     </div>
   </div>
 </template>
@@ -50,9 +58,44 @@ export default {
   data() {
     return {
       timestamp: "",
+      isTranslated: false,
+      isTranslating: false,
+      translatedText: '',
     };
   },
   methods: {
+    async translateText() {
+      if (this.isTranslated) {
+        this.isTranslated = false;
+        return;
+      }
+      
+      if (this.translatedText) {
+        this.isTranslated = true;
+        return;
+      }
+
+      this.isTranslating = true;
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE}/translate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            text: this.comment['body'],
+            target_lang: 'en'
+          })
+        });
+        const data = await response.json();
+        this.translatedText = data.translated_text || 'Error translating text';
+        this.isTranslated = true;
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.isTranslating = false;
+      }
+    },
     async HideComment() {
       if (this.isAnswer) {
         console.log("we will be hiding a comment");

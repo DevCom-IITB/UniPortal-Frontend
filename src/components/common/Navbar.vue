@@ -1,173 +1,107 @@
 <template>
-  <div class="navbar" :style="{ background: colourStore.unselected }">
-    <router-link
-      :to="authStore.vite_base + '/'"
-      class="btn"
-      id="info"
-      @click="selected1"
-      @hover="hover1"
-      :style="
-        colourStore.currentPage == 1
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">Infopost</div></router-link
-    >
-    <router-link
-      v-if="authStore.role == 1980 || authStore.role == 7669"
-      :to="authStore.vite_base + '/questions'"
-      class="btn"
-      @click="selected2"
-      @hover="hover2"
-      :style="
-        colourStore.currentPage == 2
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">Questions</div></router-link
-    >
-    <router-link
-      v-if="authStore.role == 1980 || authStore.role == 7669"
-      :to="authStore.vite_base + '/myquestions'"
-      class="btn"
-      @click="selected3"
-      @hover="hover3"
-      :style="
-        colourStore.currentPage == 3
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">My Questions</div></router-link
-    >
-    <router-link
-      v-if="
-        authStore.role == 5980 ||
-        authStore.role == 6311 ||
-        authStore.role == 1980
-      "
-      :to="authStore.vite_base + '/unanswered'"
-      class="btn"
-      @click="selected2"
-      @hover="hover2"
-      :style="
-        colourStore.currentPage == 2
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">UnAnswered</div></router-link
-    >
-    <router-link
-      v-if="
-        authStore.role == 5980 ||
-        authStore.role == 6311 ||
-        authStore.role == 1980
-      "
-      :to="authStore.vite_base + '/answered'"
-      class="btn"
-      @click="selected3"
-      @hover="hover3"
-      :style="
-        colourStore.currentPage == 3
-          ? {
-              background: colourStore.primary,
-              color: colourStore.emphasis_text,
-            }
-          : { color: colourStore.grey }
-      "
-      ><div class="route">Answered</div></router-link
-    >
+  <div class="navbar">
+    <div class="logo-container">
+      <Logo class="asterisk-logo" />
+      <div class="logo-text">NewBee</div>
+    </div>
 
-    <div class="translate-container">
-      <button @click="toggleTranslateGlobal" class="global-translate-btn notranslate" :style="{ borderColor: colourStore.primary, color: '#000' }">
-        {{ isTranslated ? 'English' : 'Hindi' }}
+    <div class="center-icon">
+      <DC class="dc-logo" @click="toDevCom" />
+    </div>
+
+    <div class="right-links">
+      <button
+        type="button"
+        class="nav-icon bell-icon"
+        :class="{ active: notificationsOpen }"
+        @click="$emit('toggleNotifications')"
+        aria-label="Open notifications"
+      ></button>
+      <button
+        v-if="isMobile"
+        class="mobile-burger-right"
+        @click="$emit('toggleDropdown')"
+        aria-label="Toggle dropdown menu"
+      >
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
       </button>
+      <button type="button" class="nav-icon grid-icon" aria-label="Open menu">
+        <span v-for="dot in 9" :key="dot"></span>
+      </button>
+      <div class="user-profile" @click="toggleLogoutMenu">
+        <div class="user-avatar"></div>
+        <div class="user-info">
+          <div class="user-name">{{ displayName }}</div>
+          <div class="user-id">{{ displayId }}</div>
+        </div>
+        <div v-if="showLogoutMenu" class="logout-menu">
+          <button type="button" class="logout-button" @click.stop="handleLogout">Logout</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useAuthStore } from '@/stores/auth';
-import { useColourStore } from '../../stores/colour';
-
-import { ref } from 'vue';
+import DC from "../icons/DC.svg";
+import Logo from "../icons/Logo.svg";
+import { useAuthStore } from "@/stores/auth";
 
 export default {
-  name: 'Navbar',
+  name: "Navbar",
+  props: {
+    notificationsOpen: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ["toggleNotifications", "selected1", "selected2", "selected3", "toggleDropdown"],
+  components: {
+    DC,
+    Logo,
+  },
   setup() {
     const authStore = useAuthStore();
-    const colourStore = useColourStore();
-
-    const getCookie = (name) => {
-      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      if (match) return decodeURIComponent(match[2]);
-      return '';
-    };
-
-    const isTranslated = ref(getCookie('googtrans').includes('/hi'));
-
-    const toggleTranslateGlobal = () => {
-      if (isTranslated.value) {
-        // Hindi → English: clear GT cookies and reload the original page
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + window.location.hostname + "; path=/";
-        window.location.reload();
-      } else {
-        // English → Hindi: use GT widget if available, else cookie + reload
-        const select = document.querySelector('.goog-te-combo');
-        if (select) {
-          select.value = 'hi';
-          select.dispatchEvent(new Event('change', { bubbles: true }));
-          isTranslated.value = true;
-        } else {
-          document.cookie = "googtrans=/en/hi; path=/";
-          document.cookie = "googtrans=/en/hi; domain=" + window.location.hostname + "; path=/";
-          window.location.reload();
-        }
-      }
-    };
-
-    return { authStore, colourStore, isTranslated, toggleTranslateGlobal };
+    return { authStore };
   },
-  emits: ['selected1', 'selected2', 'selected3'],
-
   data() {
     return {
-      hovering: 0,
+      showLogoutMenu: false,
+      windowWidth: window.innerWidth,
     };
   },
+  mounted() {
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  },
+  computed: {
+    isMobile() {
+      return this.windowWidth < 768;
+    },
+    displayName() {
+      return this.authStore.name || "Varada Gajare";
+    },
+    displayId() {
+      return this.authStore.user_ID || "24B3632";
+    },
+  },
   methods: {
-    async selected1() {
-      this.$emit('selected1');
-      this.currentPage = 1;
+    handleResize() {
+      this.windowWidth = window.innerWidth;
     },
-    async selected2() {
-      this.$emit('selected2');
-      this.currentPage = 2;
+    toDevCom() {
+      window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
-    async selected3() {
-      this.$emit('selected3');
-      this.currentPage = 3;
+    toggleLogoutMenu() {
+      this.showLogoutMenu = !this.showLogoutMenu;
     },
-    async hover1() {
-      this.hovering = 1;
-    },
-    async hover2() {
-      this.hovering = 2;
-    },
-    async hover3() {
-      this.hovering = 3;
+    async handleLogout() {
+      await this.authStore.Logout();
+      this.showLogoutMenu = false;
     },
   },
 };
@@ -175,85 +109,261 @@ export default {
 
 <style scoped>
 .navbar {
-  position: relative;
   width: 100%;
-  border-radius: 52px;
-  background: #faf4e1;
+  height: 76px;
+  padding: 0 18px;
   display: flex;
   flex-direction: row;
-  font-size: 18px;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
+  background: #fceeb9;
 }
 
-.translate-container {
-  position: absolute;
-  right: -170px;
+.logo-container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  gap: 12px;
+  flex: 1;
 }
 
-.global-translate-btn {
-  background: white;
-  border: 2px solid #ccc;
-  border-radius: 52px;
-  padding: 12px 24px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
+.mobile-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  padding: 0;
+  z-index: 10;
 }
 
-.global-translate-btn:hover {
-  background: #fdfdfd;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-  transform: translateY(-1px);
+.burger-bar {
+  width: 100%;
+  height: 2.5px;
+  background-color: #000000;
+  border-radius: 10px;
 }
 
-.btn {
-  padding: 24px 0px;
-  width: 33.33%;
-  border-radius: 52px;
+.asterisk-logo {
+  width: 26px;
+  height: 28px;
+  display: block;
+}
+
+.logo-text {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+  font-family: Inter, sans-serif;
+  color: #000000;
+}
+
+.center-icon {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-decoration: none;
-  color: #ccb160;
-  padding: 10px 0px;
 }
 
-.route {
-  font-weight: 500;
+.dc-logo {
+  width: 88px;
+  height: auto;
+  cursor: pointer;
 }
 
-@media only screen and (max-width: 1150px) {
-  .navbar {
-    font-size: 16px;
-    height: 45%;
-  }
-  .translate-container {
-    right: -130px;
-  }
+.right-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+  flex: 1;
+}
+
+.nav-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bell-icon::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  width: 12px;
+  height: 14px;
+  border: 2px solid #000000;
+  border-bottom: none;
+  border-radius: 9px 9px 5px 5px;
+}
+
+.bell-icon::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  bottom: 5px;
+  width: 8px;
+  height: 5px;
+  border: 2px solid #000000;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.bell-icon.active {
+  background: #ffdf80;
+  border-radius: 9px;
+}
+
+.grid-icon {
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  grid-template-rows: repeat(3, 4px);
+  justify-content: center;
+  align-content: center;
+  gap: 5px;
+}
+
+.grid-icon span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #000000;
+}
+
+.user-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffdf80;
+  width: 164px;
+  height: 46px;
+  padding: 5px 10px;
+  border-radius: 14px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #cfd3d8;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: #000000;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-id {
+  font-size: 11px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: #000000;
+}
+
+.logout-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  min-width: 120px;
+  z-index: 100;
+}
+
+.logout-button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  font-family: Inter, sans-serif;
+}
+
+.logout-button:hover {
+  background: #f0f0f0;
 }
 
 @media only screen and (max-width: 750px) {
   .navbar {
-    font-size: 14px;
+    height: 64px;
+    padding: 0 12px;
   }
-  .translate-container {
-    position: fixed;
-    top: 22px;
-    right: 16px;
-    z-index: 10000;
+
+  .logo-text {
+    font-size: 18px;
   }
-  .global-translate-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-    border-color: white !important;
+
+  .asterisk-logo {
+    width: 22px;
+    height: 24px;
+  }
+
+  .center-icon {
+    display: none;
+  }
+
+  .right-links {
+    gap: 12px;
+  }
+
+  .grid-icon {
+    display: none;
+  }
+
+  .user-profile {
+    display: none !important;
+  }
+
+  .mobile-burger-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 34px;
+    height: 28px;
+    background: #ffdf80;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 7px 6px;
+    box-sizing: border-box;
+  }
+
+  .mobile-burger-right .burger-bar {
+    width: 100%;
+    height: 2px;
+    background-color: #1c1b1f;
+    border-radius: 99px;
   }
 }
 </style>

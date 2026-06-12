@@ -1,124 +1,134 @@
 <template>
-  <div class="container">
-    <div class="Header">
-      <Header
-        :headerName="headerName"
-        :headerText="headerText"
-        :background="background"
-        :primaryColor="primaryColor"
-      />
+  <div class="questions-page">
+    <div class="tabs-shell">
+      <button class="tab-button" type="button" @click="goToAnnouncements">
+        Announcements
+        <span v-if="authStore.role !== 7669 && questionStore.announcementsCount > 0" class="count-badge">{{ questionStore.announcementsCount }}</span>
+      </button>
+      <button class="tab-button active" type="button">
+        Questions
+        <span v-if="authStore.role !== 7669 && questionStore.pendingCount > 0" class="count-badge unanswered">{{ questionStore.pendingCount }}</span>
+      </button>
     </div>
+
     <div class="search-container">
       <QuestionSearch />
     </div>
-    <div class="Lister">
-      <div
-        :key="question['id']"
-        v-for="question in questions"
+
+    <div class="filter-row">
+      <button type="button" class="filter-pill selected">Unanswered</button>
+      <button type="button" class="filter-pill">Latest</button>
+    </div>
+
+    <div class="question-list">
+      <Question
+        v-for="question in filteredQuestions"
+        :key="question._id || question.id"
         class="QuestionBox"
-      >
-        <Question
-          @expand="$emit('expand')"
-          :showAnswerBox="this.true"
-          :question="question"
-          :background="background"
-          :primaryColor="primaryColor"
-          :secondaryColor="secondaryColor"
-          :primaryAccent="primaryAccent"
-          @comment="$emit('comment')"
-          @askView="$emit('askView')"
-        />
-      </div>
+        @expand="$emit('expand')"
+        :showAnswerBox="true"
+        :question="question"
+        :searchTerm="searchQuery"
+        @comment="$emit('comment')"
+        @askView="$emit('askView')"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import Question from '../components/common/questionBox.vue';
-import Header from '../components/common/Header.vue';
-import QuestionSearch from '../components/common/QuestionSearch.vue';
+import Question from "../components/common/questionBox.vue";
+import QuestionSearch from "../components/common/QuestionSearch.vue";
+import Fuse from "fuse.js";
 
-import { useAuthStore } from '../stores/auth';
-import { useListStore } from '../stores/list';
-import { useColourStore } from '../stores/colour';
+import { useAuthStore } from "../stores/auth";
+import { useListStore } from "../stores/list";
+import { useColourStore } from "../stores/colour";
+import { useQuestionStore } from "../stores/question";
 
 export default {
-  name: 'UnAnsweredQ',
+  name: "UnAnsweredQ",
   setup() {
     const authStore = useAuthStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
-    return { authStore, listStore, colourStore };
+    const questionStore = useQuestionStore();
+    return { authStore, listStore, colourStore, questionStore };
   },
   data() {
     return {
-      headerName: 'UnAnswered',
-      headerText: 'Where all the unanswered questions reside',
       questions: [],
-      background: '#FFF3F2',
-      primaryColor: '#1F1514',
-      secondaryColor: '#CC655E',
-      primaryAccent: '#FFD2D1',
-      true: true,
-      false: false,
+      searchQuery: "",
     };
+  },
+  computed: {
+    filteredQuestions() {
+      if (!this.searchQuery.trim()) return this.questions;
+      const fuse = new Fuse(this.questions, {
+        keys: ["body", "title", "user_Name", "User_name", "subject"],
+        threshold: 0.45,
+      });
+      return fuse.search(this.searchQuery).map((result) => result.item);
+    },
   },
   components: {
     Question,
-    Header,
     QuestionSearch,
   },
   methods: {
+    goToAnnouncements() {
+      this.$router.push(this.authStore.vite_base + "/");
+    },
     async fetchQuestions() {
       const bearer = `Bearer ${this.authStore.accessToken}`;
 
-      console.log('bearer : ', bearer);
+      console.log("bearer : ", bearer);
 
       const res = await fetch(
         `${import.meta.env.VITE_API_BASE}/question/unansweredQ`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: bearer,
           },
         }
       );
 
-      console.log('request sent');
+      console.log("request sent");
 
       if (res.status === 200) {
-        console.log('received response');
+        console.log("received response");
         const data = await res.json();
         console.log(data);
         this.listStore.SetList(data);
         return data;
       } else {
         if (res.status === 403) {
-          console.log('refreshing token');
+          console.log("refreshing token");
           const res = await this.authStore.Refresh();
 
           if (res.status === 200) {
-            console.log('refreshed token');
+            console.log("refreshed token");
             const bearer = `Bearer ${this.authStore.accessToken}`;
-            console.log('new bearer : ', bearer);
+            console.log("new bearer : ", bearer);
             const res = await fetch(
               `${import.meta.env.VITE_API_BASE}/question/unansweredQ`,
               {
-                method: 'GET',
+                method: "GET",
                 headers: {
-                  'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                   Authorization: bearer,
                 },
               }
             );
-            console.log('new request sent');
+            console.log("new request sent");
             const data = await res.json();
             console.log(data);
             this.listStore.SetList(data);
             return data;
           } else {
-            console.log('refresh failed');
+            console.log("refresh failed");
             await this.authStore.Logout();
           }
         } else {
@@ -128,7 +138,11 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchQuestions();
+    await Promise.all([
+      this.fetchQuestions(),
+      this.questionStore.FetchAnnouncementsCount(),
+      this.questionStore.FetchUnansweredCount()
+    ]);
     this.questions = this.listStore.list;
     console.log(this.questions);
     this.colourStore.colourUnAnswered();
@@ -137,75 +151,148 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  height: 100%;
+.questions-page {
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.Header {
-  height: 35.96%;
-  width: 84.98%;
-}
-
-.search-container {
-  width: 84.98%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  z-index: 10;
-}
-
-.Lister {
-  height: 64.04%;
-  width: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
+  color: #1c1b1f;
+}
+
+.tabs-shell {
+  width: 280px;
+  height: 46px;
+  padding: 5px;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
   align-items: center;
-  justify-content: start;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  gap: 5px;
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.18);
 }
 
-.Lister::-webkit-scrollbar {
-  width: 8px;
-}
-
-.Lister::-webkit-scrollbar-thumb {
-  background: #cc655e;
+.tab-button {
+  flex: 1;
+  height: 36px;
+  border: none;
   border-radius: 10px;
+  background: transparent;
+  color: #000000;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.Lister::-webkit-scrollbar-thumb:hover {
-  background: #3e2a28;
+.tab-button.active {
+  background: #ffdf80;
 }
 
-.QuestionBox {
-  height: fit-content;
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.count-badge.unanswered {
+  background: #ff4d4d; /* Red for unanswered questions to grab attention */
+}
+
+.feed-search {
   width: 100%;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  color: black;
+  height: 54px;
+  margin-top: 72px;
+  border-radius: 999px;
+  background: #eeeeee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #9b9b9b;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.search-icon::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  background: #9b9b9b;
+  right: -6px;
+  bottom: 1px;
+  transform: rotate(45deg);
+  border-radius: 999px;
+}
+
+.feed-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: Inter, sans-serif;
+  color: #1c1b1f;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.filter-pill {
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: #ededed;
+  padding: 0 14px;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.filter-pill.selected {
+  background: #ffdf80;
+  box-shadow: inset 0 0 0 1px #c98e00;
+}
+
+.question-list {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  padding-bottom: 28px;
 }
 
 @media only screen and (max-width: 750px) {
-  .Header {
+  .tabs-shell {
     width: 100%;
-    height: 30%;
+    max-width: 320px;
   }
 
-  .search-container {
-    width: 90%;
-  }
-
-  .Lister::-webkit-scrollbar {
-    width: 4px;
+  .feed-search {
+    margin-top: 28px;
   }
 }
 </style>
