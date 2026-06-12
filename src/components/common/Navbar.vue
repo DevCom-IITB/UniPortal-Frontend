@@ -1,11 +1,6 @@
 <template>
   <div class="navbar">
     <div class="logo-container">
-      <button v-if="isMobile" class="mobile-burger" @click="$emit('toggleSidebar')" aria-label="Toggle sidebar">
-        <span class="burger-bar"></span>
-        <span class="burger-bar"></span>
-        <span class="burger-bar"></span>
-      </button>
       <Logo class="asterisk-logo" />
       <div class="logo-text">NewBee</div>
     </div>
@@ -22,6 +17,16 @@
         @click="$emit('toggleNotifications')"
         aria-label="Open notifications"
       ></button>
+      <button
+        v-if="isMobile"
+        class="mobile-burger-right"
+        @click="$emit('toggleDropdown')"
+        aria-label="Toggle dropdown menu"
+      >
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+      </button>
       <button type="button" class="nav-icon grid-icon" aria-label="Open menu">
         <span v-for="dot in 9" :key="dot"></span>
       </button>
@@ -52,7 +57,7 @@ export default {
       default: false,
     },
   },
-  emits: ["toggleNotifications", "selected1", "selected2", "selected3"],
+  emits: ["toggleNotifications", "selected1", "selected2", "selected3", "toggleDropdown"],
   components: {
     DC,
     Logo,
@@ -336,19 +341,29 @@ export default {
   }
 
   .user-profile {
-    width: 124px;
-    height: 40px;
-    border-radius: 12px;
+    display: none !important;
   }
 
-  .user-avatar {
-    width: 30px;
-    height: 30px;
+  .mobile-burger-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 34px;
+    height: 28px;
+    background: #ffdf80;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 7px 6px;
+    box-sizing: border-box;
   }
 
-  .user-name,
-  .user-id {
-    font-size: 10px;
+  .mobile-burger-right .burger-bar {
+    width: 100%;
+    height: 2px;
+    background-color: #1c1b1f;
+    border-radius: 99px;
   }
 }
 </style>

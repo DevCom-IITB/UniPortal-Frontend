@@ -1,7 +1,7 @@
 <template>
   <article class="announcement-card">
     <div class="announcement-meta">
-      <span>SMP Mentor</span>
+      <span>ISMP Mentor</span>
       <span class="dot"></span>
       <span>{{ timestamp }}</span>
     </div>
@@ -335,12 +335,17 @@ h2 {
 
 @media only screen and (max-width: 750px) {
   .announcement-card {
-    border-radius: 14px;
-    padding: 16px 14px;
+    border-radius: 16px;
+    border: 1px solid #faeebb;
+    background: #fffdf5;
+    padding: 16px;
   }
 
   .announcement-body {
-    border-radius: 18px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    padding: 12px 14px;
   }
 }
 </style>

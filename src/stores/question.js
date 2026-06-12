@@ -18,10 +18,54 @@ export const useQuestionStore = defineStore("question", {
     showSnackbar: false,
     snackMessage: "",
     pendingCount: 0,
+    announcementsCount: 0,
     action: 0, // 1 is for answering a question, 2 is for commenting on a question, 3 is for commenting on an answer, 4 is for posting a question with student's original identity, 5 is for posting a infopost, 6 is for editing an infopost, 7 for posting a question anonymously by a student, 8 is for editing a answer by SMP
   }),
   persist: true,
   actions: {
+    async FetchAnnouncementsCount() {
+      try {
+        const authStore = useAuthStore();
+        const role = authStore.role;
+        const get = (role == 5980 || role == 1980) ? "get" : "getStu";
+        const bearer = `Bearer ${authStore.accessToken}`;
+
+        const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/${get}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: bearer,
+          },
+        });
+
+        if (res.status === 200) {
+          const data = await res.json();
+          this.announcementsCount = Array.isArray(data) ? data.length : 0;
+          return this.announcementsCount;
+        } else if (res.status === 403) {
+          await authStore.Refresh();
+          if (authStore.loggedIn) {
+            const newBearer = `Bearer ${authStore.accessToken}`;
+            const retryRes = await fetch(`${import.meta.env.VITE_API_BASE}/info/${get}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: newBearer,
+              },
+            });
+            if (retryRes.status === 200) {
+              const data = await retryRes.json();
+              this.announcementsCount = Array.isArray(data) ? data.length : 0;
+              return this.announcementsCount;
+            }
+          }
+        }
+        return this.announcementsCount;
+      } catch (error) {
+        console.error('Error fetching announcements count:', error);
+        return this.announcementsCount;
+      }
+    },
     async FetchUnansweredCount() {
       try {
         const authStore = useAuthStore();

@@ -1,8 +1,14 @@
 <template>
   <div class="questions-page">
     <div class="tabs-shell">
-      <button class="tab-button" type="button" @click="goToAnnouncements">Announcements</button>
-      <button class="tab-button active" type="button">Questions</button>
+      <button class="tab-button" type="button" @click="goToAnnouncements">
+        Announcements
+        <span v-if="authStore.role !== 7669 && questionStore.announcementsCount > 0" class="count-badge">{{ questionStore.announcementsCount }}</span>
+      </button>
+      <button class="tab-button active" type="button">
+        Questions
+        <span v-if="authStore.role !== 7669 && questionStore.pendingCount > 0" class="count-badge unanswered">{{ questionStore.pendingCount }}</span>
+      </button>
     </div>
 
     <div class="category-row">
@@ -14,7 +20,7 @@
         :class="{ selected: index === selectedCategoryIndex }"
         @click="selectCategory(index)"
       >
-        <span>{{ category }}</span>
+        <span>{{ windowWidth < 750 ? `${category} (${getCategoryCount(category)})` : category }}</span>
         <span v-if="index === selectedCategoryIndex" class="close-mark">x</span>
       </button>
     </div>
@@ -24,12 +30,17 @@
       <input
         v-model="searchQuery"
         type="search"
-        placeholder="Search"
+        :placeholder="windowWidth < 750 ? 'Search question' : 'Search'"
         aria-label="Search questions"
       />
     </label>
 
     <div class="filter-row">
+      <button class="sort-by-pill-mobile mobile-only" type="button">
+        <span class="sort-lines-icon"></span>
+        <span>Sort by</span>
+      </button>
+
       <button
         v-for="filter in filters"
         :key="filter"
@@ -66,6 +77,7 @@ import Fuse from "fuse.js";
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
 import { useColourStore } from "../stores/colour";
+import { useQuestionStore } from "../stores/question";
 
 export default {
   name: "Questions",
@@ -76,7 +88,8 @@ export default {
     const authStore = useAuthStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
-    return { authStore, listStore, colourStore };
+    const questionStore = useQuestionStore();
+    return { authStore, listStore, colourStore, questionStore };
   },
   data() {
     return {
@@ -95,6 +108,7 @@ export default {
       filters: ["Answered", "Latest", "Most commented", "Most upvoted", "Unanswered"],
       selectedCategoryIndex: null,
       selectedFilters: [],
+      windowWidth: window.innerWidth,
     };
   },
   computed: {
@@ -200,11 +214,29 @@ export default {
       await this.fetchQuestions(tag);
       this.questions = this.listStore.list || [];
     },
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    getCategoryCount(category) {
+      if (!Array.isArray(this.questions)) return 0;
+      return this.questions.filter((q) => {
+        const tag = q.tag || q.subject || q.category;
+        return tag === category;
+      }).length;
+    },
   },
   async mounted() {
-    await this.fetchQuestions();
+    await Promise.all([
+      this.fetchQuestions(),
+      this.questionStore.FetchAnnouncementsCount(),
+      this.questionStore.FetchUnansweredCount()
+    ]);
     this.questions = this.listStore.list || [];
     this.colourStore.colourQuestions();
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.handleResize);
   },
 };
 </script>
@@ -255,6 +287,26 @@ export default {
 
 .tab-button.active {
   background: #ffdf80;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.count-badge.unanswered {
+  background: #ff4d4d; /* Red for unanswered questions to grab attention */
 }
 
 .category-row {
@@ -390,29 +442,33 @@ export default {
   }
 }
 
+.mobile-only {
+  display: none !important;
+}
+
 @media only screen and (max-width: 750px) {
+  .mobile-only {
+    display: inline-flex !important;
+  }
+
   .questions-page {
+    display: flex;
+    flex-direction: column;
     padding-bottom: 20px;
   }
 
   .tabs-shell {
+    order: 1;
     width: 100%;
     max-width: 320px;
-  }
-
-  .category-row {
-    gap: 8px;
-  }
-
-  .category-pill {
-    height: 32px;
-    padding: 0 14px;
-    font-size: 12px;
+    align-self: center;
   }
 
   .feed-search {
+    order: 2;
     height: 48px;
     padding: 0 20px;
+    margin-top: 18px;
   }
 
   .search-icon {
@@ -431,8 +487,85 @@ export default {
     font-size: 16px;
   }
 
+  .filter-row {
+    order: 3;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+    width: 100%;
+  }
+
   .filter-pill {
     font-size: 12px;
+    height: 28px;
+    padding: 0 14px;
+  }
+
+  .sort-by-pill-mobile {
+    height: 28px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 999px;
+    background: #ededed;
+    color: #1c1b1f;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    cursor: pointer;
+  }
+
+  .sort-lines-icon {
+    position: relative;
+    width: 14px;
+    height: 9px;
+    display: inline-block;
+  }
+
+  .sort-lines-icon::before,
+  .sort-lines-icon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    height: 1.5px;
+    background: #1c1b1f;
+    border-radius: 99px;
+  }
+
+  .sort-lines-icon::before {
+    top: 0;
+    width: 12px;
+    box-shadow: 0 3.75px 0 #1c1b1f;
+  }
+
+  .sort-lines-icon::after {
+    bottom: 0;
+    width: 7px;
+  }
+
+  .category-row {
+    order: 4;
+    gap: 8px;
+    margin-top: 18px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .category-pill {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+
+  .question-list {
+    order: 5;
+    margin-top: 18px;
   }
 }
 </style>

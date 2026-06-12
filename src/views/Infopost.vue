@@ -3,6 +3,7 @@
     <div class="tabs-shell">
       <button class="tab-button active" type="button">
         Announcements
+        <span v-if="authStore.role !== 7669 && infoposts.length > 0" class="count-badge">{{ infoposts.length }}</span>
       </button>
 
       <button
@@ -11,6 +12,7 @@
         @click="goToQuestions"
       >
         Questions
+        <span v-if="authStore.role !== 7669 && questionStore.pendingCount > 0" class="count-badge unanswered">{{ questionStore.pendingCount }}</span>
       </button>
     </div>
 
@@ -20,15 +22,10 @@
       <input
         v-model="searchQuery"
         type="search"
-        placeholder="Search"
+        :placeholder="windowWidth < 750 ? 'Search announcement' : 'Search'"
         aria-label="Search announcements"
       />
     </label>
-
-    <button class="sort-pill" type="button">
-      <span>Sort by</span>
-      <span class="sort-icon"></span>
-    </button>
 
     <div class="announcement-list">
       <InfoBox
@@ -50,6 +47,7 @@ import Fuse from "fuse.js";
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
 import { useColourStore } from "../stores/colour";
+import { useQuestionStore } from "../stores/question";
 
 export default {
   name: "Infopost",
@@ -62,11 +60,13 @@ export default {
     const authStore = useAuthStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
+    const questionStore = useQuestionStore();
 
     return {
       authStore,
       listStore,
       colourStore,
+      questionStore,
     };
   },
 
@@ -74,6 +74,7 @@ export default {
     return {
       infoposts: [],
       searchQuery: "",
+      windowWidth: window.innerWidth,
     };
   },
 
@@ -197,16 +198,27 @@ export default {
 
       console.log(this.infoposts);
     },
+    handleResize() {
+      this.windowWidth = window.innerWidth;
+    },
   },
 
   async mounted() {
-    await this.fetchInfoPosts();
+    await Promise.all([
+      this.fetchInfoPosts(),
+      this.questionStore.FetchUnansweredCount()
+    ]);
 
     this.infoposts = this.listStore.list;
+    this.questionStore.announcementsCount = this.infoposts.length;
 
     console.log(this.infoposts);
 
     await this.colourStore.colourInfopost();
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.handleResize);
   },
 };
 </script>
@@ -249,22 +261,42 @@ export default {
   background: #ffdf80;
 }
 
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.count-badge.unanswered {
+  background: #ff4d4d;
+}
+
 .feed-search {
   width: 100%;
-  height: 64px;       /* Increased desktop search bar height */
+  height: 64px;
   margin-top: 46px;
   border-radius: 999px;
   background: #eeeeee;
   display: flex;
   align-items: center;
-  gap: 16px;          /* More space between icon and text */
-  padding: 0 32px;    /* Extra breathing room on the outer edges */
+  gap: 16px;
+  padding: 0 32px;
   position: relative;
   box-sizing: border-box;
 }
 
 .search-icon {
-  width: 24px;        /* Scaled up desktop search icon size */
+  width: 24px;
   height: 24px;
   border: 2.5px solid #9b9b9b;
   border-radius: 50%;
@@ -275,7 +307,7 @@ export default {
 .search-icon::after {
   content: "";
   position: absolute;
-  width: 10px;       /* Made icon tail proportional to scale */
+  width: 10px;
   height: 2.5px;
   background: #9b9b9b;
   right: -7px;
@@ -289,56 +321,11 @@ export default {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 18px;    /* Enlarged text typing size */
+  font-size: 18px;
   font-weight: 500;
   font-family: Inter, sans-serif;
   color: #1c1b1f;
-  padding: 12px 4px;  /* Generous vertical typing cushion */
-}
-
-.sort-pill {
-  width: fit-content;
-  height: 34px;
-  margin-top: 12px;
-  border: none;
-  border-radius: 999px;
-  background: #faeebb;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: #1c1b1f;
-  font-family: Inter, sans-serif;
-  font-size: 13px;
-  line-height: 1;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.sort-icon {
-  width: 16px;
-  height: 12px;
-  position: relative;
-}
-
-.sort-icon::before,
-.sort-icon::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  height: 1.8px;
-  background: #1c1b1f;
-  border-radius: 99px;
-}
-
-.sort-icon::before {
-  top: 3px;
-  width: 14px;
-}
-
-.sort-icon::after {
-  bottom: 3px;
-  width: 8px;
+  padding: 12px 4px;
 }
 
 .announcement-list {
@@ -355,25 +342,40 @@ export default {
 }
 
 @media only screen and (max-width: 750px) {
+  .announcements-page {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+  }
+
   .tabs-shell {
+    order: 1;
     width: 100%;
     max-width: 320px;
+    align-self: center;
   }
 
   .feed-search {
-    margin-top: 28px;
-    height: 58px;     /* Much bigger, finger-friendly search box on mobile */
-    padding: 0 24px;
+    order: 2;
+    margin-top: 18px;
+    height: 48px;
+    padding: 0 20px;
   }
 
   .search-icon {
-    width: 22px;      /* Mid-scale icon balancing for mobile viewports */
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 
   .feed-search input {
     padding: 10px 4px;
-    font-size: 16px;  /* Accessible mobile reading text size */
+    font-size: 16px;
+  }
+
+  .announcement-list {
+    order: 4;
+    margin-top: 18px;
+    gap: 16px;
   }
 }
 </style>

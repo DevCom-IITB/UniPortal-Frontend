@@ -3,13 +3,19 @@
     <article class="question-card" :class="{ answered: isAnswered }">
       <button class="question-content" type="button" @click="openQuestion">
         <div class="question-main">
-          <div class="question-meta">
-            <span class="avatar">
-              <Logo />
+          <div class="question-meta-row">
+            <div class="question-meta">
+              <span class="avatar">
+                <Logo />
+              </span>
+              <span class="author">{{ userName }}</span>
+              <span class="dot"></span>
+              <span class="timestamp">{{ displayTimestamp }}</span>
+            </div>
+            
+            <span class="status-pill mobile-only" :class="{ resolved: isAnswered }">
+              {{ isAnswered ? "Answered" : "Unanswered" }}
             </span>
-            <span class="author">{{ userName }}</span>
-            <span class="dot"></span>
-            <span class="timestamp">{{ displayTimestamp }}</span>
           </div>
 
           <h2 class="question-title" aria-live="polite">
@@ -20,7 +26,7 @@
           </h2>
         </div>
 
-        <div class="question-side">
+        <div class="question-side desktop-only">
           <span class="subject-pill">{{ subjectLabel }}</span>
           <span class="comment-pill">
             <span class="comment-icon"></span>
@@ -31,6 +37,23 @@
           </span>
         </div>
       </button>
+
+      <!-- Mobile bottom action row inside the card -->
+      <div class="mobile-action-row mobile-only">
+        <button class="mobile-action-pill upvote-pill" type="button" @click.stop="Upvote">
+          <svg class="mobile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+          </svg>
+          <span>{{ upvoteCount }}</span>
+        </button>
+        <span class="mobile-action-pill subject-pill">{{ subjectLabel }}</span>
+        <button class="mobile-action-pill comment-pill" type="button" @click.stop="CommentClick">
+          <svg class="mobile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>({{ commentCount }})</span>
+        </button>
+      </div>
 
       <div v-if="isAnswered" class="answer-preview">
         <span>Answer from SMP</span>
@@ -55,7 +78,7 @@
       </div>
     </article>
 
-    <button class="upvote-stack" type="button" @click="Upvote" aria-label="Upvote question">
+    <button class="upvote-stack desktop-only" type="button" @click="Upvote" aria-label="Upvote question">
       <span class="thumb-icon"></span>
       <span>{{ upvoteCount }}</span>
     </button>
@@ -594,6 +617,10 @@ export default {
   padding-top: 8px;
 }
 
+.mobile-only {
+  display: none !important;
+}
+
 @media only screen and (max-width: 980px) {
   .question-content {
     grid-template-columns: 1fr;
@@ -607,29 +634,99 @@ export default {
 }
 
 @media only screen and (max-width: 750px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
+  span.mobile-only {
+    display: inline-flex !important;
+  }
+
   .question-shell {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 0;
   }
 
   .question-card {
-    padding: 13px;
+    border-radius: 16px;
+    border: 1px solid #faeebb;
+    background: #fffdf5;
+    padding: 16px;
+  }
+
+  .question-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .status-pill.mobile-only {
+    display: inline-flex !important;
+    min-height: auto;
+    height: 22px;
+    padding: 0 10px;
+    font-size: 11px;
+    border-radius: 99px;
+    font-weight: 700;
   }
 
   .question-title {
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.25;
+    margin-top: 4px;
   }
 
-  .upvote-stack {
-    width: auto;
-    flex-direction: row;
-    justify-content: flex-end;
-    padding-right: 8px;
+  .mobile-action-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+    width: 100%;
   }
 
-  .thumb-icon {
-    width: 24px;
-    height: 24px;
+  .mobile-action-pill {
+    height: 30px;
+    border: 1px solid #e8dba9;
+    border-radius: 99px;
+    background: #ffffff;
+    color: #1c1b1f;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: none;
+  }
+
+  .mobile-action-pill.subject-pill {
+    cursor: default;
+    background: #ffffff;
+    border-color: #e8dba9;
+  }
+
+  .mobile-icon {
+    width: 13px;
+    height: 13px;
+    color: #1c1b1f;
+  }
+
+  .answer-preview {
+    margin-top: 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    background: #ffffff;
+    padding: 12px 14px;
   }
 }
 </style>

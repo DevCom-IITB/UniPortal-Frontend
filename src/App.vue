@@ -8,7 +8,71 @@
         @selected3="ColorMyQuestions"
         @toggleNotifications="toggleNotifications"
         @toggleSidebar="showSidebar = !showSidebar"
+        @toggleDropdown="showDropdown = !showDropdown"
       />
+      <!-- Mobile Dropdown Menu -->
+      <transition name="dropdown-fade">
+        <div v-if="showDropdown && windowWidth < 750" class="mobile-dropdown-menu">
+          <button class="dropdown-item translate-item" type="button" @click="triggerHindiTranslationAndClose">
+            <svg class="dropdown-icon translation-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            <span class="dropdown-text translation-text">हिन्दी</span>
+          </button>
+          
+          <div class="dropdown-header">
+            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            <span class="dropdown-header-text">Quick Links</span>
+          </div>
+          
+          <button class="dropdown-item link-item" type="button" @click="whatsapp">
+            <svg class="dropdown-icon whatsapp" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.706 1.459h.008c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            <span class="dropdown-text">Whatsapp Group</span>
+          </button>
+          
+          <button class="dropdown-item link-item" type="button" @click="smpEmail">
+            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <span class="dropdown-text">SMP Email</span>
+          </button>
+          
+          <button class="dropdown-item link-item" type="button" @click="toSMP">
+            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="dropdown-text">SMP Wesbite</span>
+          </button>
+          
+          <button class="dropdown-item link-item" type="button" @click="insta">
+            <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+            <span class="dropdown-text">SMP Instagram</span>
+          </button>
+          
+          <button class="dropdown-item logout-item" type="button" @click="handleLogoutAndClose">
+            <svg class="dropdown-icon logout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span class="dropdown-text">Logout</span>
+          </button>
+        </div>
+      </transition>
     </div>
     <div class="main-body">
       <div class="Sidebar" :class="{ 'hidden': windowWidth < 750 && !showSidebar }">
@@ -20,7 +84,7 @@
         class="Content"
         :style="windowWidth < 750 ? { width: '100vw' } : {}"
       >
-        <div class="content-actions" v-if="Auth.role != 6311">
+        <div class="content-actions desktop-only" v-if="Auth.role != 6311">
           <button class="language-button notranslate" type="button" @click="triggerHindiTranslation">
             {{ isCurrentlyHindi ? 'Eng' : 'Hindi' }}
           </button>
@@ -29,6 +93,23 @@
             <span>{{ actionLabel }}</span>
           </button>
         </div>
+        
+        <!-- Mobile Floating Action Button (FAB) -->
+        <button
+          v-if="windowWidth < 750 && Auth.role != 6311"
+          class="mobile-fab"
+          type="button"
+          @click="postInfoQues"
+        >
+          <span class="fab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </span>
+          <span>{{ actionLabel }}</span>
+        </button>
         <div class="RouterView">
           <router-view
             @comment="ask"
@@ -127,6 +208,7 @@ export default {
       askQuestion: false,
       windowWidth: window.innerWidth,
       showSidebar: false,
+      showDropdown: false,
       accessToken: "",
       glass: false,
       expanded: false,
@@ -261,6 +343,30 @@ export default {
       }
 
       this.isCurrentlyHindi = !this.isCurrentlyHindi;
+    },
+    triggerHindiTranslationAndClose() {
+      this.triggerHindiTranslation();
+      this.showDropdown = false;
+    },
+    whatsapp() {
+      window.open("https://chat.whatsapp.com/", "_blank");
+      this.showDropdown = false;
+    },
+    smpEmail() {
+      window.open("mailto:smp@iitb.ac.in");
+      this.showDropdown = false;
+    },
+    toSMP() {
+      window.open("https://gymkhana.iitb.ac.in/~smp/", "_blank");
+      this.showDropdown = false;
+    },
+    insta() {
+      window.open("https://www.instagram.com/smp.iitb/", "_blank");
+      this.showDropdown = false;
+    },
+    async handleLogoutAndClose() {
+      await this.Auth.Logout();
+      this.showDropdown = false;
     },
     onResize() {
       this.windowWidth = window.innerWidth;
@@ -654,6 +760,10 @@ export default {
 }
 
 @media only screen and (max-width: 750px) {
+  .desktop-only {
+    display: none !important;
+  }
+
   .TopBar {
     height: 64px;
   }
@@ -663,11 +773,7 @@ export default {
   }
 
   .Sidebar {
-    height: 100vh;
-    z-index: 2;
-    position: fixed;
-    justify-content: start;
-    padding: 0;
+    display: none !important;
   }
 
   .Content {
@@ -679,8 +785,120 @@ export default {
     width: 100%;
   }
 
-  .Sidebar {
-    width: 0px;
+  .mobile-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 18px;
+    z-index: 99;
+    height: 64px;
+    border-radius: 32px;
+    background: #ffdf80; /* golden yellow */
+    border: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    gap: 10px;
+    color: #1c1b1f;
+    font-family: Inter, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .mobile-fab:active {
+    transform: scale(0.96);
+  }
+
+  .fab-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fab-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-dropdown-menu {
+    position: absolute;
+    top: 68px;
+    right: 12px;
+    background: #fff0c2; /* light yellow matching header */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 18px;
+    width: 190px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 200;
+  }
+
+  .dropdown-item {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1c1b1f;
+    cursor: pointer;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .dropdown-item.link-item span {
+    text-decoration: underline;
+  }
+
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1c1b1f;
+    font-family: Inter, sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    margin-top: 4px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 12px;
+  }
+
+  .dropdown-item.logout-item {
+    margin-top: 4px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 12px;
+  }
+
+  .dropdown-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: #1c1b1f;
+  }
+
+  .dropdown-icon.whatsapp {
+    color: #1c1b1f;
+  }
+
+  .dropdown-fade-enter-active,
+  .dropdown-fade-leave-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .dropdown-fade-enter-from,
+  .dropdown-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
   }
 
   .snackbar {

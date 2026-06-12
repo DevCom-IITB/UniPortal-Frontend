@@ -1,8 +1,14 @@
 <template>
   <div class="questions-page">
     <div class="tabs-shell">
-      <button class="tab-button" type="button" @click="goToAnnouncements">Announcements</button>
-      <button class="tab-button active" type="button">Questions</button>
+      <button class="tab-button" type="button" @click="goToAnnouncements">
+        Announcements
+        <span v-if="authStore.role !== 7669 && questionStore.announcementsCount > 0" class="count-badge">{{ questionStore.announcementsCount }}</span>
+      </button>
+      <button class="tab-button active" type="button">
+        Questions
+        <span v-if="authStore.role !== 7669 && questionStore.pendingCount > 0" class="count-badge unanswered">{{ questionStore.pendingCount }}</span>
+      </button>
     </div>
 
     <label class="feed-search">
@@ -38,6 +44,7 @@ import Fuse from "fuse.js";
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
 import { useColourStore } from "../stores/colour";
+import { useQuestionStore } from "../stores/question";
 
 export default {
   name: "UnAnsweredQ",
@@ -45,7 +52,8 @@ export default {
     const authStore = useAuthStore();
     const listStore = useListStore();
     const colourStore = useColourStore();
-    return { authStore, listStore, colourStore };
+    const questionStore = useQuestionStore();
+    return { authStore, listStore, colourStore, questionStore };
   },
   data() {
     return {
@@ -129,7 +137,11 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchQuestions();
+    await Promise.all([
+      this.fetchQuestions(),
+      this.questionStore.FetchAnnouncementsCount(),
+      this.questionStore.FetchUnansweredCount()
+    ]);
     this.questions = this.listStore.list;
     console.log(this.questions);
     this.colourStore.colourUnAnswered();
@@ -173,6 +185,26 @@ export default {
 
 .tab-button.active {
   background: #ffdf80;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.count-badge.unanswered {
+  background: #ff4d4d; /* Red for unanswered questions to grab attention */
 }
 
 .feed-search {
