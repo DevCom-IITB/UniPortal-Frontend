@@ -51,9 +51,12 @@
       </article>
     </section>
 
-    <button class="useful-row" type="button" @click="Upvote">
+    <button class="useful-row" type="button" @click="UpvoteToggle">
       <span class="useful-count">
-        <span class="thumb-icon"></span>
+        <span class="thumb-icon-svg">
+          <Upvote1 v-if="isUpvoted" />
+          <Upvote v-else />
+        </span>
         <span>{{ upvoteCount }}</span>
       </span>
       <span>I found this useful!</span>
@@ -93,6 +96,8 @@
 
 <script>
 import Logo from "../components/icons/Logo.svg";
+import Upvote from "../components/icons/upvote.svg";
+import Upvote1 from "../components/icons/expand_more.svg";
 
 import { useAuthStore } from '../stores/auth';
 import { useQuestionStore } from "../stores/question";
@@ -109,7 +114,7 @@ export default {
     const AuthStore = useAuthStore();
     return { questionStore, listStore, colourStore, AuthStore };
   },
-  components: { Logo },
+  components: { Logo, Upvote, Upvote1 },
   watch: {
     '$route.params.id': function (newId) {
       if (newId) {
@@ -124,6 +129,7 @@ export default {
       comments: [],
       commentText: "",
       loading: true,
+      isUpvoted: false,
     };
   },
   computed: {
@@ -227,9 +233,10 @@ export default {
       await this.questionStore.SetAddImage(true);
       this.$emit("comment");
     },
-    async Upvote() {
+    async UpvoteToggle() {
       await this.ensureQuestionSelected();
       await this.questionStore.UpvoteQuestion();
+      this.isUpvoted = !this.isUpvoted;
     },
     async Hide() {
       await this.ensureQuestionSelected();
@@ -521,34 +528,18 @@ h1 {
   font-weight: 700;
 }
 
-.thumb-icon {
+.thumb-icon-svg {
   width: 18px;
   height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.thumb-icon::before {
-  content: "";
-  position: absolute;
-  left: 8px;
-  top: 2px;
-  width: 7px;
-  height: 12px;
-  border: 1.7px solid #1c1b1f;
-  border-left: none;
-  border-radius: 2px 5px 5px 2px;
-  transform: rotate(18deg);
-}
-
-.thumb-icon::after {
-  content: "";
-  position: absolute;
-  left: 3px;
-  bottom: 3px;
-  width: 6px;
-  height: 8px;
-  border: 1.7px solid #1c1b1f;
-  border-radius: 2px;
-  background: #ffffff;
+.thumb-icon-svg svg {
+  width: 16px;
+  height: 16px;
+  color: #1c1b1f;
 }
 
 .comment-composer {

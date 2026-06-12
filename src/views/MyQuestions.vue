@@ -64,7 +64,7 @@ export default {
       }
       const fuse = new Fuse(this.questions, {
         keys: ["body", "title", "subject"],
-        threshold: 0.45,
+        threshold: 0.2,
       });
       return fuse.search(this.searchQuery).map((result) => result.item);
     },
@@ -183,49 +183,9 @@ export default {
   background: #ffdf80;
 }
 
-.feed-search {
-  position: relative;
+.search-container {
   width: 100%;
-  height: 54px;
   margin-top: 72px;
-  border-radius: 999px;
-  background: #eeeeee;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 24px;
-}
-
-.search-icon {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #9b9b9b;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.search-icon::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 2px;
-  background: #9b9b9b;
-  right: -6px;
-  bottom: 1px;
-  transform: rotate(45deg);
-  border-radius: 999px;
-}
-
-.feed-search input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 15px;
-  font-weight: 500;
-  font-family: Inter, sans-serif;
-  color: #1c1b1f;
 }
 
 .filter-row {
@@ -267,7 +227,8 @@ export default {
     max-width: 320px;
   }
 
-  .feed-search {
+  .search-container {
+    width: 100%;
     margin-top: 28px;
   }
 }

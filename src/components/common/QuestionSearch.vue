@@ -165,7 +165,7 @@ export default {
 
       this.loading = true;
       this.showDropdown = true;
-      this.debounceTimer = setTimeout(() => this.runSearch(), 280);
+      this.debounceTimer = setTimeout(() => this.runSearch(), 150);
     },
     async runSearch() {
       const q = this.query.trim();

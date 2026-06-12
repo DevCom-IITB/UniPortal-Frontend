@@ -35,14 +35,42 @@
           <span class="status-pill" :class="{ resolved: isAnswered }">
             {{ isAnswered ? "Answered" : "Unanswered" }}
           </span>
+          <button v-if="(AuthStore.role == 5980 || AuthStore.role == 6311) && !isAnswered" class="answer-pill-yellow" type="button" @click.stop="toggleInlineAnswer(false)">
+            Answer
+          </button>
         </div>
       </button>
+
+      <div v-if="isAnswering" class="inline-answer-container" @click.stop>
+        <div class="inline-input-wrapper">
+          <textarea v-model="inlineAnswerBody" placeholder="Answer a question" class="inline-textarea"></textarea>
+          <div class="inline-input-bottom">
+            <button class="add-attachment-btn" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+              </svg>
+              Add attachment
+            </button>
+          </div>
+        </div>
+        <div class="inline-answer-actions">
+          <button class="btn-send" type="button" @click="submitInlineAnswer">
+            Send 
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+          <button class="btn-cancel" type="button" @click="cancelInlineAnswer">Cancel</button>
+        </div>
+      </div>
 
       <!-- Mobile bottom action row inside the card -->
       <div class="mobile-action-row mobile-only">
         <button class="mobile-action-pill upvote-pill" type="button" @click.stop="Upvote">
           <svg class="mobile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+            <path v-if="!isUpvoted" d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+            <path v-else d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
           </svg>
           <span>{{ upvoteCount }}</span>
         </button>
@@ -55,17 +83,29 @@
         </button>
       </div>
 
-      <div v-if="isAnswered" class="answer-preview">
-        <span>Answer from SMP</span>
-        <p>{{ answerPreview }}</p>
+      <div v-if="isAnswered" class="answer-preview-wrapper">
+        <div class="answer-preview">
+          <div class="answer-preview-text">
+            <span>Answer from SMP</span>
+            <p>{{ answerPreview }}</p>
+          </div>
+          <div class="answer-actions" v-if="(AuthStore.role == 5980 || AuthStore.role == 6311)">
+            <button type="button" @click.stop="toggleInlineAnswer(true)" class="icon-btn" aria-label="Edit Answer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            </button>
+            <button type="button" @click.stop="deleteAnswer" class="icon-btn" aria-label="Delete Answer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div v-if="AuthStore.role == 5980" class="moderation-actions">
+      <!-- <div v-if="AuthStore.role == 5980" class="moderation-actions">
         <button type="button" @click.stop="Hide">
           {{ question.hidden ? "Show" : "Hide" }}
         </button>
         <button type="button" @click.stop="AnswerClick">Answer</button>
-      </div>
+      </div> -->
 
       <div v-if="showComments" class="comment-boxes">
         <div
@@ -78,8 +118,11 @@
       </div>
     </article>
 
-    <button class="upvote-stack desktop-only" type="button" @click="Upvote" aria-label="Upvote question">
-      <span class="thumb-icon"></span>
+    <button class="upvote-stack desktop-only" type="button" @click="Upvote" aria-label="Upvote question" :title="isUpvoted ? 'Remove upvote' : 'Upvote'">
+      <svg class="desktop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path v-if="!isUpvoted" d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+        <path v-else d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+      </svg>
       <span>{{ upvoteCount }}</span>
     </button>
   </div>
@@ -134,6 +177,10 @@ export default {
       isTranslated: false,
       isTranslating: false,
       translatedText: "",
+      isUpvoted: false,
+      isAnswering: false,
+      isEditingAnswer: false,
+      inlineAnswerBody: "",
     };
   },
   computed: {
@@ -273,6 +320,50 @@ export default {
       await this.QuestionStore.SetAddImage(true);
       this.$emit("comment");
     },
+    async deleteAnswer() {
+      if (!confirm("Are you sure you want to delete this answer?")) return;
+      if (this.question.answers && this.question.answers.length > 0) {
+        await this.QuestionStore.SetQuestion(this.question);
+        await this.QuestionStore.SetQuestionID(this.question._id || this.question.id);
+        await this.QuestionStore.SetAnswerID(this.question.answers[0]._id || this.question.answers[0].id);
+        await this.QuestionStore.HideAnswer();
+      }
+    },
+    async EditAnswerClick() {
+      await this.QuestionStore.SetQuestion(this.question);
+      await this.QuestionStore.SetAction(8);
+      await this.QuestionStore.SetAddImage(false);
+      this.$emit("comment");
+    },
+    toggleInlineAnswer(isEdit = false) {
+      this.isAnswering = true;
+      this.isEditingAnswer = isEdit;
+      if (isEdit && this.question.answers && this.question.answers.length > 0) {
+        this.inlineAnswerBody = this.question.answers[0].body || "";
+      } else {
+        this.inlineAnswerBody = "";
+      }
+    },
+    cancelInlineAnswer() {
+      this.isAnswering = false;
+      this.inlineAnswerBody = "";
+    },
+    async submitInlineAnswer() {
+      if (!this.inlineAnswerBody.trim()) return;
+      await this.QuestionStore.SetQuestion(this.question);
+      
+      if (this.isEditingAnswer) {
+        if (this.question.answers && this.question.answers.length > 0) {
+           await this.QuestionStore.SetAnswerID(this.question.answers[0]._id || this.question.answers[0].id);
+        }
+        await this.QuestionStore.EditAnswer(this.inlineAnswerBody);
+      } else {
+        await this.QuestionStore.AddAnswer(this.inlineAnswerBody, []);
+      }
+      
+      this.isAnswering = false;
+      this.inlineAnswerBody = "";
+    },
     async CommentClick() {
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetAction(2);
@@ -282,6 +373,7 @@ export default {
     async Upvote() {
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.UpvoteQuestion();
+      this.isUpvoted = !this.isUpvoted;
     },
     async Hide() {
       await this.QuestionStore.SetQuestion(this.question);
@@ -515,16 +607,27 @@ export default {
   color: #0ca44f;
 }
 
-.answer-preview {
+.answer-preview-wrapper {
   margin-top: 16px;
+}
+
+.answer-preview {
   min-height: 54px;
   border: 1px solid #c9c9c9;
   border-radius: 22px;
   background: #ffffff;
   padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.answer-preview span {
+.answer-preview-text {
+  flex-grow: 1;
+  padding-right: 12px;
+}
+
+.answer-preview-text span {
   display: block;
   margin-bottom: 4px;
   font-size: 11px;
@@ -533,11 +636,30 @@ export default {
   color: #9b9b9b;
 }
 
-.answer-preview p {
+.answer-preview-text p {
   margin: 0;
   font-size: 12px;
   line-height: 1.25;
   font-weight: 500;
+  color: #1c1b1f;
+}
+
+.answer-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.answer-actions .icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #1c1b1f;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   color: #1c1b1f;
 }
 
@@ -595,10 +717,102 @@ export default {
   background: #fff6c9;
 }
 
+.desktop-icon {
+  width: 24px;
+  height: 24px;
+  color: #1c1b1f;
+  margin-bottom: 2px;
+}
+
+.answer-pill-yellow {
+  min-height: 28px;
+  border-radius: 999px;
+  background: #ffdf80;
+  color: #1c1b1f;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 700;
+  border: none;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
 .moderation-actions {
   display: flex;
   gap: 8px;
   margin-top: 12px;
+}
+
+.inline-answer-container {
+  padding: 12px 0 0 0;
+}
+
+.inline-input-wrapper {
+  border: 1px solid #c9c9c9;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.inline-textarea {
+  width: 100%;
+  min-height: 40px;
+  border: none;
+  background: transparent;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 13px;
+  color: #1c1b1f;
+  outline: none;
+}
+
+.inline-input-bottom {
+  margin-top: 8px;
+}
+
+.add-attachment-btn {
+  border: 1px solid #1c1b1f;
+  border-radius: 999px;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inline-answer-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-send {
+  background: #ffdf80;
+  border: 1px solid #c9c9c9;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-cancel {
+  background: #ffffff;
+  border: 1px solid #1c1b1f;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
 }
 
 .moderation-actions button {

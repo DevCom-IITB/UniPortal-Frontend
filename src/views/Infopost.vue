@@ -81,7 +81,7 @@ export default {
 
       const fuse = new Fuse(this.infoposts, {
         keys: ["body", "title", "user_Name", "User_name"],
-        threshold: 0.45,
+        threshold: 0.2,
       });
 
       return fuse.search(this.searchQuery).map((result) => result.item);
@@ -276,51 +276,9 @@ export default {
   background: #ff4d4d;
 }
 
-.feed-search {
+.search-container {
   width: 100%;
-  height: 64px;
   margin-top: 46px;
-  border-radius: 999px;
-  background: #eeeeee;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 0 32px;
-  position: relative;
-  box-sizing: border-box;
-}
-
-.search-icon {
-  width: 24px;
-  height: 24px;
-  border: 2.5px solid #9b9b9b;
-  border-radius: 50%;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.search-icon::after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 2.5px;
-  background: #9b9b9b;
-  right: -7px;
-  bottom: 2px;
-  transform: rotate(45deg);
-  border-radius: 999px;
-}
-
-.feed-search input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 18px;
-  font-weight: 500;
-  font-family: Inter, sans-serif;
-  color: #1c1b1f;
-  padding: 12px 4px;
 }
 
 .announcement-list {
@@ -350,21 +308,10 @@ export default {
     align-self: center;
   }
 
-  .feed-search {
+  .search-container {
     order: 2;
+    width: 100%;
     margin-top: 18px;
-    height: 48px;
-    padding: 0 20px;
-  }
-
-  .search-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .feed-search input {
-    padding: 10px 4px;
-    font-size: 16px;
   }
 
   .announcement-list {

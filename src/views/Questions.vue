@@ -20,7 +20,7 @@
         :class="{ selected: index === selectedCategoryIndex }"
         @click="selectCategory(index)"
       >
-        <span>{{ windowWidth < 750 ? `${category} (${getCategoryCount(category)})` : category }}</span>
+        <span>{{ category }} ({{ getCategoryCount(category) }})</span>
         <span v-if="index === selectedCategoryIndex" class="close-mark">x</span>
       </button>
     </div>
@@ -126,7 +126,7 @@ export default {
         const remaining = result.filter((q) => q.tag !== activeCategory);
         const categoryFuse = new Fuse(remaining, {
           keys: ["body", "title", "subject"],
-          threshold: 0.5,
+          threshold: 0.2,
         });
         const fuzzyMatches = categoryFuse.search(activeCategory).map((res) => res.item);
         result = [...exactMatches, ...fuzzyMatches];
@@ -143,7 +143,7 @@ export default {
       if (this.searchQuery.trim()) {
         const fuse = new Fuse(result, {
           keys: ["body", "title", "user_Name", "User_name", "subject"],
-          threshold: 0.45,
+          threshold: 0.2,
         });
         result = fuse.search(this.searchQuery).map((res) => res.item);
       }
@@ -348,60 +348,9 @@ export default {
   font-weight: 800;
 }
 
-/* FIXED & OPTIMIZED: Strict width boundaries with a sleek, compact container layout */
-.feed-search {
-  display: flex;
-  align-items: center;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 100% !important;
-  height: 54px; /* Reduced from 90px to a cleaner profile */
-  margin-top: 20px;
-  border-radius: 999px;
-  background: #eeeeee;
-  gap: 14px; 
-  padding: 0 24px; /* Streamlined horizontal padding */
-  flex-shrink: 0;
-}
-
-/* Clear upscale profile for higher resolution rendering */
-.search-icon {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  border: 2.5px solid #8e8e8e;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.search-icon::after {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 2.5px;
-  background: #8e8e8e;
-  right: -6px;
-  bottom: 0px;
-  transform: rotate(45deg);
-  border-radius: 999px;
-}
-
-.feed-search input {
-  flex: 1;
+.search-container {
   width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 18px; 
-  font-weight: 600; 
-  font-family: Inter, sans-serif;
-  color: #1c1b1f;
-}
-
-.feed-search input::placeholder {
-  color: #8e8e8e;
-  font-weight: 500;
-  opacity: 1;
+  margin-top: 20px;
 }
 
 .filter-row {
@@ -460,27 +409,10 @@ export default {
     align-self: center;
   }
 
-  .feed-search {
+  .search-container {
     order: 2;
-    height: 48px;
-    padding: 0 20px;
+    width: 100%;
     margin-top: 18px;
-  }
-
-  .search-icon {
-    width: 20px;
-    height: 20px;
-    border-width: 2px;
-  }
-
-  .search-icon::after {
-    width: 7px;
-    height: 2px;
-    right: -4px;
-  }
-
-  .feed-search input {
-    font-size: 16px;
   }
 
   .filter-row {

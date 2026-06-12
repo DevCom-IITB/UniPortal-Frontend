@@ -179,7 +179,8 @@ export default {
       return "Ask a question";
     },
     primaryActionLabel() {
-      return this.questionStore.action == 6 ? "Save" : "Post";
+      if (this.questionStore.action == 6 || this.questionStore.action == 8) return "Save";
+      return "Post";
     },
     showIdentityControls() {
       return this.questionStore.action == 4;
@@ -192,6 +193,11 @@ export default {
     if (this.editBody && this.questionStore.action == 6) {
       this.text = this.editBody;
       this.announcementTitle = this.editTitle;
+    } else if (this.questionStore.action == 8) {
+      const q = this.questionStore.question;
+      if (q && q.answers && q.answers.length > 0) {
+        this.text = q.answers[0].body || "";
+      }
     }
   },
   watch: {
@@ -303,7 +309,7 @@ export default {
       const q = this.text.trim();
       console.log("Searching for:", q, "List size:", this.listStore.list ? this.listStore.list.length : 0);
       
-      if (q.length < 3) {
+      if (q.length < 2) {
         this.similarResults = [];
         console.log("Query too short, clearing results.");
         return;
@@ -312,7 +318,9 @@ export default {
       // Client-side fuzzy search using Fuse.js
       const options = {
         keys: ["body", "title", "subject"],
-        threshold: 0.4,
+        threshold: 0.2,
+        ignoreLocation: true,
+        distance: 100,
       };
 
       const fuse = new Fuse(this.listStore.list || [], options);

@@ -1,27 +1,62 @@
 <template>
-  <article class="announcement-card">
-    <div class="announcement-meta">
-      <span>ISMP Mentor</span>
-      <span class="dot"></span>
-      <span>{{ timestamp }}</span>
+  <article class="announcement-card" :class="{ 'editing-mode': isEditing }">
+    <div class="delete-modal-overlay" v-if="showDeleteModal" @click.self="showDeleteModal = false">
+      <div class="delete-modal">
+        <h3>Are you sure you want to<br/>delete this announcement</h3>
+        <div class="modal-actions">
+          <button class="btn-delete-confirm" @click="confirmDelete">Delete</button>
+          <button class="btn-cancel" @click="showDeleteModal = false">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div class="header-row">
+      <div class="announcement-meta">
+        <span>ISMP Mentor</span>
+        <span class="dot"></span>
+        <span>{{ timestamp }}</span>
+      </div>
+      <div class="admin-actions" v-if="authStore.role == 5980 || authStore.role == 6311">
+        <button class="action-btn circle-btn" :class="{ active: isEditing }" @click="toggleEdit">
+          <edit class="icon" />
+        </button>
+        <button class="action-btn circle-btn" @click="showDeleteModal = true">
+          <svg class="icon trash-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <h2>{{ announcementTitle }}</h2>
 
     <div class="announcement-body">
-      <div ref="markdownWrapper" class="markdown-wrapper collapsed">
-        <div class="arrow-container" v-if="announcementBody.includes('\n')">
-          <rightArrow 
-            class="arrow" 
-            :class="{ rotated: isRotated }" 
-            @click="toggleRotation" 
-          />
+      <template v-if="!isEditing">
+        <div ref="markdownWrapper" class="markdown-wrapper collapsed">
+          <div class="arrow-container" v-if="announcementBody.includes('\n')">
+            <rightArrow 
+              class="arrow" 
+              :class="{ rotated: isRotated }" 
+              @click="toggleRotation" 
+            />
+          </div>
+          <Markdown :source="getMarkdownContent()" />
         </div>
-        <Markdown :source="getMarkdownContent()" />
-      </div>
+      </template>
+      <template v-else>
+        <textarea class="edit-textarea" v-model="editBody" placeholder="Edit announcement text..."></textarea>
+        <button class="add-attachment-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+          </svg>
+          Add attachment
+        </button>
+      </template>
     </div>
 
-    <div class="Images" v-if="images.length">
+    <div class="Images" v-if="images.length && !isEditing">
       <button
         v-for="image in images"
         :key="image"
@@ -32,21 +67,19 @@
         <img :src="image" alt="" />
       </button>
     </div>
-
-    <div
-      class="mentor-actions"
-      v-if="authStore.role == 5980 || authStore.role == 1980"
-    >
-      <button type="button" @click="Hide">
-        <eye v-if="!infopost.hidden" class="icon" />
-        <closed_eye v-if="infopost.hidden" class="icon" />
-        <span>{{ infopost.hidden ? "Show" : "Hide" }}</span>
+    
+    <div class="edit-actions" v-if="isEditing">
+      <button class="btn-send" @click="saveEdit">
+        Send 
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
       </button>
-      <button type="button" @click="Edit">
-        <edit class="icon" />
-        <span>Edit</span>
-      </button>
+      <button class="btn-cancel" @click="cancelEdit">Cancel</button>
     </div>
+
+
   </article>
 </template>
 
@@ -82,6 +115,9 @@ export default {
       windowWidth: window.innerWidth,
       timestamp: "",
       isRotated: false,
+      isEditing: false,
+      showDeleteModal: false,
+      editBody: "",
     };
   },
   computed: {
@@ -119,12 +155,25 @@ export default {
       await this.questionStore.HideInfoPost();
       this.$emit("hide");
     },
-    async Edit() {
-      console.log("editing");
+    toggleEdit() {
+      this.isEditing = !this.isEditing;
+      if (this.isEditing) {
+        this.editBody = this.infopost.body;
+      }
+    },
+    cancelEdit() {
+      this.isEditing = false;
+    },
+    async saveEdit() {
       await this.questionStore.SetInfoID(this.infopost._id || this.infopost.id);
-      await this.questionStore.SetAction(6);
-      console.log("emitting edit :", this.infopost);
-      this.$emit("edit", this.infopost);
+      await this.questionStore.EditInfoPost(this.infopost.title, this.editBody);
+      this.infopost.body = this.editBody;
+      this.isEditing = false;
+    },
+    async confirmDelete() {
+      await this.questionStore.SetInfoID(this.infopost._id || this.infopost.id);
+      await this.questionStore.DeleteInfoPost();
+      this.showDeleteModal = false;
     },
     formatShortDate(value) {
       const date = new Date(value);
@@ -193,11 +242,47 @@ export default {
   display: flex;
   align-items: center;
   gap: 7px;
-  margin-bottom: 6px;
   font-size: 12px;
   line-height: 1;
   font-weight: 500;
   color: #1c1b1f;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.circle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #1c1b1f;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.circle-btn.active {
+  background: #ffdf80;
+}
+
+.circle-btn:hover {
+  background: #f0f0f0;
+}
+
+.circle-btn.active:hover {
+  background: #e6c873;
 }
 
 .announcement-meta span {
@@ -237,6 +322,121 @@ h2 {
   color: #1c1b1f;
 }
 
+.edit-textarea {
+  width: 100%;
+  min-height: 60px;
+  border: none;
+  background: transparent;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 13px;
+  color: #1c1b1f;
+  outline: none;
+  margin-bottom: 8px;
+}
+
+.add-attachment-btn {
+  border: 1px solid #1c1b1f;
+  border-radius: 999px;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-send {
+  background: #ffdf80;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid #1c1b1f;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+}
+
+.delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.delete-modal h3 {
+  font-size: 22px;
+  font-weight: 500;
+  color: #1c1b1f;
+  margin-bottom: 24px;
+  line-height: 1.3;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-delete-confirm {
+  background: #ffdf80;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+}
+
+.modal-actions .btn-cancel {
+  border: 1px solid #1c1b1f;
+  background: transparent;
+  border-radius: 999px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+}
+
 .Images {
   display: flex;
   flex-wrap: wrap;
@@ -261,26 +461,7 @@ h2 {
   object-fit: cover;
 }
 
-.mentor-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
 
-.mentor-actions button {
-  border: 1px solid #1c1b1f;
-  border-radius: 999px;
-  background: transparent;
-  min-height: 30px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  font-family: Inter, sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-}
 
 .arrow-container {
   display: flex;
