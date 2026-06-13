@@ -117,7 +117,7 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: "Search questions...",
+      default: "Search questions, Infoposts...",
     },
   },
   emits: ["select"],

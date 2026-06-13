@@ -205,11 +205,18 @@ export default {
     this.$nextTick(() => {
       window.addEventListener("resize", this.onResize);
     });
-    const rawImages = this.infopost.images || this.infopost.imgs || [];
-    this.images = rawImages.map((image) => {
-      if (typeof image !== "string") return image;
-      if (image.startsWith("http") || image.startsWith(".") || image.startsWith("/")) {
-        return image;
+    console.log("we will be loggin the images");
+    this.images = this.infopost.images;
+    if (this.images.length > 0) {
+      for (let i = 0; i < this.images.length; i++) {
+        //D:\SMP\SMP-Portal-Backend\uploads
+        console.log(this.images[i]);
+        const temp =
+          (import.meta.env.VITE_NODE_ENV == "DEV"
+            ? "http://localhost:5000/uploads/"
+            : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + this.images[i];
+        this.images[i] = temp;
+        console.log(this.images[i]);
       }
       return (
         (import.meta.env.VITE_NODE_ENV == "DEV"
