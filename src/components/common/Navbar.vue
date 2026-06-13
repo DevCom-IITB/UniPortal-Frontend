@@ -16,7 +16,9 @@
         :class="{ active: notificationsOpen }"
         @click="$emit('toggleNotifications')"
         aria-label="Open notifications"
-      ></button>
+      >
+        <Notification class="notification-svg" />
+      </button>
       <button
         v-if="isMobile"
         class="mobile-burger-right"
@@ -26,9 +28,6 @@
         <span class="burger-bar"></span>
         <span class="burger-bar"></span>
         <span class="burger-bar"></span>
-      </button>
-      <button type="button" class="nav-icon grid-icon" aria-label="Open menu">
-        <span v-for="dot in 9" :key="dot"></span>
       </button>
       <div class="user-profile" @click="toggleLogoutMenu">
         <div class="user-avatar"></div>
@@ -47,6 +46,7 @@
 <script>
 import DC from "../icons/DC.svg";
 import Logo from "../icons/Logo.svg";
+import Notification from "../icons/notification.svg";
 import { useAuthStore } from "@/stores/auth";
 
 export default {
@@ -61,6 +61,7 @@ export default {
   components: {
     DC,
     Logo,
+    Notification,
   },
   setup() {
     const authStore = useAuthStore();
@@ -183,8 +184,6 @@ export default {
 }
 
 .nav-icon {
-  width: 28px;
-  height: 28px;
   border: none;
   background: transparent;
   padding: 0;
@@ -192,49 +191,25 @@ export default {
   flex-shrink: 0;
 }
 
-.bell-icon::before {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 5px;
-  width: 12px;
-  height: 14px;
-  border: 2px solid #000000;
-  border-bottom: none;
-  border-radius: 9px 9px 5px 5px;
-}
-
-.bell-icon::after {
-  content: "";
-  position: absolute;
-  left: 9px;
-  bottom: 5px;
-  width: 8px;
-  height: 5px;
-  border: 2px solid #000000;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
+.bell-icon {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: background 0.2s;
 }
 
 .bell-icon.active {
   background: #ffdf80;
-  border-radius: 9px;
 }
 
-.grid-icon {
-  display: grid;
-  grid-template-columns: repeat(3, 4px);
-  grid-template-rows: repeat(3, 4px);
-  justify-content: center;
-  align-content: center;
-  gap: 5px;
-}
-
-.grid-icon span {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #000000;
+.notification-svg {
+  width: 38px;
+  height: 38px;
+  color: #1c1b1f;
+  display: block;
 }
 
 .user-profile {
@@ -334,10 +309,6 @@ export default {
 
   .right-links {
     gap: 12px;
-  }
-
-  .grid-icon {
-    display: none;
   }
 
   .user-profile {
