@@ -120,7 +120,7 @@ export default {
       this.windowWidth = window.innerWidth;
     },
     goToUnanswered() {
-      this.$router.push(this.authStore.vite_base + '/unanswered');
+      this.$router.push({ path: this.authStore.vite_base + '/questions', query: { filter: 'Unanswered' } });
     },
     async loadNotifications() {
       try {

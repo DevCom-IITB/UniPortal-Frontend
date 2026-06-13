@@ -1,5 +1,14 @@
 <template>
   <div class="question-shell">
+    <div class="delete-modal-overlay" v-if="showDeleteModal" @click.self="showDeleteModal = false">
+      <div class="delete-modal">
+        <h3>Are you sure you want to<br/>delete this answer?</h3>
+        <div class="modal-actions">
+          <button class="btn-delete-confirm" type="button" @click.stop="confirmDelete">Delete</button>
+          <button class="btn-cancel" type="button" @click.stop="showDeleteModal = false">Cancel</button>
+        </div>
+      </div>
+    </div>
     <article class="question-card" :class="{ answered: isAnswered }">
       <button class="question-content" type="button" @click="openQuestion">
         <div class="question-main">
@@ -181,6 +190,7 @@ export default {
       isAnswering: false,
       isEditingAnswer: false,
       inlineAnswerBody: "",
+      showDeleteModal: false,
     };
   },
   computed: {
@@ -321,13 +331,7 @@ export default {
       this.$emit("comment");
     },
     async deleteAnswer() {
-      if (!confirm("Are you sure you want to delete this answer?")) return;
-      if (this.question.answers && this.question.answers.length > 0) {
-        await this.QuestionStore.SetQuestion(this.question);
-        await this.QuestionStore.SetQuestionID(this.question._id || this.question.id);
-        await this.QuestionStore.SetAnswerID(this.question.answers[0]._id || this.question.answers[0].id);
-        await this.QuestionStore.HideAnswer();
-      }
+      this.showDeleteModal = true;
     },
     async EditAnswerClick() {
       await this.QuestionStore.SetQuestion(this.question);
@@ -374,6 +378,15 @@ export default {
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.UpvoteQuestion();
       this.isUpvoted = !this.isUpvoted;
+    },
+    async confirmDelete() {
+      if (this.question.answers && this.question.answers.length > 0) {
+        await this.QuestionStore.SetQuestion(this.question);
+        await this.QuestionStore.SetQuestionID(this.question._id || this.question.id);
+        await this.QuestionStore.SetAnswerID(this.question.answers[0]._id || this.question.answers[0].id);
+        await this.QuestionStore.DeleteAnswer();
+      }
+      this.showDeleteModal = false;
     },
     async Hide() {
       await this.QuestionStore.SetQuestion(this.question);
@@ -513,6 +526,35 @@ export default {
   line-height: 1;
   font-weight: 400;
   color: #777777;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.circle-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #1c1b1f;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.circle-btn:hover {
+  background: #f0f0f0;
+}
+
+.circle-btn .icon {
+  width: 12px;
+  height: 12px;
 }
 
 .question-title {
@@ -942,5 +984,62 @@ export default {
     background: #ffffff;
     padding: 12px 14px;
   }
+}
+
+.delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.delete-modal h3 {
+  font-size: 22px;
+  font-weight: 500;
+  color: #1c1b1f;
+  margin-bottom: 24px;
+  line-height: 1.3;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-delete-confirm {
+  background: #ffdf80;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
+}
+
+.modal-actions .btn-cancel {
+  border: 1px solid #1c1b1f;
+  background: transparent;
+  border-radius: 999px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1b1f;
+  cursor: pointer;
 }
 </style>

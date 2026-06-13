@@ -38,6 +38,7 @@
       <button
         v-for="filter in filters"
         :key="filter"
+        v-show="filter !== 'My questions' || authStore.role === 7669"
         type="button"
         class="filter-pill"
         :class="{ selected: selectedFilters.includes(filter) }"
@@ -49,6 +50,12 @@
     </div>
 
     <div class="question-list">
+      <div v-if="networkError" class="empty-state">
+        <NoNetwork class="empty-svg" />
+      </div>
+      <div v-else-if="filteredQuestions.length === 0" class="empty-state">
+        <NoResultFound class="empty-svg" />
+      </div>
       <Question
         v-for="question in filteredQuestions"
         :key="question._id || question.id"
@@ -68,6 +75,8 @@
 import Question from "../components/common/questionBox.vue";
 import QuestionSearch from "../components/common/QuestionSearch.vue";
 import Fuse from "fuse.js";
+import NoResultFound from "../components/icons/NoResultFound.svg";
+import NoNetwork from "../components/icons/NoNetwork.svg";
 
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
@@ -79,6 +88,8 @@ export default {
   components: {
     Question,
     QuestionSearch,
+    NoResultFound,
+    NoNetwork,
   },
   setup() {
     const authStore = useAuthStore();
@@ -89,6 +100,7 @@ export default {
   },
   data() {
     return {
+      networkError: false,
       questions: [],
       searchQuery: "",
       categories: [
@@ -101,7 +113,7 @@ export default {
         "Orientation",
         "Miscellaneous",
       ],
-      filters: ["Answered", "Latest", "Most commented", "Most upvoted", "Unanswered"],
+      filters: ["Answered", "Latest", "Most commented", "Most upvoted", "Unanswered", "My questions"],
       selectedCategoryIndex: null,
       selectedFilters: [],
       windowWidth: window.innerWidth,
@@ -132,6 +144,10 @@ export default {
         result = [...exactMatches, ...fuzzyMatches];
       }
 
+      if (this.selectedFilters.includes("My questions")) {
+        result = result.filter((q) => q.user_ID === this.authStore.user_ID);
+      }
+
       if (this.selectedFilters.includes("Most upvoted")) {
         result.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
       } else if (this.selectedFilters.includes("Most commented")) {
@@ -160,6 +176,13 @@ export default {
     toggleFilter(filter) {
       if (this.selectedFilters.includes(filter)) {
         this.selectedFilters = this.selectedFilters.filter((item) => item !== filter);
+        
+        // Remove from URL if it matches the current query, so refresh won't re-add it
+        if (this.$route.query.filter === filter) {
+          const query = { ...this.$route.query };
+          delete query.filter;
+          this.$router.replace({ query }).catch(() => {});
+        }
         return;
       }
       this.selectedFilters = [...this.selectedFilters, filter];
@@ -176,6 +199,7 @@ export default {
       const url = `${import.meta.env.VITE_API_BASE}/question/`;
 
       try {
+        this.networkError = false;
         const res = await fetch(url, {
           method: "GET",
           headers: { "Content-Type": "application/json", Authorization: bearer },
@@ -204,6 +228,7 @@ export default {
         }
       } catch (error) {
         console.error("Failed to fetch questions:", error);
+        this.networkError = true;
       }
     },
     async handleTagSelected(tag) {
@@ -221,7 +246,30 @@ export default {
       }).length;
     },
   },
+  watch: {
+    "$route.query.filter"(newFilter) {
+      if (newFilter && this.filters.includes(newFilter)) {
+        if (!this.selectedFilters.includes(newFilter)) {
+          this.selectedFilters.push(newFilter);
+        }
+        // Remove from URL so refresh clears it
+        const query = { ...this.$route.query };
+        delete query.filter;
+        this.$router.replace({ query }).catch(() => {});
+      }
+    },
+  },
   async mounted() {
+    if (this.$route.query.filter && this.filters.includes(this.$route.query.filter)) {
+      if (!this.selectedFilters.includes(this.$route.query.filter)) {
+        this.selectedFilters.push(this.$route.query.filter);
+      }
+      // Remove from URL so refresh clears it
+      const query = { ...this.$route.query };
+      delete query.filter;
+      this.$router.replace({ query }).catch(() => {});
+    }
+    
     await Promise.all([
       this.fetchQuestions(),
       this.questionStore.FetchAnnouncementsCount(),
@@ -495,5 +543,20 @@ export default {
     order: 5;
     margin-top: 18px;
   }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.empty-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
 }
 </style>

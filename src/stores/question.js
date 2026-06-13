@@ -1031,6 +1031,63 @@ export const useQuestionStore = defineStore("question", {
         }
       }
     },
+    async DeleteAnswer() {
+      const authStore = useAuthStore();
+      const listStore = useListStore();
+      const colourStore = useColourStore();
+
+      const bearer = `Bearer ${authStore.accessToken}`;
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE}/question/deleteA/${this.question_ID}/${this.answer_ID}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: bearer,
+          },
+        }
+      );
+      
+      this.showSnackbar = true;
+
+      if (res.status == 200) {
+        const data = await res.json();
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
+        await listStore.SetDeleteAnswer(this.question_ID, this.answer_ID);
+        return true;
+      } else {
+        if (res.status === 403) {
+          await authStore.Refresh()
+          if (authStore.loggedIn) {
+            const bearer = `Bearer ${authStore.accessToken}`;
+            const res = await fetch(
+              `${import.meta.env.VITE_API_BASE}/question/deleteA/${this.question_ID}/${this.answer_ID}`,
+              {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: bearer,
+                },
+              }
+            )
+            const data = await res.json();
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
+            await listStore.SetDeleteAnswer(this.question_ID, this.answer_ID);
+            return true;
+          } else {
+            await authStore.Logout();
+            return false;
+          }
+        } else {
+          this.snackMessage = "not enough permissions";
+          colourStore.SetSnackColor(false);
+          await authStore.Logout();
+          return false;
+        }
+      }
+    },
 
     async HideQuestionComment() {
       const authStore = useAuthStore();
@@ -1269,6 +1326,57 @@ export const useQuestionStore = defineStore("question", {
           this.snackMessage = "not enough permissions";
           colourStore.SetSnackColor(false);
           await this.authStore.Logout();
+        }
+      }
+    },
+    async DeleteInfoPost() {
+      const authStore = useAuthStore();
+      const listStore = useListStore();
+      const colourStore = useColourStore();
+
+      const bearer = `Bearer ${authStore.accessToken}`;
+      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/delete/${this.info_ID}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: bearer,
+        },
+      });
+
+      this.showSnackbar = true;
+
+      if (res.status == 200) {
+        const data = await res.json();
+        this.snackMessage = data.message;
+        colourStore.SetSnackColor(true);
+        await listStore.SetDeleteInfoPost(this.info_ID);
+        return true;
+      } else {
+        if (res.status === 403) {
+          await authStore.Refresh()
+          if (authStore.loggedIn) {
+            const bearer = `Bearer ${authStore.accessToken}`;
+            const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/delete/${this.info_ID}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: bearer,
+              },
+            });
+            const data = await res.json();
+            this.snackMessage = data.message;
+            colourStore.SetSnackColor(true);
+            await listStore.SetDeleteInfoPost(this.info_ID);
+            return true;
+          } else {
+            await authStore.Logout();
+            return false;
+          }
+        } else {
+          this.snackMessage = "not enough permissions";
+          colourStore.SetSnackColor(false);
+          await authStore.Logout();
+          return false;
         }
       }
     },

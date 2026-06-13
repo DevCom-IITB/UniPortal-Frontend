@@ -21,6 +21,12 @@
     </div>
 
     <div class="announcement-list">
+      <div v-if="networkError" class="empty-state">
+        <NoNetwork class="empty-svg" />
+      </div>
+      <div v-else-if="filteredInfoposts.length === 0" class="empty-state">
+        <NoAnnouncementYet class="empty-svg" />
+      </div>
       <InfoBox
         v-for="infopost in filteredInfoposts"
         :key="infopost._id || infopost.id"
@@ -37,6 +43,8 @@
 import InfoBox from "../components/common/InfoBox.vue";
 import QuestionSearch from "../components/common/QuestionSearch.vue";
 import Fuse from "fuse.js";
+import NoAnnouncementYet from "../components/icons/NoAnnouncementYet.svg";
+import NoNetwork from "../components/icons/NoNetwork.svg";
 
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
@@ -49,6 +57,8 @@ export default {
   components: {
     InfoBox,
     QuestionSearch,
+    NoAnnouncementYet,
+    NoNetwork,
   },
 
   setup() {
@@ -67,6 +77,7 @@ export default {
 
   data() {
     return {
+      networkError: false,
       infoposts: [],
       searchQuery: "",
       windowWidth: window.innerWidth,
@@ -95,6 +106,7 @@ export default {
 
     async fetchInfoPosts() {
       try {
+        this.networkError = false;
         const bearer = `Bearer ${this.authStore.accessToken}`;
         const role = this.authStore.role;
 
@@ -174,6 +186,7 @@ export default {
         await this.authStore.Logout();
       } catch (error) {
         console.error("Error fetching info posts:", error);
+        this.networkError = true;
       }
     },
 
@@ -319,5 +332,20 @@ export default {
     margin-top: 18px;
     gap: 16px;
   }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
 }
 </style>

@@ -15,6 +15,12 @@
     </div>
 
     <div class="question-list">
+      <div v-if="networkError" class="empty-state">
+        <NoNetwork class="empty-svg" />
+      </div>
+      <div v-else-if="filteredQuestions.length === 0" class="empty-state">
+        <NoQuestionsAsked class="empty-svg" />
+      </div>
       <Question
         v-for="question in filteredQuestions"
         :key="question._id || question.id"
@@ -34,6 +40,8 @@
 import Question from "../components/common/questionBox.vue";
 import QuestionSearch from "../components/common/QuestionSearch.vue";
 import Fuse from "fuse.js";
+import NoQuestionsAsked from "../components/icons/NoQuestionsAsked.svg";
+import NoNetwork from "../components/icons/NoNetwork.svg";
 
 import { useAuthStore } from "../stores/auth";
 import { useListStore } from "../stores/list";
@@ -44,6 +52,8 @@ export default {
   components: {
     Question,
     QuestionSearch,
+    NoQuestionsAsked,
+    NoNetwork,
   },
   setup() {
     const authStore = useAuthStore();
@@ -53,6 +63,7 @@ export default {
   },
   data() {
     return {
+      networkError: false,
       questions: [],
       searchQuery: "",
     };
@@ -86,6 +97,7 @@ export default {
       console.log("bearer : ", bearer);
 
       try {
+        this.networkError = false;
         const res = await fetch(`${import.meta.env.VITE_API_BASE}/question/myQ`, {
           method: "PUT",
           headers: {
@@ -133,6 +145,7 @@ export default {
         }
       } catch (error) {
         console.error("Error fetching my questions:", error);
+        this.networkError = true;
       }
     },
   },
@@ -231,5 +244,20 @@ export default {
     width: 100%;
     margin-top: 28px;
   }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
 }
 </style>

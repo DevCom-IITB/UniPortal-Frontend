@@ -53,10 +53,7 @@
           v-else-if="results.length === 0 && query.length >= 2"
           class="search-status empty-state"
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            <line x1="8" y1="11" x2="14" y2="11"/>
-          </svg>
+          <NoResultFound class="empty-icon" />
           <span>No similar questions found</span>
         </div>
 
@@ -110,9 +107,13 @@ import { useAuthStore } from "@/stores/auth";
 import { useColourStore } from "@/stores/colour";
 import { useQuestionStore } from "@/stores/question";
 import { useListStore } from "@/stores/list";
+import NoResultFound from "../icons/NoResultFound.svg";
 
 export default {
   name: "QuestionSearch",
+  components: {
+    NoResultFound,
+  },
   props: {
     placeholder: {
       type: String,
@@ -185,8 +186,12 @@ export default {
         return;
       }
 
-      const full = await this.questionStore.FetchQuestionById(item._id);
-      if (!full) return;
+      // Try to fetch the full question from the backend; fall back to item if it fails
+      let full = await this.questionStore.FetchQuestionById(item._id);
+      if (!full) {
+        // Backend fetch failed (e.g. token expiry or missing route) — use the search result
+        full = item;
+      }
 
       this.listStore.UpsertQuestion(full);
       await this.questionStore.SetQuestion(full);
@@ -195,12 +200,15 @@ export default {
       this.$emit("select", full);
       this.closeDropdown();
 
-      // Navigate to the question view; if answered, add hash so view can scroll
-      const target = this.authStore.vite_base + "/question";
-      if (item.answered) {
-        this.$router.push({ path: target, hash: "#answer" });
+      // Navigate to /question/:id — the router accepts an optional :id? param.
+      // Putting the ID in the path lets Questionview.loadQuestion() find the
+      // correct question even after a page refresh.
+      const basePath = this.authStore.vite_base + "/question/" + item._id;
+      const isAnswered = full.status === true || (Array.isArray(full.answers) && full.answers.length > 0);
+      if (isAnswered) {
+        this.$router.push({ path: basePath, hash: "#answer" });
       } else {
-        this.$router.push(target);
+        this.$router.push(basePath);
       }
     },
     selectHighlighted() {
