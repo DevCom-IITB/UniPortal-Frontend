@@ -9,6 +9,15 @@
         </div>
       </div>
     </div>
+    <div class="delete-modal-overlay" v-if="showDeleteQuestionModal" @click.self="showDeleteQuestionModal = false">
+      <div class="delete-modal">
+        <h3>Are you sure you want to<br/>delete this question?</h3>
+        <div class="modal-actions">
+          <button class="btn-delete-confirm" type="button" @click.stop="confirmDeleteQuestion">Delete</button>
+          <button class="btn-cancel" type="button" @click.stop="showDeleteQuestionModal = false">Cancel</button>
+        </div>
+      </div>
+    </div>
     <article class="question-card" :class="{ answered: isAnswered }">
       <button class="question-content" type="button" @click="openQuestion">
         <div class="question-main">
@@ -46,6 +55,9 @@
           </span>
           <button v-if="(AuthStore.role == 5980 || AuthStore.role == 6311) && !isAnswered" class="answer-pill-yellow" type="button" @click.stop="toggleInlineAnswer(false)">
             Answer
+          </button>
+          <button v-if="AuthStore.role == 5980" class="icon-btn" type="button" @click.stop="deleteQuestion" aria-label="Delete Question">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
           </button>
         </div>
       </button>
@@ -244,6 +256,7 @@ export default {
       inlineSelectedImages: [],
       inlinePreviewImages: [],
       showDeleteModal: false,
+      showDeleteQuestionModal: false,
     };
   },
   computed: {
@@ -401,6 +414,9 @@ export default {
     async deleteAnswer() {
       this.showDeleteModal = true;
     },
+    async deleteQuestion() {
+      this.showDeleteQuestionModal = true;
+    },
     async EditAnswerClick() {
       await this.QuestionStore.SetQuestion(this.question);
       await this.QuestionStore.SetAction(8);
@@ -505,6 +521,12 @@ export default {
         await this.QuestionStore.DeleteAnswer();
       }
       this.showDeleteModal = false;
+    },
+    async confirmDeleteQuestion() {
+      await this.QuestionStore.SetQuestion(this.question);
+      await this.QuestionStore.SetQuestionID(this.question._id || this.question.id);
+      await this.QuestionStore.DeleteQuestion();
+      this.showDeleteQuestionModal = false;
     },
     async Hide() {
       await this.QuestionStore.SetQuestion(this.question);
@@ -816,7 +838,8 @@ export default {
   flex-shrink: 0;
 }
 
-.answer-actions .icon-btn {
+.answer-actions .icon-btn,
+.question-side .icon-btn {
   width: 28px;
   height: 28px;
   border-radius: 50%;
