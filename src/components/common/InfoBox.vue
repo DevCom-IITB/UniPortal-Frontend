@@ -202,30 +202,22 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      window.addEventListener("resize", this.onResize);
-    });
-    console.log("we will be loggin the images");
-    this.images = this.infopost.images;
-    if (this.images.length > 0) {
-      for (let i = 0; i < this.images.length; i++) {
-        //D:\SMP\SMP-Portal-Backend\uploads
-        console.log(this.images[i]);
-        const temp =
-          (import.meta.env.VITE_NODE_ENV == "DEV"
-            ? "http://localhost:5000/uploads/"
-            : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + this.images[i];
-        this.images[i] = temp;
-        console.log(this.images[i]);
-      }
-      return (
+  this.$nextTick(() => {
+    window.addEventListener("resize", this.onResize);
+  });
+  console.log("we will be loggin the images");
+  this.images = this.infopost.images;
+  if (this.images.length > 0) {
+    for (let i = 0; i < this.images.length; i++) {
+      const temp =
         (import.meta.env.VITE_NODE_ENV == "DEV"
           ? "http://localhost:5000/uploads/"
-          : "https://gymkhana.iitb.ac.in/newbee/uploads/") + image
-      );
-    });
-    this.timestamp = this.formatShortDate(this.infopost.asked_At);
-  },
+          : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + this.images[i];
+      this.images[i] = temp;
+    }
+  }
+  this.timestamp = this.formatShortDate(this.infopost.asked_At);
+},
   beforeUnmount() {
     window.removeEventListener("resize", this.onResize);
   },

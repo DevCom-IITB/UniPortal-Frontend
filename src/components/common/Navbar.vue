@@ -11,6 +11,7 @@
 
     <div class="right-links">
       <button
+        v-if="authStore.role === 7669"
         type="button"
         class="nav-icon bell-icon"
         :class="{ active: notificationsOpen }"
