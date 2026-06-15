@@ -97,7 +97,10 @@ export const useListStore = defineStore("list", {
   if (!q) return;
 
   const answer = q.answers.find(a => a._id === aid);
-  if (answer) answer.body = body;
+  if (answer) {
+    answer.body = body;
+    answer.edited = true;
+  }
 },
     async UpsertQuestion(question) {
       const id = question._id || question.id;

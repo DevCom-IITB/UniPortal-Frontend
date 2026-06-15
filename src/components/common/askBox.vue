@@ -51,7 +51,7 @@
         @input="onQuestionTextInput"
       ></textarea>
       <button
-        v-if="questionStore.addImage"
+        v-if="questionStore.addImage && questionStore.action !== 8"
         class="attachment-button"
         type="button"
         @click="AddImages"
@@ -287,10 +287,33 @@ export default {
       this.$refs.fileInput.click();
     },
     SelectingFiles(e) {
-      this.selectedImages.push(...Array.from(e.target.files));
+      if(e.target.files.length === 0) return;
+
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      
+      const filesToAdd = [];
+      Array.from(e.target.files).forEach((file) => {
+        if (!allowedTypes.includes(file.type)) {
+          alert(`File "${file.name}" is not a supported image format. Please upload JPEG, PNG, or GIF.`);
+          return;
+        }
+        if (file.size > maxSize) {
+          alert(`File "${file.name}" exceeds the maximum size of 10MB.`);
+          return;
+        }
+        filesToAdd.push(file);
+      });
+
+      if (filesToAdd.length === 0) {
+        e.target.value = null;
+        return;
+      }
+
+      this.selectedImages.push(...filesToAdd);
       console.log(this.selectedImages);
 
-      Array.from(e.target.files).forEach((image) => {
+      filesToAdd.forEach((image) => {
         const reader = new FileReader();
         reader.onload = () => {
           if (reader.readyState === 2) {
@@ -300,6 +323,7 @@ export default {
         reader.readAsDataURL(image);
       });
       console.log(this.previewImages);
+      e.target.value = null;
     },
     RemoveImage(index) {
       this.previewImages.splice(index, 1);

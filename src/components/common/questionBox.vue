@@ -54,12 +54,20 @@
         <div class="inline-input-wrapper">
           <textarea v-model="inlineAnswerBody" placeholder="Answer a question" class="inline-textarea"></textarea>
           <div class="inline-input-bottom">
-            <button class="add-attachment-btn" type="button">
+            <button v-if="!isEditingAnswer" class="add-attachment-btn" type="button" @click="AddInlineImages">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
               </svg>
               Add attachment
             </button>
+            <input ref="inlineFileInput" type="file" @change="SelectInlineFiles" multiple style="display: none;" />
+          </div>
+        </div>
+        
+        <div class="inline-preview" v-if="inlinePreviewImages.length > 0">
+          <div v-for="(image, index) in inlinePreviewImages" :key="index" class="PreImage">
+            <button class="cancel" type="button" @click.stop="RemoveInlineImage(index)" aria-label="Remove attachment"></button>
+            <img :src="image" alt="Preview Image" />
           </div>
         </div>
         <div class="inline-answer-actions">
@@ -95,8 +103,14 @@
       <div v-if="isAnswered" class="answer-preview-wrapper">
         <div class="answer-preview">
           <div class="answer-preview-text">
-            <span>Answer from SMP</span>
+            <span>Answer from SMP <span class="edited-tag" v-if="answersList[0] && answersList[0].edited" style="color: #777; font-size: 0.9em; font-weight: normal;">(edited)</span></span>
             <p>{{ answerPreview }}</p>
+
+            <div class="inline-preview" v-if="answerImages.length > 0">
+              <div v-for="(image, index) in answerImages" :key="index" class="PreImage">
+                <img :src="image" alt="Attachment" @click.stop="$emit('expand', image)" />
+              </div>
+            </div>
           </div>
           <div class="answer-actions" v-if="(AuthStore.role == 5980 || AuthStore.role == 6311)">
             <button type="button" @click.stop="toggleInlineAnswer(true)" class="icon-btn" aria-label="Edit Answer">
@@ -190,6 +204,8 @@ export default {
       isAnswering: false,
       isEditingAnswer: false,
       inlineAnswerBody: "",
+      inlineSelectedImages: [],
+      inlinePreviewImages: [],
       showDeleteModal: false,
     };
   },
@@ -228,6 +244,21 @@ export default {
       return answer && answer.body
         ? answer.body
         : "The answer will be here. The answer will be here. The answer will be here.";
+    },
+    answerImages() {
+      const answer = this.answersList[0];
+      const rawImages = answer && answer.images ? answer.images : [];
+      return rawImages.map((image) => {
+        if (typeof image !== "string") return image;
+        if (image.startsWith("http") || image.startsWith(".") || image.startsWith("/")) {
+          return image;
+        }
+        return (
+          (import.meta.env.VITE_NODE_ENV == "DEV"
+            ? "http://localhost:5000/uploads/"
+            : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
+        );
+      });
     },
     displayTimestamp() {
       return this.formatShortDate(this.question.asked_At || this.question.timestamp);
@@ -347,14 +378,19 @@ export default {
       } else {
         this.inlineAnswerBody = "";
       }
+      this.inlineSelectedImages = [];
+      this.inlinePreviewImages = [];
     },
     cancelInlineAnswer() {
       this.isAnswering = false;
       this.inlineAnswerBody = "";
+      this.inlineSelectedImages = [];
+      this.inlinePreviewImages = [];
     },
     async submitInlineAnswer() {
       if (!this.inlineAnswerBody.trim()) return;
       await this.QuestionStore.SetQuestion(this.question);
+      await this.QuestionStore.SetQuestionID(this.question._id || this.question.id);
       
       if (this.isEditingAnswer) {
         if (this.question.answers && this.question.answers.length > 0) {
@@ -362,11 +398,56 @@ export default {
         }
         await this.QuestionStore.EditAnswer(this.inlineAnswerBody);
       } else {
-        await this.QuestionStore.AddAnswer(this.inlineAnswerBody, []);
+        await this.QuestionStore.AddAnswer(this.inlineAnswerBody, this.inlineSelectedImages);
       }
       
       this.isAnswering = false;
       this.inlineAnswerBody = "";
+      this.inlineSelectedImages = [];
+      this.inlinePreviewImages = [];
+    },
+    AddInlineImages() {
+      if(this.$refs.inlineFileInput) this.$refs.inlineFileInput.click();
+    },
+    SelectInlineFiles(e) {
+      if(e.target.files.length === 0) return;
+      
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      
+      const filesToAdd = [];
+      Array.from(e.target.files).forEach((file) => {
+        if (!allowedTypes.includes(file.type)) {
+          alert(`File "${file.name}" is not a supported image format. Please upload JPEG, PNG, or GIF.`);
+          return;
+        }
+        if (file.size > maxSize) {
+          alert(`File "${file.name}" exceeds the maximum size of 10MB.`);
+          return;
+        }
+        filesToAdd.push(file);
+      });
+      
+      if (filesToAdd.length === 0) {
+        e.target.value = null;
+        return;
+      }
+
+      this.inlineSelectedImages.push(...filesToAdd);
+      filesToAdd.forEach((image) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (reader.readyState === 2) {
+            this.inlinePreviewImages.push(reader.result);
+          }
+        };
+        reader.readAsDataURL(image);
+      });
+      e.target.value = null;
+    },
+    RemoveInlineImage(index) {
+      this.inlineSelectedImages.splice(index, 1);
+      this.inlinePreviewImages.splice(index, 1);
     },
     async CommentClick() {
       await this.QuestionStore.SetQuestion(this.question);
@@ -676,6 +757,12 @@ export default {
   line-height: 1;
   font-weight: 400;
   color: #9b9b9b;
+}
+
+.answer-preview-text span.edited-tag {
+  display: inline;
+  margin-bottom: 0;
+  margin-left: 4px;
 }
 
 .answer-preview-text p {
@@ -1041,5 +1128,39 @@ export default {
   font-weight: 600;
   color: #1c1b1f;
   cursor: pointer;
+}
+
+.inline-preview {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.PreImage {
+  position: relative;
+  width: 140px;
+  height: 100px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e8dba9;
+}
+.PreImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.PreImage .cancel {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  background: #ff7c7c;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
 }
 </style>
