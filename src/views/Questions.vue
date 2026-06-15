@@ -447,7 +447,7 @@ export default {
   .questions-page {
     display: flex;
     flex-direction: column;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
   }
 
   .tabs-shell {
@@ -542,6 +542,7 @@ export default {
   .question-list {
     order: 5;
     margin-top: 18px;
+    padding-bottom: 200px;
   }
 }
 
