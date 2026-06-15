@@ -1548,11 +1548,17 @@ export const useQuestionStore = defineStore("question", {
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
         await listStore.SetEditAnswer(
-
           this.question_ID,
           this.answer_ID,
           body
         );
+        if (this.question && this.question.answers) {
+          const answer = this.question.answers.find(a => a._id === this.answer_ID || a.id === this.answer_ID);
+          if (answer) {
+            answer.body = body;
+            answer.edited = true;
+          }
+        }
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
@@ -1585,8 +1591,14 @@ export const useQuestionStore = defineStore("question", {
               this.question_ID,
               this.answer_ID,
               body
-
             );
+            if (this.question && this.question.answers) {
+              const answer = this.question.answers.find(a => a._id === this.answer_ID || a.id === this.answer_ID);
+              if (answer) {
+                answer.body = body;
+                answer.edited = true;
+              }
+            }
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();

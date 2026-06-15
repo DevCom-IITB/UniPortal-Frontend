@@ -23,14 +23,20 @@
         <span v-if="!isAnswered" class="status-pill">Unanswered</span>
       </div>
 
+      <div class="preview" v-if="questionImages.length > 0">
+        <div v-for="(image, index) in questionImages" :key="index" class="PreImage">
+          <img :src="image" alt="Attachment" @click.stop="$emit('expand', image)" />
+        </div>
+      </div>
+
       <div
         class="mentor-actions"
         v-if="AuthStore.role == 5980 || AuthStore.role == 6311"
       >
         <button type="button" @click="AnswerClick">Answer</button>
-        <button v-if="AuthStore.role == 5980" type="button" @click="Hide">
+        <!-- <button v-if="AuthStore.role == 5980" type="button" @click="Hide">
           {{ question.hidden ? "Show" : "Hide" }}
-        </button>
+        </button> -->
       </div>
     </section>
 
@@ -43,10 +49,17 @@
           </span>
           <div>
             <strong>ISMP Mentor</strong>
-            <span>{{ answerAuthor }}</span>
+            <span>{{ answerAuthor }} <span class="edited-tag" v-if="primaryAnswer.edited" style="color: #777; font-size: 0.9em; font-weight: normal;">(edited)</span></span>
           </div>
         </div>
         <p>{{ answerBody }}</p>
+
+        <div class="preview" v-if="answerImages.length > 0">
+          <div v-for="(image, index) in answerImages" :key="index" class="PreImage">
+            <img :src="image" alt="Attachment" @click.stop="$emit('expand', image)" />
+          </div>
+        </div>
+
         <time>{{ answerTimestamp }}</time>
       </article>
     </section>
@@ -150,6 +163,34 @@ export default {
       const subject = this.question.tag || this.question.subject || this.question.category;
       if (!subject || subject === "subject1") return "Campus Life";
       return subject;
+    },
+    questionImages() {
+      const rawImages = this.question.images || [];
+      return rawImages.map((image) => {
+        if (typeof image !== "string") return image;
+        if (image.startsWith("http") || image.startsWith(".") || image.startsWith("/")) {
+          return image;
+        }
+        return (
+          (import.meta.env.VITE_NODE_ENV == "DEV"
+            ? "http://localhost:5000/uploads/"
+            : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
+        );
+      });
+    },
+    answerImages() {
+      const rawImages = this.primaryAnswer.images || [];
+      return rawImages.map((image) => {
+        if (typeof image !== "string") return image;
+        if (image.startsWith("http") || image.startsWith(".") || image.startsWith("/")) {
+          return image;
+        }
+        return (
+          (import.meta.env.VITE_NODE_ENV == "DEV"
+            ? "http://localhost:5000/uploads/"
+            : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
+        );
+      });
     },
     upvoteCount() {
       return this.question.upvotes || 0;
@@ -480,6 +521,11 @@ h1 {
   font-weight: 500;
 }
 
+.answer-author span.edited-tag {
+  display: inline;
+  margin-left: 4px;
+}
+
 .answer-card p {
   margin: 0;
   font-size: 12px;
@@ -660,5 +706,28 @@ h1 {
   .comment-composer {
     margin-top: 34px;
   }
+}
+
+.preview {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 12px;
+  margin-top: 14px;
+}
+.PreImage {
+  position: relative;
+  width: 140px;
+  height: 100px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #e8dba9;
+}
+.PreImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
