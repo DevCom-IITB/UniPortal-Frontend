@@ -5,6 +5,7 @@
         <upvote
           v-if="AuthStore.role == 7669 || AuthStore.role == 1980"
           :upvotes="upvotes"
+          :isUpvoted="isUpvoted"
         />
       </div>
 
@@ -59,6 +60,7 @@
               :primaryColor1="primaryColor"
               :upvotes="upvotes"
               :windowWidth="windowWidth"
+              :isUpvoted="isUpvoted"
             />
           </div>
           <div
@@ -202,6 +204,7 @@ export default {
       images: [],
       timestamp: "",
       showName:'',
+      isUpvoted: false,
     };
   },
   methods: {
@@ -270,6 +273,7 @@ export default {
         await this.questionStore.SetAnswerID(this.question["_id"]);
         this.$emit("upvote");
       }
+      this.isUpvoted = !this.isUpvoted;
     },
     async Hide() {
       if (!this.isAnswer) {

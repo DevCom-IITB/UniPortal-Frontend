@@ -11,14 +11,6 @@ export const useListStore = defineStore("list", {
       this.list = list;
       console.log("List was set : ", this.list);
     },
-    async UpsertQuestion(question) {
-      const idx = this.list.findIndex(q => q._id === question._id);
-      if (idx !== -1) {
-        this.list[idx] = question;
-      } else {
-        this.list.unshift(question);
-      }
-    },
     async AddCommentQuestion(qid, comment) {
       console.log("adding comment to question in list : ", qid);
       this.list.filter((item) => item["_id"] === qid)[0].comments.push(comment);
@@ -44,6 +36,17 @@ export const useListStore = defineStore("list", {
       console.log("hiding question in list : ", qid);
       this.list.filter((item) => item["_id"] === qid)[0].hidden =
         !this.list.filter((item) => item["_id"] === qid)[0].hidden;
+    },
+    async SetDeleteQuestion(qid) {
+      console.log("deleting question in list : ", qid);
+      this.list = this.list.filter((item) => item["_id"] !== qid);
+    },
+    async SetDeleteAnswer(qid, aid) {
+      console.log("deleting answer in list : ", qid, aid);
+      const question = this.list.find((item) => item["_id"] === qid);
+      if (question && question.answers) {
+        question.answers = question.answers.filter((item) => item["_id"] !== aid);
+      }
     },
     async SetHideAnswer(qid, aid) {
       console.log("hiding answer in list : ", qid, aid);
@@ -76,9 +79,17 @@ export const useListStore = defineStore("list", {
       this.list.filter((item) => item["_id"] === id)[0].hidden =
         !this.list.filter((item) => item["_id"] === id)[0].hidden;
     },
-    async SetEditInfoPost(id, body) {
+    async SetDeleteInfoPost(id) {
+      console.log("deleting infopost in list : ", id);
+      this.list = this.list.filter((item) => item["_id"] !== id);
+    },
+    async SetEditInfoPost(id, title, body) {
       console.log("editing infopost in list : ", id);
-      this.list.filter((item) => item["_id"] === id)[0].body = body;
+      const post = this.list.find((item) => item["_id"] === id);
+      if (post) {
+        post.title = title;
+        post.body = body;
+      }
     },
     async SetEditAnswer(qid, aid, body) {
   console.log("editing answer in list :", qid, aid);
@@ -87,6 +98,18 @@ export const useListStore = defineStore("list", {
 
   const answer = q.answers.find(a => a._id === aid);
   if (answer) answer.body = body;
-}
+},
+    async UpsertQuestion(question) {
+      const id = question._id || question.id;
+      if (!id) return;
+      const idx = this.list.findIndex(
+        (item) => String(item._id || item.id) === String(id)
+      );
+      if (idx !== -1) {
+        this.list[idx] = question;
+      } else {
+        this.list.push(question);
+      }
+    },
   },
 });

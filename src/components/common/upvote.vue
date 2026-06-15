@@ -7,7 +7,10 @@
         background: colourStore.background,
       }"
     >
-      <div class="icon"><Upvote1 /></div>
+      <div class="icon">
+        <Upvote v-if="isUpvoted" />
+        <Upvote1 v-else />
+      </div>
       <p v-if="windowWidth <= 750">&nbsp;(</p>
       <p>{{ upvotes }}</p>
       <p v-if="windowWidth <= 750">)</p>
@@ -37,6 +40,10 @@ export default {
     windowWidth: {
       type: Number,
       required: true,
+    },
+    isUpvoted: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
