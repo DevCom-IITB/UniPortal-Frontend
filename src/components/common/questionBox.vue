@@ -50,7 +50,7 @@
         </div>
       </button>
 
-      <div v-if="isAnswering" class="inline-answer-container" @click.stop>
+      <div v-if="isAnswering" class="inline-answer-container desktop-only" @click.stop>
         <div class="inline-input-wrapper">
           <textarea v-model="inlineAnswerBody" placeholder="Answer a question" class="inline-textarea"></textarea>
           <div class="inline-input-bottom">
@@ -90,6 +90,43 @@
           </svg>
           <span>({{ commentCount }})</span>
         </button>
+        <button
+          v-if="(AuthStore.role == 5980 || AuthStore.role == 6311) && !isAnswered && !isAnswering"
+          class="mobile-action-pill answer-pill-yellow"
+          type="button"
+          @click.stop="toggleInlineAnswer(false)"
+        >
+          Answer
+        </button>
+      </div>
+
+      <!-- Mobile inline answer input box -->
+      <div v-if="isAnswering" class="inline-answer-container mobile-only" @click.stop>
+        <div class="inline-input-wrapper inline-input-wrapper-mobile">
+          <textarea v-model="inlineAnswerBody" placeholder="Answer a question" class="inline-textarea"></textarea>
+          <div class="inline-input-bottom inline-input-bottom-mobile">
+            <button class="add-attachment-btn" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+              </svg>
+              Add attachment
+            </button>
+            <div class="inline-icon-actions">
+              <button class="icon-action-btn icon-cancel" type="button" @click="cancelInlineAnswer" aria-label="Cancel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <button class="icon-action-btn icon-send" type="button" @click="submitInlineAnswer" aria-label="Send">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div v-if="isAnswered" class="answer-preview-wrapper">
@@ -971,6 +1008,12 @@ export default {
     border-color: #e8dba9;
   }
 
+  .mobile-action-pill.answer-pill-yellow {
+    border: none;
+    background: #ffdf80;
+    color: #1c1b1f;
+  }
+
   .mobile-icon {
     width: 13px;
     height: 13px;
@@ -983,6 +1026,59 @@ export default {
     border-radius: 16px;
     background: #ffffff;
     padding: 12px 14px;
+  }
+
+  .inline-answer-container.mobile-only {
+    width: 100%;
+    margin-top: 14px;
+    padding: 0;
+  }
+
+  .inline-answer-container.mobile-only .inline-input-wrapper-mobile {
+    width: 100%;
+    border-radius: 16px;
+    margin-bottom: 0;
+  }
+
+  .inline-answer-container.mobile-only .inline-textarea {
+    min-height: 70px;
+  }
+
+  .inline-input-bottom-mobile {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .inline-icon-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .icon-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .icon-action-btn.icon-send {
+    background: #ffdf80;
+    border: 1px solid transparent;
+    color: #1c1b1f;
+  }
+
+  .icon-action-btn.icon-cancel {
+    background: transparent;
+    border: 1px solid #1c1b1f;
+    color: #1c1b1f;
   }
 }
 
