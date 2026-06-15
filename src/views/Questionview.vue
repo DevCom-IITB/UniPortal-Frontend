@@ -34,9 +34,9 @@
         v-if="AuthStore.role == 5980 || AuthStore.role == 6311"
       >
         <button type="button" @click="AnswerClick">Answer</button>
-        <button v-if="AuthStore.role == 5980" type="button" @click="Hide">
+        <!-- <button v-if="AuthStore.role == 5980" type="button" @click="Hide">
           {{ question.hidden ? "Show" : "Hide" }}
-        </button>
+        </button> -->
       </div>
     </section>
 
