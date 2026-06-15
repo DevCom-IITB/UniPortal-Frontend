@@ -58,9 +58,13 @@ export default {
 
 <style scoped>
 .Snackbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
   padding: 16px 32px;
   background: white;
-  /* border : 1px solid ; */
   box-shadow: 20px 20px 60px #3a3a3a, -20px -20px 60px #ffffff;
   border-radius: 12px;
   text-align: center;
