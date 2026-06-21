@@ -230,11 +230,24 @@ export default {
       return this.Auth.role == 5980 ? "Create Announcement" : "Ask question";
     },
     notificationItems() {
-      const items = Array.isArray(this.ListStore.list) ? this.ListStore.list : [];
+      const items = Array.isArray(this.ListStore.list) ? [...this.ListStore.list] : [];
+      
+      // Sort newest first
+      items.sort((a, b) => {
+        const dateA = new Date(a.asked_At || a.createdAt || 0);
+        const dateB = new Date(b.asked_At || b.createdAt || 0);
+        return dateB - dateA;
+      });
+
       const fallbackTitle = "What are the best electives for first-year CS students?";
       const fallbackBody =
         "The answer will be here. The answer will be here. The answer will be here. The answer will be here. The answer will be here.";
-      const candidates = items.filter((item) => item && item.body).slice(0, 2);
+      const candidates = items.filter((item) => {
+        if (!item || !item.body) return false;
+        if (item.title) return true;
+        if (item.answers && item.answers.length > 0) return true;
+        return false;
+      }).slice(0, 2);
 
       if (!candidates.length) {
         return [1, 2].map((id) => ({
@@ -246,16 +259,30 @@ export default {
         }));
       }
 
-      return candidates.map((item, index) => ({
-        id: item._id || item.id || index,
-        kicker: "Your question was answered by ISMP Priya",
-        title: item.title || item.body || fallbackTitle,
-        body:
-          item.answers && item.answers.length
+      return candidates.map((item, index) => {
+        const isAnnouncement = !!item.title;
+        let kicker, title, body;
+
+        if (isAnnouncement) {
+          kicker = "New Announcement from SMP";
+          title = item.title;
+          body = item.body;
+        } else {
+          kicker = "Your question was answered by ISMP Priya";
+          title = item.body || fallbackTitle;
+          body = item.answers && item.answers.length
             ? item.answers[0].body || fallbackBody
-            : fallbackBody,
-        time: this.formatShortDate(item.asked_At),
-      }));
+            : fallbackBody;
+        }
+
+        return {
+          id: item._id || item.id || index,
+          kicker,
+          title,
+          body,
+          time: this.formatShortDate(item.asked_At || item.createdAt || new Date()),
+        };
+      });
     },
   },
   
