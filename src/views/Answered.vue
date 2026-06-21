@@ -57,11 +57,13 @@ export default {
   },
   data() {
     return {
-      questions: [],
       searchQuery: "",
     };
   },
   computed: {
+    questions() {
+      return this.listStore.list || [];
+    },
     filteredQuestions() {
       if (!this.searchQuery.trim()) return this.questions;
       const fuse = new Fuse(this.questions, {
@@ -143,7 +145,6 @@ export default {
       this.questionStore.FetchAnnouncementsCount(),
       this.questionStore.FetchUnansweredCount()
     ]);
-    this.questions = this.listStore.list;
     console.log(this.questions);
     this.colourStore.colourAnswered();
   },
