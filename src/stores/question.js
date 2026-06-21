@@ -373,6 +373,10 @@ export const useQuestionStore = defineStore("question", {
         const data = await res.json();
         console.log('data :', data);
         this.snackMessage = data.message;
+        const listStore = useListStore();
+        if (data.data) {
+          listStore.list.unshift(data.data);
+        }
         await colourStore.SetSnackColor(true);
       } else {
         if (res.status === 403) {
@@ -396,8 +400,11 @@ export const useQuestionStore = defineStore("question", {
             console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :', data);
             this.snackMessage = data.message;
+            const listStore = useListStore();
+            if (data.data) {
+              listStore.list.unshift(data.data);
+            }
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
@@ -1511,60 +1518,7 @@ export const useQuestionStore = defineStore("question", {
         }
       }
     },
-    async DeleteInfoPost() {
-      const authStore = useAuthStore();
-      const listStore = useListStore();
-      const colourStore = useColourStore();
-      console.log("deleting infopost in question.js", this.info_ID);
 
-      const accessToken = authStore.accessToken;
-      const bearer = `Bearer ${accessToken}`;
-
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/delete/${this.info_ID}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: bearer,
-        },
-      });
-
-      this.showSnackbar = true;
-      if (res.status == 200) {
-        console.log("successfully deleted the info post :", this.info_ID);
-        const data = await res.json();
-        this.snackMessage = data.message;
-        colourStore.SetSnackColor(true);
-        // Assuming we need to remove from listStore. Let's filter out the deleted infopost in listStore or let component reload
-        listStore.list = listStore.list.filter(item => item._id !== this.info_ID && item.id !== this.info_ID);
-      } else {
-        if (res.status === 403) {
-          await authStore.Refresh();
-          if (authStore.loggedIn) {
-            const bearer = `Bearer ${authStore.accessToken}`;
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/delete/${this.info_ID}`, {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: bearer,
-              },
-            });
-            this.showSnackbar = true;
-            const data = await res.json();
-            this.snackMessage = data.message;
-            colourStore.SetSnackColor(true);
-            listStore.list = listStore.list.filter(item => item._id !== this.info_ID && item.id !== this.info_ID);
-            return data;
-          } else {
-            await this.authStore.Logout();
-          }
-        } else {
-          this.showSnackbar = true;
-          this.snackMessage = "not enough permissions";
-          colourStore.SetSnackColor(false);
-          await this.authStore.Logout();
-        }
-      }
-    },
     async EditAnswer(body) {
       const authStore = useAuthStore();
       const listStore = useListStore();
