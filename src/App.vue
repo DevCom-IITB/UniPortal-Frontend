@@ -96,7 +96,7 @@
         
         <!-- Mobile Floating Action Button (FAB) -->
         <button
-          v-if="windowWidth < 750 && Auth.role != 6311"
+          v-if="windowWidth < 750 && Auth.role != 6311 && !askQuestion"
           class="mobile-fab"
           type="button"
           @click="postInfoQues"

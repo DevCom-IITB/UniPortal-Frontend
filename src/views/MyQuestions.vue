@@ -64,11 +64,13 @@ export default {
   data() {
     return {
       networkError: false,
-      questions: [],
       searchQuery: "",
     };
   },
   computed: {
+    questions() {
+      return this.listStore.list || [];
+    },
     filteredQuestions() {
       if (!this.searchQuery.trim()) {
         return this.questions;
@@ -152,7 +154,6 @@ export default {
   async mounted() {
     await this.colourStore.colourMyQuestions();
     await this.fetchQuestions();
-    this.questions = this.listStore.list || [];
     console.log(this.questions);
   },
 };
