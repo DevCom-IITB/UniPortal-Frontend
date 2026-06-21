@@ -260,6 +260,16 @@ export default {
   },
   
   watch: {
+    $route() {
+      this.showSidebar = false;
+      this.showDropdown = false;
+    },
+    askQuestion(newVal) {
+      if (newVal) {
+        this.showSidebar = false;
+        this.showDropdown = false;
+      }
+    },
     "QuestionStore.showSnackbar"(newValue) {
       if (newValue === true) {
         this.localSnackbarOverride = false;
