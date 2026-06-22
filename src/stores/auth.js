@@ -16,67 +16,66 @@ export const useAuthStore = defineStore("auth", {
   persist: true,
   actions: {
     async Login(uid, password, sso) {
-      let info = {};
       const questionStore = useQuestionStore();
       const colourStore = useColourStore();
+      let res; // We will store the fetch response here for both paths
+
       if (sso) {
         console.log("login with sso");
         const urlParams = new URLSearchParams(window.location.search);
         const authorizationCode = urlParams.get("code");
         console.log(authorizationCode);
 
-        const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/smplogin`, {
+        // Make ONE request to the securely updated backend route
+        res = await fetch(`${import.meta.env.VITE_API_BASE}/user/smplogin`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ authCode: authorizationCode }),
         });
-        const data = await res.json();
-        console.log("data from smp login :", data);
-        uid = data.rollNumber;
-        console.log("SMP KEY :", SMP_KEY);
-        info = {
-          user_ID: data.rollNumber,
-          password: SMP_KEY,
-        };
+
       } else {
         console.log("normal login");
-
-        info = {
+        const info = {
           user_ID: uid,
           password: password,
         };
+
+        // Make standard login request
+        res = await fetch(`${import.meta.env.VITE_API_BASE}/user/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(info),
+        });
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(info),
-      });
-
-      if (res.status == 200) {
+      // Handle the response identically for both SSO and Normal Login
+      if (res.status === 200) {
         const data = await res.json();
         console.log("data :", data);
-        this.accessToken = data["accessToken"];
-        console.log("access token: " + this.accessToken);
+        
+        this.accessToken = data.accessToken; // Now the backend actually sends this!
         this.loggedIn = true;
-        this.user_ID = uid;
-        this.name = data["name"];
-        this.role = data["role"];
+        this.user_ID = data.user_ID || uid; 
+        this.name = data.name;
+        this.role = data.role;
+        
         console.log("logged in as :", this.loggedIn);
         console.log("user id :", this.user_ID);
         console.log("role :", this.role);
-        console.log("name :", this.name);
+        
+        // Redirect to dashboard
         window.location.href = import.meta.env.VITE_BASE + "/";
       } else {
-        console.log("logging out from login");
+        console.log("Login failed");
         const data = await res.json();
         console.log("data :", data);
+        
         await questionStore.SetShowSnackBar(true);
-        await questionStore.SetSnackMessage(data.message);
+        await questionStore.SetSnackMessage(data.message || "Invalid Credentials");
         await colourStore.SetSnackColor(false);
       }
     },
