@@ -421,6 +421,7 @@ export const useQuestionStore = defineStore("question", {
     async AddAnswer(body, images) {
       const authStore = useAuthStore();
       const colourStore = useColourStore();
+      const listStore = useListStore();
       console.log("we have entered the add answer function in question.js");
 
       console.log("images : ", images);
@@ -461,7 +462,9 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
-        window.location.href = import.meta.env.VITE_BASE + "/answered";
+        if (data.data) {
+          await listStore.UpsertQuestion(data.data);
+        }
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
@@ -489,10 +492,9 @@ export const useQuestionStore = defineStore("question", {
             const data = await res.json();
             console.log('data :', data);
             this.snackMessage = data.message;
-            window.location.href = import.meta.env.VITE_BASE + "/answered";
-            window.onload = function () {
-              window.location.href = import.meta.env.VITE_BASE + "/question";
-            };
+            if (data.data) {
+              await listStore.UpsertQuestion(data.data);
+            }
             return data;
           } else {
             console.log("refresh failed");

@@ -66,20 +66,19 @@
         <div class="inline-input-wrapper">
           <textarea v-model="inlineAnswerBody" placeholder="Answer a question" class="inline-textarea"></textarea>
           <div class="inline-input-bottom">
-            <button v-if="!isEditingAnswer" class="add-attachment-btn" type="button" @click="AddInlineImages">
+            <button class="add-attachment-btn" type="button" @click="$refs.fileInput.click()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
               </svg>
               Add attachment
             </button>
-            <input ref="inlineFileInput" type="file" @change="SelectInlineFiles" multiple style="display: none;" />
-          </div>
-        </div>
-        
-        <div class="inline-preview" v-if="inlinePreviewImages.length > 0">
-          <div v-for="(image, index) in inlinePreviewImages" :key="index" class="PreImage">
-            <button class="cancel" type="button" @click.stop="RemoveInlineImage(index)" aria-label="Remove attachment"></button>
-            <img :src="image" alt="Preview Image" />
+            <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none" multiple accept="image/*" />
+            <div v-if="inlineImages.length > 0" class="selected-images">
+              <span v-for="(img, idx) in inlineImages" :key="idx" class="image-pill">
+                {{ img.name }}
+                <button type="button" @click="removeInlineImage(idx)">&times;</button>
+              </span>
+            </div>
           </div>
         </div>
         <div class="inline-answer-actions">
@@ -253,8 +252,7 @@ export default {
       isAnswering: false,
       isEditingAnswer: false,
       inlineAnswerBody: "",
-      inlineSelectedImages: [],
-      inlinePreviewImages: [],
+      inlineImages: [],
       showDeleteModal: false,
       showDeleteQuestionModal: false,
     };
@@ -423,9 +421,20 @@ export default {
       await this.QuestionStore.SetAddImage(false);
       this.$emit("comment");
     },
+    handleFileUpload(event) {
+      const files = Array.from(event.target.files);
+      if (files.length > 0) {
+        this.inlineImages.push(...files);
+      }
+      event.target.value = '';
+    },
+    removeInlineImage(index) {
+      this.inlineImages.splice(index, 1);
+    },
     toggleInlineAnswer(isEdit = false) {
       this.isAnswering = true;
       this.isEditingAnswer = isEdit;
+      this.inlineImages = [];
       if (isEdit && this.question.answers && this.question.answers.length > 0) {
         this.inlineAnswerBody = this.question.answers[0].body || "";
       } else {
@@ -437,8 +446,7 @@ export default {
     cancelInlineAnswer() {
       this.isAnswering = false;
       this.inlineAnswerBody = "";
-      this.inlineSelectedImages = [];
-      this.inlinePreviewImages = [];
+      this.inlineImages = [];
     },
     async submitInlineAnswer() {
       if (!this.inlineAnswerBody.trim()) return;
@@ -451,56 +459,12 @@ export default {
         }
         await this.QuestionStore.EditAnswer(this.inlineAnswerBody);
       } else {
-        await this.QuestionStore.AddAnswer(this.inlineAnswerBody, this.inlineSelectedImages);
+        await this.QuestionStore.AddAnswer(this.inlineAnswerBody, this.inlineImages);
       }
       
       this.isAnswering = false;
       this.inlineAnswerBody = "";
-      this.inlineSelectedImages = [];
-      this.inlinePreviewImages = [];
-    },
-    AddInlineImages() {
-      if(this.$refs.inlineFileInput) this.$refs.inlineFileInput.click();
-    },
-    SelectInlineFiles(e) {
-      if(e.target.files.length === 0) return;
-      
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-      const maxSize = 10 * 1024 * 1024; // 10MB
-      
-      const filesToAdd = [];
-      Array.from(e.target.files).forEach((file) => {
-        if (!allowedTypes.includes(file.type)) {
-          alert(`File "${file.name}" is not a supported image format. Please upload JPEG, PNG, or GIF.`);
-          return;
-        }
-        if (file.size > maxSize) {
-          alert(`File "${file.name}" exceeds the maximum size of 10MB.`);
-          return;
-        }
-        filesToAdd.push(file);
-      });
-      
-      if (filesToAdd.length === 0) {
-        e.target.value = null;
-        return;
-      }
-
-      this.inlineSelectedImages.push(...filesToAdd);
-      filesToAdd.forEach((image) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.readyState === 2) {
-            this.inlinePreviewImages.push(reader.result);
-          }
-        };
-        reader.readAsDataURL(image);
-      });
-      e.target.value = null;
-    },
-    RemoveInlineImage(index) {
-      this.inlineSelectedImages.splice(index, 1);
-      this.inlinePreviewImages.splice(index, 1);
+      this.inlineImages = [];
     },
     async CommentClick() {
       await this.QuestionStore.SetQuestion(this.question);
@@ -620,12 +584,23 @@ export default {
   min-width: 0;
 }
 
+.question-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 12px;
+  width: 100%;
+}
+
 .question-meta {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 5px;
   white-space: nowrap;
+  min-width: 0;
+  flex: 1;
 }
 
 .avatar {
@@ -651,6 +626,9 @@ export default {
   line-height: 1;
   font-weight: 800;
   color: #1c1b1f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dot {
@@ -666,6 +644,7 @@ export default {
   line-height: 1;
   font-weight: 400;
   color: #777777;
+  flex-shrink: 0;
 }
 
 .admin-actions {
@@ -718,6 +697,38 @@ export default {
   color: #1c1b1f;
 }
 
+.selected-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.image-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  color: #333;
+}
+
+.image-pill button {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.image-pill button:hover {
+  color: #d32f2f;
+}
+
 .question-side {
   display: flex;
   align-items: center;
@@ -736,6 +747,7 @@ export default {
   font-size: 13px;
   line-height: 1;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .subject-pill,

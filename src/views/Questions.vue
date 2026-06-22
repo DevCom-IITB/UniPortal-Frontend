@@ -468,7 +468,8 @@ export default {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 12px;
+    row-gap: 14px;
     margin-top: 18px;
     width: 100%;
   }
@@ -526,7 +527,8 @@ export default {
 
   .category-row {
     order: 4;
-    gap: 8px;
+    gap: 15px;
+    row-gap: 14px;
     margin-top: 18px;
     width: 100%;
     display: flex;
