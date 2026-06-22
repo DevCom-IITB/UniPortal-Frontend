@@ -135,6 +135,9 @@
             <p class="notification-body">{{ item.body }}</p>
             <span class="notification-time">{{ item.time }}</span>
           </article>
+          <div v-if="notificationItems.length === 0" style="padding: 10px 0; color: #555; font-size: 14px;">
+            No new notifications.
+          </div>
         </section>
         <div class="ask" v-if="askQuestion">
           <askBox
@@ -239,24 +242,15 @@ export default {
         return dateB - dateA;
       });
 
-      const fallbackTitle = "What are the best electives for first-year CS students?";
-      const fallbackBody =
-        "The answer will be here. The answer will be here. The answer will be here. The answer will be here. The answer will be here.";
       const candidates = items.filter((item) => {
         if (!item || !item.body) return false;
         if (item.title) return true;
         if (item.answers && item.answers.length > 0) return true;
         return false;
-      }).slice(0, 2);
+      }).slice(0, 5);
 
       if (!candidates.length) {
-        return [1, 2].map((id) => ({
-          id,
-          kicker: "Your question was answered by ISMP Priya",
-          title: fallbackTitle,
-          body: fallbackBody,
-          time: "12 May 26 07:45pm",
-        }));
+        return [];
       }
 
       return candidates.map((item, index) => {
@@ -268,11 +262,12 @@ export default {
           title = item.title;
           body = item.body;
         } else {
-          kicker = "Your question was answered by ISMP Priya";
-          title = item.body || fallbackTitle;
+          const author = (item.answers && item.answers[0] && item.answers[0].author) ? item.answers[0].author : "a mentor";
+          kicker = `Your question was answered by ${author}`;
+          title = item.body || "Question";
           body = item.answers && item.answers.length
-            ? item.answers[0].body || fallbackBody
-            : fallbackBody;
+            ? item.answers[0].body
+            : "";
         }
 
         return {
