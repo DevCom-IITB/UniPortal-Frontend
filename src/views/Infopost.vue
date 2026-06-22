@@ -78,13 +78,15 @@ export default {
   data() {
     return {
       networkError: false,
-      infoposts: [],
       searchQuery: "",
       windowWidth: window.innerWidth,
     };
   },
 
   computed: {
+    infoposts() {
+      return this.listStore.list || [];
+    },
     filteredInfoposts() {
       if (!this.searchQuery.trim()) {
         return this.infoposts;
@@ -201,9 +203,6 @@ export default {
       console.log("Selected tag:", tag);
 
       await this.fetchInfoPosts(tag);
-
-      this.infoposts = this.listStore.list;
-
       console.log(this.infoposts);
     },
     handleResize() {
@@ -217,7 +216,6 @@ export default {
       this.questionStore.FetchUnansweredCount()
     ]);
 
-    this.infoposts = this.listStore.list;
     this.questionStore.announcementsCount = this.infoposts.length;
 
     console.log(this.infoposts);

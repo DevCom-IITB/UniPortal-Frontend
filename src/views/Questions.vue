@@ -101,7 +101,6 @@ export default {
   data() {
     return {
       networkError: false,
-      questions: [],
       searchQuery: "",
       categories: [
         "Hostel",
@@ -120,6 +119,9 @@ export default {
     };
   },
   computed: {
+    questions() {
+      return this.listStore.list || [];
+    },
     filteredQuestions() {
       let result = [...this.questions];
 
@@ -233,7 +235,6 @@ export default {
     },
     async handleTagSelected(tag) {
       await this.fetchQuestions(tag);
-      this.questions = this.listStore.list || [];
     },
     handleResize() {
       this.windowWidth = window.innerWidth;
@@ -275,7 +276,6 @@ export default {
       this.questionStore.FetchAnnouncementsCount(),
       this.questionStore.FetchUnansweredCount()
     ]);
-    this.questions = this.listStore.list || [];
     this.colourStore.colourQuestions();
     window.addEventListener("resize", this.handleResize);
   },
