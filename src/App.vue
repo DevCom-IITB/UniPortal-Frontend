@@ -401,7 +401,10 @@ export default {
         await this.QuestionStore.SetAction(4);
       }
     },
-    async ExpandImage() {
+    async ExpandImage(imageUrl) {
+      if (imageUrl) {
+        this.QuestionStore.ImageLink = imageUrl;
+      }
       this.glass = true;
       this.expanded = true;
     },
@@ -686,34 +689,42 @@ export default {
 
 .ExpandedImg {
   position: fixed;
-  background: white;
-  height: 400px;
-  z-index: 1;
-  overflow: hidden;
+  background: transparent;
+  height: auto;
+  max-height: 90vh;
+  max-width: 90vw;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
 }
 
 .cancel {
-  position: fixed;
-  z-index: 1;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-  background: #60b926;
-  margin-top: 15px;
-  margin-right: 15px;
+  position: absolute;
+  z-index: 2;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ff7c7c;
+  top: -10px;
+  right: -10px;
+  cursor: pointer;
+  border: 2px solid white;
 }
 
 .cancel:hover {
-  background: #ff7c7c;
+  background: #d32f2f;
 }
 
 .ExpandedImg img {
-  height: 100%;
-  object-fit: cover;
+  max-height: 90vh;
+  max-width: 90vw;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 .login {

@@ -30,6 +30,7 @@ export const useAuthStore = defineStore("auth", {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ authCode: authorizationCode }),
         });
         const data = await res.json();
@@ -54,6 +55,7 @@ export const useAuthStore = defineStore("auth", {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(info),
       });
 
@@ -89,6 +91,7 @@ export const useAuthStore = defineStore("auth", {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -117,6 +120,7 @@ export const useAuthStore = defineStore("auth", {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       console.log("res :", res);
 
