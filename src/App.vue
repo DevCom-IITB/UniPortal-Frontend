@@ -84,7 +84,7 @@
         class="Content"
         :style="windowWidth < 750 ? { width: '100vw' } : {}"
       >
-        <div class="content-actions desktop-only" v-if="Auth.role != 6311">
+        <div class="content-actions desktop-only">
           <button class="language-button notranslate" type="button" @click="triggerHindiTranslation">
             {{ isCurrentlyHindi ? 'Eng' : 'Hindi' }}
           </button>
@@ -96,7 +96,7 @@
         
         <!-- Mobile Floating Action Button (FAB) -->
         <button
-          v-if="windowWidth < 750 && Auth.role != 6311 && !askQuestion"
+          v-if="windowWidth < 750 && !askQuestion"
           class="mobile-fab"
           type="button"
           @click="postInfoQues"
@@ -230,7 +230,7 @@ export default {
       return this.QuestionStore.showSnackbar === true;
     },
     actionLabel() {
-      return this.Auth.role == 5980 ? "Create Announcement" : "Ask question";
+      return (this.Auth.role == 5980 || this.Auth.role == 6311) ? "Create Announcement" : "Ask question";
     },
     notificationItems() {
       const items = Array.isArray(this.ListStore.list) ? [...this.ListStore.list] : [];
