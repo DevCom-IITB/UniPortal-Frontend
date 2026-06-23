@@ -32,7 +32,7 @@
         :key="infopost._id || infopost.id"
         class="InfoPostBox"
         :infopost="infopost"
-        @expand="$emit('expand')"
+        @expand="$emit('expand', $event)"
         @edit="EditInfo"
       />
     </div>

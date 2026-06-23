@@ -171,7 +171,7 @@ export default {
         }
         return (
           (import.meta.env.VITE_NODE_ENV == "DEV"
-            ? "http://localhost:5000/uploads/"
+            ? import.meta.env.VITE_API_BASE + "/uploads/"
             : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
         );
       });
@@ -185,7 +185,7 @@ export default {
         }
         return (
           (import.meta.env.VITE_NODE_ENV == "DEV"
-            ? "http://localhost:5000/uploads/"
+            ? import.meta.env.VITE_API_BASE + "/uploads/"
             : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
         );
       });

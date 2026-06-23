@@ -211,7 +211,7 @@ export default {
     for (let i = 0; i < this.images.length; i++) {
       const temp =
         (import.meta.env.VITE_NODE_ENV == "DEV"
-          ? "http://localhost:5000/uploads/"
+          ? import.meta.env.VITE_API_BASE + "/uploads/"
           : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + this.images[i];
       this.images[i] = temp;
     }

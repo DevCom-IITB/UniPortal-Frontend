@@ -124,12 +124,19 @@
         <div class="inline-input-wrapper inline-input-wrapper-mobile">
           <textarea v-model="inlineAnswerBody" placeholder="Answer a question" class="inline-textarea"></textarea>
           <div class="inline-input-bottom inline-input-bottom-mobile">
-            <button class="add-attachment-btn" type="button">
+            <button class="add-attachment-btn" type="button" @click="$refs.fileInputMobile.click()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
               </svg>
               Add attachment
             </button>
+            <input type="file" ref="fileInputMobile" @change="handleFileUpload" style="display: none" multiple accept="image/*" />
+            <div v-if="inlineImages.length > 0" class="selected-images" style="width: 100%; order: -1; margin-bottom: 8px;">
+              <span v-for="(img, idx) in inlineImages" :key="idx" class="image-pill">
+                {{ img.name }}
+                <button type="button" @click="removeInlineImage(idx)">&times;</button>
+              </span>
+            </div>
             <div class="inline-icon-actions">
               <button class="icon-action-btn icon-cancel" type="button" @click="cancelInlineAnswer" aria-label="Cancel">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -303,7 +310,7 @@ export default {
         }
         return (
           (import.meta.env.VITE_NODE_ENV == "DEV"
-            ? "http://localhost:5000/uploads/"
+            ? import.meta.env.VITE_API_BASE + "/uploads/"
             : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
         );
       });
@@ -457,7 +464,7 @@ export default {
         if (this.question.answers && this.question.answers.length > 0) {
            await this.QuestionStore.SetAnswerID(this.question.answers[0]._id || this.question.answers[0].id);
         }
-        await this.QuestionStore.EditAnswer(this.inlineAnswerBody);
+        await this.QuestionStore.EditAnswer(this.inlineAnswerBody, this.inlineImages);
       } else {
         await this.QuestionStore.AddAnswer(this.inlineAnswerBody, this.inlineImages);
       }

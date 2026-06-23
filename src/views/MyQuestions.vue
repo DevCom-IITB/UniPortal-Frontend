@@ -25,7 +25,7 @@
         v-for="question in filteredQuestions"
         :key="question._id || question.id"
         class="QuestionBox"
-        @expand="$emit('expand')"
+        @expand="$emit('expand', $event)"
         :showAnswerBox="true"
         :question="question"
         :searchTerm="searchQuery"

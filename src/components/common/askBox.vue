@@ -104,7 +104,7 @@
     </div>
 
     <div class="actions">
-      <button class="post" type="submit">{{ primaryActionLabel }}</button>
+      <button class="post" type="button" @click="decide">{{ primaryActionLabel }}</button>
       <button class="discard" type="button" @click="$emit('discard')">Cancel</button>
     </div>
   </form>
