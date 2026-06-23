@@ -83,6 +83,7 @@ export default {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+          credentials: "include",
             text: this.comment['body'],
             target_lang: 'en'
           })

@@ -7,13 +7,21 @@ export const useAuthStore = defineStore("auth", {
   id: "auth",
   state: () => ({
     accessToken: "",
-    loggedIn: true,
+    // default to not logged in; keep accessToken in-memory only
+    loggedIn: false,
     user_ID: 0,
     role: 0,
     name: "",
     vite_base: import.meta.env.VITE_BASE,
   }),
-  persist: true,
+  // persist only the non-sensitive vite_base field
+  persist: [
+    {
+      key: "auth",
+      storage: localStorage,
+      paths: ["vite_base"],
+    },
+  ],
   actions: {
     async Login(uid, password, sso) {
       let info = {};
@@ -25,7 +33,7 @@ export const useAuthStore = defineStore("auth", {
         const authorizationCode = urlParams.get("code");
         console.log(authorizationCode);
 
-        const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/smplogin`, {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE}/user/smplogin`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

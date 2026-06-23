@@ -36,6 +36,7 @@ export const useQuestionStore = defineStore("question", {
             "Content-Type": "application/json",
             Authorization: bearer,
           },
+          credentials: "include",
         });
 
         if (res.status === 200) {
@@ -52,6 +53,7 @@ export const useQuestionStore = defineStore("question", {
                 "Content-Type": "application/json",
                 Authorization: newBearer,
               },
+              credentials: "include",
             });
             if (retryRes.status === 200) {
               const data = await retryRes.json();
@@ -80,6 +82,7 @@ export const useQuestionStore = defineStore("question", {
               "Content-Type": "application/json",
               Authorization: bearer,
             },
+            credentials: "include",
           }
         );
 
@@ -99,6 +102,7 @@ export const useQuestionStore = defineStore("question", {
                   "Content-Type": "application/json",
                   Authorization: newBearer,
                 },
+                credentials: "include",
               }
             );
             if (retryRes.status === 200) {
@@ -178,6 +182,7 @@ export const useQuestionStore = defineStore("question", {
           headers: {
             Authorization: bearer,
           },
+          credentials: "include",
         });
 
         if (response.ok) {
@@ -194,6 +199,7 @@ export const useQuestionStore = defineStore("question", {
               headers: {
                 Authorization: newBearer,
               },
+              credentials: "include",
             });
             
             if (retryResponse.ok) {
@@ -284,6 +290,7 @@ export const useQuestionStore = defineStore("question", {
         headers: {
           Authorization: bearer,
         },
+        credentials: "include",
         body: questionObj,
       })
       // message for adding question
@@ -311,6 +318,7 @@ export const useQuestionStore = defineStore("question", {
               headers: {
                 Authorization: bearer,
               },
+              credentials: "include",
               body: questionObj,
             })
             // message for adding question
@@ -363,6 +371,7 @@ export const useQuestionStore = defineStore("question", {
         headers: {
           Authorization: bearer,
         },
+        credentials: "include",
         body: infoPostObj,
       })
       // message for adding InfoPost
@@ -392,6 +401,7 @@ export const useQuestionStore = defineStore("question", {
               headers: {
                 Authorization: bearer,
               },
+              credentials: "include",
               body: infoPostObj,
             })
             // message for adding InfoPost
@@ -450,6 +460,7 @@ export const useQuestionStore = defineStore("question", {
         headers: {
           Authorization: bearer,
         },
+        credentials: "include",
         body: answerObj,
       })
       // message for adding answer
@@ -481,6 +492,7 @@ export const useQuestionStore = defineStore("question", {
                 headers: {
                   Authorization: bearer,
                 },
+                credentials: "include",
                 body: answerObj,
               }
             )
@@ -539,6 +551,7 @@ export const useQuestionStore = defineStore("question", {
           "Content-Type": "application/json",
           Authorization: bearer,
         },
+        credentials: "include",
         body: JSON.stringify(commentObj),
       });
       // message for adding comment on question
@@ -576,6 +589,7 @@ export const useQuestionStore = defineStore("question", {
                   "Content-Type": "application/json",
                   Authorization: bearer,
                 },
+                credentials: "include",
                 body: JSON.stringify(commentObj),
               }
             )
@@ -643,6 +657,7 @@ export const useQuestionStore = defineStore("question", {
             "Content-Type": "application/json",
             Authorization: bearer,
           },
+          credentials: "include",
           body: JSON.stringify(commentObj),
         }
       )
@@ -686,6 +701,7 @@ export const useQuestionStore = defineStore("question", {
                   "Content-Type": "application/json",
                   Authorization: bearer,
                 },
+                credentials: "include",
                 body: JSON.stringify(commentObj),
               }
             )
@@ -750,8 +766,9 @@ export const useQuestionStore = defineStore("question", {
           "Content-Type": "application/json",
           Authorization: bearer,
         },
+        credentials: "include",
         body: JSON.stringify(upvoteObj),
-      })
+      });
       // message for upvoting a question
       this.showSnackbar = true;
       console.log("snackbar");

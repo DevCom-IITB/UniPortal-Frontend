@@ -148,6 +148,7 @@ export default {
           'Content-Type': 'application/json',
           Authorization: bearer,
         },
+        credentials: "include",
         body: JSON.stringify(request),
       });
 
@@ -177,6 +178,7 @@ export default {
                   'Content-Type': 'application/json',
                   Authorization: bearer,
                 },
+                credentials: "include",
                 body: JSON.stringify(request),
               }
             );
