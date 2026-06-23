@@ -1521,20 +1521,22 @@ export const useQuestionStore = defineStore("question", {
       }
     },
 
-    async EditAnswer(body) {
+    async EditAnswer(body, images = []) {
       const authStore = useAuthStore();
       const listStore = useListStore();
       const colourStore = useColourStore();
       console.log("we have entered the edit answer function in question.js");
       const uid = authStore.user_ID;
       console.log("user id  parent function: ", uid);
-      const answerObj = {
-  answers: {        
-    user_ID: uid,
-    body: body
-  }
-};
-      console.log("answer object : ", answerObj);
+
+      const answerObj = new FormData();
+      answerObj.append("answers[user_ID]", uid);
+      answerObj.append("answers[body]", body);
+      
+      for (let i = 0; i < images.length; i++) {
+        answerObj.append("images", images[i]);
+      }
+
       const accessToken = authStore.accessToken;
       const bearer = `Bearer ${accessToken}`;
       console.log("bearer : ", bearer);
@@ -1546,10 +1548,9 @@ export const useQuestionStore = defineStore("question", {
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
             Authorization: bearer,
           },
-          body: JSON.stringify(answerObj),
+          body: answerObj,
         }
       )
       // message for editing answer
@@ -1561,17 +1562,8 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
-        await listStore.SetEditAnswer(
-          this.question_ID,
-          this.answer_ID,
-          body
-        );
-        if (this.question && this.question.answers) {
-          const answer = this.question.answers.find(a => a._id === this.answer_ID || a.id === this.answer_ID);
-          if (answer) {
-            answer.body = body;
-            answer.edited = true;
-          }
+        if (data.data) {
+          await listStore.UpsertQuestion(data.data);
         }
       } else {
         if (res.status === 403) {
@@ -1587,10 +1579,9 @@ export const useQuestionStore = defineStore("question", {
               {
                 method: "PATCH",
                 headers: {
-                  "Content-Type": "application/json",
                   Authorization: bearer,
                 },
-                body: JSON.stringify(answerObj),
+                body: answerObj,
               }
             )
             // message for editing answer
@@ -1601,17 +1592,8 @@ export const useQuestionStore = defineStore("question", {
             console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
-            await listStore.SetEditAnswer(
-              this.question_ID,
-              this.answer_ID,
-              body
-            );
-            if (this.question && this.question.answers) {
-              const answer = this.question.answers.find(a => a._id === this.answer_ID || a.id === this.answer_ID);
-              if (answer) {
-                answer.body = body;
-                answer.edited = true;
-              }
+            if (data.data) {
+              await listStore.UpsertQuestion(data.data);
             }
           } else {
             console.log("refresh failed");

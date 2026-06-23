@@ -129,6 +129,8 @@
             v-for="item in notificationItems"
             :key="item.id"
             class="notification-card"
+            @click="openNotification(item)"
+            style="cursor: pointer;"
           >
             <p class="notification-kicker">{{ item.kicker }}</p>
             <h3>{{ item.title }}</h3>
@@ -157,11 +159,6 @@
         class="glass"
         v-if="askQuestion == true || glass == true"
         @click="glassClick"
-        :style="
-          windowWidth <= 750
-            ? { background: ColourStore.background }
-            : { background: 'rgba(0, 0, 0, 0.5)' }
-        "
       ></div>
     </div>
   </div>
@@ -272,6 +269,7 @@ export default {
 
         return {
           id: item._id || item.id || index,
+          isAnnouncement,
           kicker,
           title,
           body,
@@ -405,6 +403,14 @@ export default {
     },
     toggleNotifications() {
       this.showNotifications = !this.showNotifications;
+    },
+    openNotification(item) {
+      this.showNotifications = false;
+      if (item.isAnnouncement) {
+        this.$router.push(this.Auth.vite_base + "/");
+      } else {
+        this.$router.push(this.Auth.vite_base + "/question/" + item.id);
+      }
     },
     async Burger(value) {
       this.showSidebar = value;
@@ -696,14 +702,16 @@ export default {
 .ask {
   position: fixed;
   width: min(990px, calc(100vw - 220px));
-  min-height: 572px;
-  top: 102px;
+  max-height: 90vh;
+  overflow-y: auto;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 10;
   background: white;
   border-radius: 28px;
   padding: 42px;
+  box-sizing: border-box;
 }
 
 .glass {
@@ -717,6 +725,9 @@ export default {
   top: 0;
   left: 0;
   z-index: 8;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .ExpandedImg {
@@ -988,12 +999,14 @@ export default {
 
   .ask {
     width: calc(100vw - 24px);
-    min-height: auto;
     max-height: calc(100vh - 88px);
     overflow-y: auto;
-    top: 76px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 28px 22px;
     border-radius: 24px;
+    box-sizing: border-box;
   }
 
   .ExpandedImg {
