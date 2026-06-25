@@ -467,6 +467,9 @@ export default {
     async toDevCom() {
       window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
+    async toSMP() {
+      window.open("https://smp.gymkhana.iitb.ac.in/");
+    },
     formatShortDate(value) {
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) {

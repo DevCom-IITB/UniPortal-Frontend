@@ -151,12 +151,7 @@ export default {
 
   methods: {
     async handleLogin() {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(this.password);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashedPassword = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-      await this.Auth.Login(this.uid, hashedPassword, false);
+      await this.Auth.Login(this.uid, this.password, false);
     },
     redirectToExternalRoute() {
       window.location.href = `https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=${sso_client_id}&response_type=code&scope=program&redirect_uri=${redirect_uri}`;
