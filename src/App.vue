@@ -766,7 +766,7 @@ export default {
 .login {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right, #fffcf1 50%, #ffe687 50%);
+  background: linear-gradient(to right, #fffcf1 50%, #fceeb9 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -817,7 +817,7 @@ export default {
 }
 
 .DC-logo {
-  width: 90px;
+  width: 100px;
   height: auto;
   cursor: pointer;
   transform: translate(12px, -8px);

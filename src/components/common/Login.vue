@@ -64,7 +64,7 @@
           <h1 class="mobile-login-heading">Log In</h1>
         </div>
 
-        <div class="form-fields">
+        <form class="form-fields" @submit.prevent="handleLogin">
           <div class="field-group">
             <label class="field-label" for="roll-no-input">Roll No</label>
             <input
@@ -83,22 +83,22 @@
               type="text"
               class="field-input"
               v-model="password"
-              placeholder="DD/MM/YYYY"
+              placeholder="DD-MM-YYYY"
             />
           </div>
 
           <button
             id="login-submit-btn"
+            type="submit"
             class="login-btn"
-            @click="handleLogin"
           >
             Login
           </button>
-        </div>
+        </form>
 
         <p class="help-text">
           If you have trouble signing up, contact
-          <a href="mailto:smpcs2025@gmail.com" class="help-link">smpcs2025@gmail.com</a>
+          <a href="mailto:smpcs2026@gmail.com" class="help-link">smpcs2026@gmail.com</a>
         </p>
       </div>
     </div>
@@ -140,18 +140,19 @@ export default {
       slideTransition: "slide-left",
       autoplayTimer: null,
       slides: [
-        { alt: "", image: slide1 },
-        { alt: "", image: slide2 },
-        { alt: "", image: slide3 },
-        { alt: "", image: slide4 },
-        { alt: "", image: slide5 },
+        { alt: "Welcome NewBee", image: slide1 },
+        { alt: "Your companion to help you sail smooth through the admission process", image: slide2 },
+        { alt: "Check your task list and announcements", image: slide3 },
+        { alt: "Stay updated with latest college news", image: slide4 },
+        { alt: "Connect with your mentor for guidance", image: slide5 },
       ],
     };
   },
 
   methods: {
     async handleLogin() {
-      await this.Auth.Login(this.uid, this.password, false);
+      if (!this.uid || !this.password) return;
+      await this.Auth.Login(this.uid.trim(), this.password.trim(), false);
     },
     redirectToExternalRoute() {
       window.location.href = `https://gymkhana.iitb.ac.in/profiles/oauth/authorize/?client_id=${sso_client_id}&response_type=code&scope=program&redirect_uri=${redirect_uri}`;
@@ -317,18 +318,26 @@ export default {
 .arrow-right { right: 16px; }
 
 .carousel-dots {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  z-index: 4;
 }
 
 .carousel-dot {
-  width: 10px;
-  height: 10px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 1.5px solid #111111;
-  background: transparent;
+  border: 2px solid #111111;
+  background: #ffffff;
   padding: 0;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background-color 0.2s ease;
 }
 
 .carousel-dot.active {
@@ -341,9 +350,6 @@ export default {
 .slide-right-enter-active,
 .slide-right-leave-active {
   transition: opacity 0.4s ease, transform 0.4s ease;
-  position: absolute;
-  width: 100%;
-  height: 100%;
 }
 
 .slide-left-enter-from { opacity: 0; transform: translateX(40px); }
@@ -368,7 +374,7 @@ export default {
 
 .form-container-scroller {
   width: 100%;
-  max-width: 440px;
+  max-width: 740px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -520,6 +526,7 @@ export default {
   .left-panel {
     flex: none;
     width: 100%;
+    max-width: 100%;
     min-height: 42vh;
     background-color: #fdf2b3;
     display: flex;
@@ -575,7 +582,7 @@ export default {
   }
 
   .slide {
-    padding: 0 16px 0;
+    padding: 0 16px 60px;
     flex: 1;
     min-height: 0;
     height: auto;
@@ -599,8 +606,7 @@ export default {
   .slide-image-container {
     order: 1;
     width: 100%;
-    max-width: 260px;
-    flex: 1;
+    max-width: 190px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -615,7 +621,13 @@ export default {
   }
 
   .carousel-caption-text {
-    display: none;
+    display: block;
+    order: 2;
+    font-size: 16px;
+    font-weight: 600;
+    margin: -1 0 16px 0;
+    color: #111111;
+    text-align: center;
   }
 
   .carousel-dots {
@@ -625,7 +637,8 @@ export default {
     gap: 8px;
     width: 100%;
     padding: 6px 0 10px;
-    position: relative;
+    position: absolute;
+    bottom: 50px;
     z-index: 4;
     flex-shrink: 0;
   }
@@ -633,6 +646,7 @@ export default {
   /* ---- RIGHT PANEL (white form area overlapping yellow) ---- */
   .right-panel {
     width: 100%;
+    max-width: 100%;
     flex: 1;
     background: #ffffff;
     border-top-left-radius: 30px;
