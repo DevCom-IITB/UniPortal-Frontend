@@ -791,11 +791,10 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100px;
+  padding: 1px 5px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
+  align-items: flex-start;
   box-sizing: border-box;
   z-index: 10;
   pointer-events: none;
@@ -818,9 +817,10 @@ export default {
 }
 
 .DC-logo {
-  width: 48px;
+  width: 90px;
   height: auto;
   cursor: pointer;
+  transform: translate(12px, -8px);
 }
 
 

@@ -223,6 +223,8 @@ export default {
 
 .left-panel {
   flex: 1;
+  width: 50%;
+  max-width: 50%;
   background-color: #fceeb9;
   display: flex;
   align-items: center;
@@ -352,6 +354,8 @@ export default {
 /* ===== RIGHT PANEL ===== */
 .right-panel {
   flex: 1;
+  width: 50%;
+  max-width: 50%;
   box-sizing: border-box;
   background: #ffffff;
   display: flex;
