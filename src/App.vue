@@ -83,7 +83,7 @@
         class="Content"
         :style="windowWidth < 750 ? { width: '100vw' } : {}"
       >
-        <div class="content-actions desktop-only" v-if="Auth.role != 6311">
+        <div class="content-actions desktop-only">
           <button class="language-button notranslate" type="button" @click="triggerHindiTranslation">
             {{ isCurrentlyHindi ? 'Eng' : 'Hindi' }}
           </button>
@@ -94,7 +94,7 @@
         </div>
         
         <button
-          v-if="windowWidth < 750 && Auth.role != 6311"
+          v-if="windowWidth < 750 && !askQuestion"
           class="mobile-fab"
           type="button"
           @click="postInfoQues"
@@ -127,12 +127,17 @@
             v-for="item in notificationItems"
             :key="item.id"
             class="notification-card"
+            @click="openNotification(item)"
+            style="cursor: pointer;"
           >
             <p class="notification-kicker">{{ item.kicker }}</p>
             <h3>{{ item.title }}</h3>
             <p class="notification-body">{{ item.body }}</p>
             <span class="notification-time">{{ item.time }}</span>
           </article>
+          <div v-if="notificationItems.length === 0" style="padding: 10px 0; color: #555; font-size: 14px;">
+            No new notifications.
+          </div>
         </section>
         <div class="ask" v-if="askQuestion">
           <askBox
@@ -152,11 +157,6 @@
         class="glass"
         v-if="askQuestion == true || glass == true"
         @click="glassClick"
-        :style="
-          windowWidth <= 750
-            ? { background: ColourStore.background }
-            : { background: 'rgba(0, 0, 0, 0.5)' }
-        "
       ></div>
     </div>
   </div>
@@ -224,39 +224,69 @@ export default {
       return this.QuestionStore.showSnackbar === true;
     },
     actionLabel() {
-      return this.Auth.role == 5980 ? "Create Announcement" : "Ask question";
+      return (this.Auth.role == 5980 || this.Auth.role == 6311) ? "Create Announcement" : "Ask question";
     },
     notificationItems() {
-      const items = Array.isArray(this.ListStore.list) ? this.ListStore.list : [];
-      const fallbackTitle = "What are the best electives for first-year CS students?";
-      const fallbackBody =
-        "The answer will be here. The answer will be here. The answer will be here. The answer will be here. The answer will be here.";
-      const candidates = items.filter((item) => item && item.body).slice(0, 2);
+      const items = Array.isArray(this.ListStore.list) ? [...this.ListStore.list] : [];
+      
+      // Sort newest first
+      items.sort((a, b) => {
+        const dateA = new Date(a.asked_At || a.createdAt || 0);
+        const dateB = new Date(b.asked_At || b.createdAt || 0);
+        return dateB - dateA;
+      });
+
+      const candidates = items.filter((item) => {
+        if (!item || !item.body) return false;
+        if (item.title) return true;
+        if (item.answers && item.answers.length > 0) return true;
+        return false;
+      }).slice(0, 5);
 
       if (!candidates.length) {
-        return [1, 2].map((id) => ({
-          id,
-          kicker: "Your question was answered by ISMP Priya",
-          title: fallbackTitle,
-          body: fallbackBody,
-          time: "12 May 26 07:45pm",
-        }));
+        return [];
       }
 
-      return candidates.map((item, index) => ({
-        id: item._id || item.id || index,
-        kicker: "Your question was answered by ISMP Priya",
-        title: item.title || item.body || fallbackTitle,
-        body:
-          item.answers && item.answers.length
-            ? item.answers[0].body || fallbackBody
-            : fallbackBody,
-        time: this.formatShortDate(item.asked_At),
-      }));
+      return candidates.map((item, index) => {
+        const isAnnouncement = !!item.title;
+        let kicker, title, body;
+
+        if (isAnnouncement) {
+          kicker = "New Announcement from SMP";
+          title = item.title;
+          body = item.body;
+        } else {
+          const author = (item.answers && item.answers[0] && item.answers[0].author) ? item.answers[0].author : "a mentor";
+          kicker = `Your question was answered by ${author}`;
+          title = item.body || "Question";
+          body = item.answers && item.answers.length
+            ? item.answers[0].body
+            : "";
+        }
+
+        return {
+          id: item._id || item.id || index,
+          isAnnouncement,
+          kicker,
+          title,
+          body,
+          time: this.formatShortDate(item.asked_At || item.createdAt || new Date()),
+        };
+      });
     },
   },
   
   watch: {
+    $route() {
+      this.showSidebar = false;
+      this.showDropdown = false;
+    },
+    askQuestion(newVal) {
+      if (newVal) {
+        this.showSidebar = false;
+        this.showDropdown = false;
+      }
+    },
     "QuestionStore.showSnackbar"(newValue) {
       if (newValue === true) {
         this.localSnackbarOverride = false;
@@ -367,6 +397,14 @@ export default {
     toggleNotifications() {
       this.showNotifications = !this.showNotifications;
     },
+    openNotification(item) {
+      this.showNotifications = false;
+      if (item.isAnnouncement) {
+        this.$router.push(this.Auth.vite_base + "/");
+      } else {
+        this.$router.push(this.Auth.vite_base + "/question/" + item.id);
+      }
+    },
     async Burger(value) {
       this.showSidebar = value;
       console.log(this.showSidebar);
@@ -394,7 +432,10 @@ export default {
         await this.QuestionStore.SetAction(4);
       }
     },
-    async ExpandImage() {
+    async ExpandImage(imageUrl) {
+      if (imageUrl) {
+        this.QuestionStore.ImageLink = imageUrl;
+      }
       this.glass = true;
       this.expanded = true;
     },
@@ -651,14 +692,16 @@ export default {
 .ask {
   position: fixed;
   width: min(990px, calc(100vw - 220px));
-  min-height: 572px;
-  top: 102px;
+  max-height: 90vh;
+  overflow-y: auto;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 10;
   background: white;
   border-radius: 28px;
   padding: 42px;
+  box-sizing: border-box;
 }
 
 .glass {
@@ -672,38 +715,49 @@ export default {
   top: 0;
   left: 0;
   z-index: 8;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .ExpandedImg {
   position: fixed;
-  background: white;
-  height: 400px;
-  z-index: 1;
-  overflow: hidden;
+  background: transparent;
+  height: auto;
+  max-height: 90vh;
+  max-width: 90vw;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
 }
 
 .cancel {
-  position: fixed;
-  z-index: 1;
-  width: 15px;
-  height: 15px;
-  border-radius: 50px;
-  background: #60b926;
-  margin-top: 15px;
-  margin-right: 15px;
+  position: absolute;
+  z-index: 2;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ff7c7c;
+  top: -10px;
+  right: -10px;
+  cursor: pointer;
+  border: 2px solid white;
 }
 
 .cancel:hover {
-  background: #ff7c7c;
+  background: #d32f2f;
 }
 
 .ExpandedImg img {
-  height: 100%;
-  object-fit: cover;
+  max-height: 90vh;
+  max-width: 90vw;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 .login {
@@ -959,12 +1013,14 @@ export default {
 
   .ask {
     width: calc(100vw - 24px);
-    min-height: auto;
     max-height: calc(100vh - 88px);
     overflow-y: auto;
-    top: 76px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 28px 22px;
     border-radius: 24px;
+    box-sizing: border-box;
   }
 
   .ExpandedImg {

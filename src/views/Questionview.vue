@@ -53,13 +53,11 @@
           </div>
         </div>
         <p>{{ answerBody }}</p>
-
-        <div class="preview" v-if="answerImages.length > 0">
-          <div v-for="(image, index) in answerImages" :key="index" class="PreImage">
-            <img :src="image" alt="Attachment" @click.stop="$emit('expand', image)" />
-          </div>
+        <div v-if="answerImages && answerImages.length > 0" class="answer-images-container">
+          <a v-for="img in answerImages" :key="img" :href="getImageUrl(img)" target="_blank" rel="noopener noreferrer">
+            <img :src="getImageUrl(img)" alt="Answer attachment" class="answer-attachment-img" />
+          </a>
         </div>
-
         <time>{{ answerTimestamp }}</time>
       </article>
     </section>
@@ -173,7 +171,7 @@ export default {
         }
         return (
           (import.meta.env.VITE_NODE_ENV == "DEV"
-            ? "http://localhost:5000/uploads/"
+            ? import.meta.env.VITE_API_BASE + "/uploads/"
             : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
         );
       });
@@ -187,7 +185,7 @@ export default {
         }
         return (
           (import.meta.env.VITE_NODE_ENV == "DEV"
-            ? "http://localhost:5000/uploads/"
+            ? import.meta.env.VITE_API_BASE + "/uploads/"
             : "https://gymkhana.iitb.ac.in/newbee/api/uploads/") + image
         );
       });
@@ -209,6 +207,9 @@ export default {
     },
     answerTimestamp() {
       return this.formatShortDate(this.primaryAnswer.asked_At || this.primaryAnswer.timestamp);
+    },
+    answerImages() {
+      return this.primaryAnswer.images || [];
     },
   },
   methods: {
@@ -259,6 +260,10 @@ export default {
     async ensureQuestionSelected() {
       await this.questionStore.SetQuestion(this.question);
       await this.questionStore.SetQuestionID(this.question._id || this.question.id);
+    },
+    getImageUrl(filename) {
+      if (!filename) return "";
+      return `${import.meta.env.VITE_API_BASE}/uploads/${filename}`;
     },
     async submitComment() {
       const text = this.commentText.trim();
@@ -531,6 +536,26 @@ h1 {
   font-size: 12px;
   line-height: 1.25;
   font-weight: 500;
+}
+
+.answer-images-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.answer-attachment-img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  transition: transform 0.2s ease;
+}
+
+.answer-attachment-img:hover {
+  transform: scale(1.02);
 }
 
 .answer-card time {

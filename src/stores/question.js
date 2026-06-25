@@ -373,6 +373,10 @@ export const useQuestionStore = defineStore("question", {
         const data = await res.json();
         console.log('data :', data);
         this.snackMessage = data.message;
+        const listStore = useListStore();
+        if (data.data) {
+          listStore.list.unshift(data.data);
+        }
         await colourStore.SetSnackColor(true);
       } else {
         if (res.status === 403) {
@@ -396,8 +400,11 @@ export const useQuestionStore = defineStore("question", {
             console.log("snackbar");
             console.log("new request sent");
             const data = await res.json();
-            console.log('data :', data);
             this.snackMessage = data.message;
+            const listStore = useListStore();
+            if (data.data) {
+              listStore.list.unshift(data.data);
+            }
           } else {
             console.log("refresh failed");
             await this.authStore.Logout();
@@ -414,6 +421,7 @@ export const useQuestionStore = defineStore("question", {
     async AddAnswer(body, images) {
       const authStore = useAuthStore();
       const colourStore = useColourStore();
+      const listStore = useListStore();
       console.log("we have entered the add answer function in question.js");
 
       console.log("images : ", images);
@@ -454,7 +462,9 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         await colourStore.SetSnackColor(true);
-        window.location.href = import.meta.env.VITE_BASE + "/answered";
+        if (data.data) {
+          await listStore.UpsertQuestion(data.data);
+        }
       } else {
         if (res.status === 403) {
           console.log("refreshing token");
@@ -482,10 +492,9 @@ export const useQuestionStore = defineStore("question", {
             const data = await res.json();
             console.log('data :', data);
             this.snackMessage = data.message;
-            window.location.href = import.meta.env.VITE_BASE + "/answered";
-            window.onload = function () {
-              window.location.href = import.meta.env.VITE_BASE + "/question";
-            };
+            if (data.data) {
+              await listStore.UpsertQuestion(data.data);
+            }
             return data;
           } else {
             console.log("refresh failed");
@@ -1511,74 +1520,23 @@ export const useQuestionStore = defineStore("question", {
         }
       }
     },
-    async DeleteInfoPost() {
-      const authStore = useAuthStore();
-      const listStore = useListStore();
-      const colourStore = useColourStore();
-      console.log("deleting infopost in question.js", this.info_ID);
 
-      const accessToken = authStore.accessToken;
-      const bearer = `Bearer ${accessToken}`;
-
-      const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/delete/${this.info_ID}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: bearer,
-        },
-      });
-
-      this.showSnackbar = true;
-      if (res.status == 200) {
-        console.log("successfully deleted the info post :", this.info_ID);
-        const data = await res.json();
-        this.snackMessage = data.message;
-        colourStore.SetSnackColor(true);
-        // Assuming we need to remove from listStore. Let's filter out the deleted infopost in listStore or let component reload
-        listStore.list = listStore.list.filter(item => item._id !== this.info_ID && item.id !== this.info_ID);
-      } else {
-        if (res.status === 403) {
-          await authStore.Refresh();
-          if (authStore.loggedIn) {
-            const bearer = `Bearer ${authStore.accessToken}`;
-            const res = await fetch(`${import.meta.env.VITE_API_BASE}/info/delete/${this.info_ID}`, {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: bearer,
-              },
-            });
-            this.showSnackbar = true;
-            const data = await res.json();
-            this.snackMessage = data.message;
-            colourStore.SetSnackColor(true);
-            listStore.list = listStore.list.filter(item => item._id !== this.info_ID && item.id !== this.info_ID);
-            return data;
-          } else {
-            await this.authStore.Logout();
-          }
-        } else {
-          this.showSnackbar = true;
-          this.snackMessage = "not enough permissions";
-          colourStore.SetSnackColor(false);
-          await this.authStore.Logout();
-        }
-      }
-    },
-    async EditAnswer(body) {
+    async EditAnswer(body, images = []) {
       const authStore = useAuthStore();
       const listStore = useListStore();
       const colourStore = useColourStore();
       console.log("we have entered the edit answer function in question.js");
       const uid = authStore.user_ID;
       console.log("user id  parent function: ", uid);
-      const answerObj = {
-  answers: {        
-    user_ID: uid,
-    body: body
-  }
-};
-      console.log("answer object : ", answerObj);
+
+      const answerObj = new FormData();
+      answerObj.append("answers[user_ID]", uid);
+      answerObj.append("answers[body]", body);
+      
+      for (let i = 0; i < images.length; i++) {
+        answerObj.append("images", images[i]);
+      }
+
       const accessToken = authStore.accessToken;
       const bearer = `Bearer ${accessToken}`;
       console.log("bearer : ", bearer);
@@ -1590,10 +1548,9 @@ export const useQuestionStore = defineStore("question", {
         {
           method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
             Authorization: bearer,
           },
-          body: JSON.stringify(answerObj),
+          body: answerObj,
         }
       )
       // message for editing answer
@@ -1605,17 +1562,8 @@ export const useQuestionStore = defineStore("question", {
         console.log('data :', data);
         this.snackMessage = data.message;
         colourStore.SetSnackColor(true);
-        await listStore.SetEditAnswer(
-          this.question_ID,
-          this.answer_ID,
-          body
-        );
-        if (this.question && this.question.answers) {
-          const answer = this.question.answers.find(a => a._id === this.answer_ID || a.id === this.answer_ID);
-          if (answer) {
-            answer.body = body;
-            answer.edited = true;
-          }
+        if (data.data) {
+          await listStore.UpsertQuestion(data.data);
         }
       } else {
         if (res.status === 403) {
@@ -1631,10 +1579,9 @@ export const useQuestionStore = defineStore("question", {
               {
                 method: "PATCH",
                 headers: {
-                  "Content-Type": "application/json",
                   Authorization: bearer,
                 },
-                body: JSON.stringify(answerObj),
+                body: answerObj,
               }
             )
             // message for editing answer
@@ -1645,17 +1592,8 @@ export const useQuestionStore = defineStore("question", {
             console.log('data :', data);
             this.snackMessage = data.message;
             colourStore.SetSnackColor(true);
-            await listStore.SetEditAnswer(
-              this.question_ID,
-              this.answer_ID,
-              body
-            );
-            if (this.question && this.question.answers) {
-              const answer = this.question.answers.find(a => a._id === this.answer_ID || a.id === this.answer_ID);
-              if (answer) {
-                answer.body = body;
-                answer.edited = true;
-              }
+            if (data.data) {
+              await listStore.UpsertQuestion(data.data);
             }
           } else {
             console.log("refresh failed");

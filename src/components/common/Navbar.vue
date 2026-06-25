@@ -15,7 +15,7 @@
         type="button"
         class="nav-icon bell-icon"
         :class="{ active: notificationsOpen }"
-        @click="$emit('toggleNotifications')"
+        @click="handleToggleNotifications"
         aria-label="Open notifications"
       >
         <Notification class="notification-svg" />
@@ -76,9 +76,16 @@ export default {
   },
   mounted() {
     window.addEventListener("resize", this.handleResize);
+    document.addEventListener("click", this.closeDropdown);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.handleResize);
+    document.removeEventListener("click", this.closeDropdown);
+  },
+  watch: {
+    $route() {
+      this.showLogoutMenu = false;
+    }
   },
   computed: {
     isMobile() {
@@ -95,11 +102,26 @@ export default {
     handleResize() {
       this.windowWidth = window.innerWidth;
     },
+    closeDropdown(e) {
+      const userProfile = this.$el.querySelector('.user-profile');
+      if (this.showLogoutMenu && userProfile && !userProfile.contains(e.target)) {
+        this.showLogoutMenu = false;
+      }
+    },
     toDevCom() {
       window.open("https://devcom.gymkhana.iitb.ac.in/");
     },
+    handleToggleNotifications() {
+      if (this.showLogoutMenu) {
+        this.showLogoutMenu = false;
+      }
+      this.$emit("toggleNotifications");
+    },
     toggleLogoutMenu() {
       this.showLogoutMenu = !this.showLogoutMenu;
+      if (this.showLogoutMenu && this.notificationsOpen) {
+        this.$emit("toggleNotifications");
+      }
     },
     async handleLogout() {
       await this.authStore.Logout();
