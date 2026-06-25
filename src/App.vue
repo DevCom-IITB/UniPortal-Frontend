@@ -10,7 +10,6 @@
         @toggleSidebar="showSidebar = !showSidebar"
         @toggleDropdown="showDropdown = !showDropdown"
       />
-      <!-- Mobile Dropdown Menu -->
       <transition name="dropdown-fade">
         <div v-if="showDropdown && windowWidth < 750" class="mobile-dropdown-menu">
           <button class="dropdown-item translate-item notranslate" type="button" @click="triggerHindiTranslationAndClose">
@@ -94,7 +93,6 @@
           </button>
         </div>
         
-        <!-- Mobile Floating Action Button (FAB) -->
         <button
           v-if="windowWidth < 750 && Auth.role != 6311"
           class="mobile-fab"
@@ -163,10 +161,11 @@
     </div>
   </div>
   <div class="login" v-if="!Auth.loggedIn">
-    <DC class="DC" @click="toDevCom"/>
-    <SMP class="SMP" @click="toSMP"/>
-    <login_background class="login-background" />
-    <div class="login-form">
+    <div class="login-header-bar">
+      <SMP class="SMP-logo" @click="toSMP"/>
+      <DC class="DC-logo" @click="toDevCom"/>
+    </div>
+    <div class="login-panel-wrapper">
       <Login :loggedIn="loggedIn" @loggedIn="Login" />
     </div>
     <div class="snackbar" v-if="isSnackbarVisible" :key="snackbarKey">
@@ -180,7 +179,6 @@ import Navbar from "./components/common/Navbar.vue";
 import Sidebar from "./components/common/Sidebar.vue";
 import askBox from "./components/common/askBox.vue";
 import Snackbar from "./components/common/snackbar.vue";
-import login_background from "./components/background_images/Group 9.svg";
 import Login from "./components/common/Login.vue";
 import DC from "./components/icons/DC.svg";
 import SMP from "./components/icons/SMP_black.svg";
@@ -197,7 +195,6 @@ export default {
     Navbar,
     Sidebar,
     askBox,
-    login_background,
     Login,
     Snackbar,
     DC,
@@ -314,25 +311,21 @@ export default {
       this.askQuestion = !this.askQuestion;
     },
     
-    // FIXED: Uses native restore widget handlers & cookie resets to cleanly skip the middle step entirely
     triggerHindiTranslation() {
       this.checkGoogleTranslateState();
 
       if (this.isCurrentlyHindi) {
-        // Alternative approach: Find Google's native 'Show Original' skip button in its iframe wrappers
         const restoreButton = document.querySelector('.goog-te-banner-frame')?.contentWindow?.document?.querySelector('.goog-te-button button');
         
         if (restoreButton) {
           restoreButton.click();
         } else {
-          // If the button is inaccessible inside the iframe cross-origin context, clear the cookie and refresh to guarantee baseline state
           document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + location.hostname;
           location.reload();
           return;
         }
       } else {
-        // Forward translation: Directly target the dropdown combo box
         const selectElement = document.querySelector('.goog-te-combo');
         if (selectElement) {
           selectElement.value = 'hi';
@@ -432,9 +425,6 @@ export default {
     },
     async toDevCom() {
       window.open("https://devcom.gymkhana.iitb.ac.in/");
-    },
-    async toSMP() {
-      window.open("https://smp.gymkhana.iitb.ac.in/");
     },
     formatShortDate(value) {
       const date = new Date(value);
@@ -719,39 +709,63 @@ export default {
 .login {
   width: 100vw;
   height: 100vh;
-  background: #fff9e5;
+  background: linear-gradient(to right, #fffcf1 50%, #ffe687 50%);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.login-background {
-  position: fixed;
+.login-panel-wrapper {
+  position: relative; /* Fixed: Added boundary context for the absolute layout elements */
+  width: calc(100% - 100px);
+  height: calc(100% - 80px);
+  max-width: 1720px;
+  max-height: 880px;
+  display: flex;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(180, 140, 0, 0.18);
 }
 
-.DC {
-  left: 10px;
-  top: 0px;
-  z-index: 1;
-  position: fixed;
+.login-header-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  box-sizing: border-box;
+  z-index: 10;
+  pointer-events: none;
 }
 
-.SMP {
-  right: 30px;
-  top: 20px;
-  z-index: 1;
-  position: fixed;
+.login-header-bar > * {
+  pointer-events: auto;
 }
 
-.login-form {
-  background: #fff;
-  border-radius: 24px;
-  width: 38vw;
-  height: 85vh;
-  box-shadow: 20px 20px 60px #d9d4c3, -20px -20px 60px #fff9e5;
-  z-index: 1;
-  padding: 24px 24px;
+.SMP-logo {
+  width: 80px;
+  height: auto;
+  cursor: pointer;
 }
+
+.login-header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.DC-logo {
+  width: 48px;
+  height: auto;
+  cursor: pointer;
+}
+
 
 @media only screen and (max-width: 950px) {
   .ExpandedImg {
@@ -792,7 +806,7 @@ export default {
     z-index: 99;
     height: 64px;
     border-radius: 32px;
-    background: #ffdf80; /* golden yellow */
+    background: #ffdf80; 
     border: none;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     display: inline-flex;
@@ -829,7 +843,7 @@ export default {
     position: absolute;
     top: 68px;
     right: 12px;
-    background: #fff0c2; /* light yellow matching header */
+    background: #fff0c2; 
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 20px;
     padding: 18px;
@@ -955,17 +969,35 @@ export default {
 
   .ExpandedImg {
     height: 200px;
+    background: #fceeb9;
   }
 
-  .login-form {
-    width: 95vw;
-    height: 95vh;
+  .login {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    background: #ffffff;
+    overflow-y: auto;
+  }
+
+  .login-header-bar {
+    display: none;
+  }
+
+  .login-panel-wrapper {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    flex: 1;
   }
 }
 </style>
 
 <style>
-/* Global rules to cleanly hide the Google Translate widget header elements */
 .goog-te-banner-frame,
 iframe.goog-te-banner-frame,
 .goog-te-menu-value,

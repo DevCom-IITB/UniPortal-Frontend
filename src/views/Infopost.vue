@@ -1,7 +1,7 @@
 <template>
   <div class="announcements-page">
     <div class="tabs-shell">
-      <button class="tab-button active" type="button">
+      <button class="tab-button active" type="button" @click="goToAnnouncements">
         Announcements
         <span v-if="authStore.role !== 7669 && infoposts.length > 0" class="count-badge">{{ infoposts.length }}</span>
       </button>
