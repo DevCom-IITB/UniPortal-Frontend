@@ -94,6 +94,14 @@
           >
             Login
           </button>
+
+          <!-- Mobile-only mentor button, inline in form flow -->
+          <button
+            class="mentor-btn mentor-btn-mobile"
+            @click="redirectToExternalRoute"
+          >
+            Login as a Mentor
+          </button>
         </div>
 
         <p class="help-text">
@@ -487,6 +495,11 @@ export default {
   border-color: #111111;
 }
 
+/* Mobile mentor button hidden by default on desktop */
+.mentor-btn-mobile {
+  display: none;
+}
+
 .help-text {
   font-size: 14px;
   color: #111111;
@@ -649,7 +662,7 @@ export default {
     position: relative;
   }
 
-  /* Hide mentor button on mobile */
+  /* Hide the absolutely-positioned desktop mentor button on mobile */
   .mentor-action-section {
     display: none !important;
   }
@@ -718,7 +731,7 @@ export default {
     color: #9e9e9e;
   }
 
-  /* Login button: full-width pill, pushed to bottom */
+  /* Login button: full-width pill */
   .login-btn {
     width: 100%;
     height: 56px;
@@ -733,6 +746,30 @@ export default {
     align-self: center;
     padding: 0;
     letter-spacing: -0.2px;
+  }
+
+  /* Mobile mentor button: show as full-width outlined pill below Login */
+  .mentor-btn-mobile {
+    display: block;
+    width: 100%;
+    height: 56px;
+    background: transparent;
+    border: 1.5px solid #b48c00;
+    border-radius: 32px;
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #b48c00;
+    cursor: pointer;
+    padding: 0;
+    letter-spacing: -0.2px;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .mentor-btn-mobile:hover {
+    background: #ffdf80;
+    color: #111111;
+    border-color: #111111;
   }
 
   /* Help text: left-aligned, smaller */
