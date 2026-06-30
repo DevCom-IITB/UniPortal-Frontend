@@ -25,7 +25,7 @@
         v-for="question in filteredQuestions"
         :key="question._id || question.id"
         class="QuestionBox"
-        @expand="$emit('expand')"
+        @expand="$emit('expand', $event)"
         :showAnswerBox="true"
         :question="question"
         :searchTerm="searchQuery"
@@ -64,11 +64,13 @@ export default {
   data() {
     return {
       networkError: false,
-      questions: [],
       searchQuery: "",
     };
   },
   computed: {
+    questions() {
+      return this.listStore.list || [];
+    },
     filteredQuestions() {
       if (!this.searchQuery.trim()) {
         return this.questions;
@@ -152,7 +154,6 @@ export default {
   async mounted() {
     await this.colourStore.colourMyQuestions();
     await this.fetchQuestions();
-    this.questions = this.listStore.list || [];
     console.log(this.questions);
   },
 };

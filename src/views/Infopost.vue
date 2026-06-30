@@ -1,7 +1,7 @@
 <template>
   <div class="announcements-page">
     <div class="tabs-shell">
-      <button class="tab-button active" type="button" @click="goToAnnouncements">
+      <button class="tab-button active" type="button">
         Announcements
         <span v-if="authStore.role !== 7669 && infoposts.length > 0" class="count-badge">{{ infoposts.length }}</span>
       </button>
@@ -32,7 +32,7 @@
         :key="infopost._id || infopost.id"
         class="InfoPostBox"
         :infopost="infopost"
-        @expand="$emit('expand')"
+        @expand="$emit('expand', $event)"
         @edit="EditInfo"
       />
     </div>
@@ -78,13 +78,15 @@ export default {
   data() {
     return {
       networkError: false,
-      infoposts: [],
       searchQuery: "",
       windowWidth: window.innerWidth,
     };
   },
 
   computed: {
+    infoposts() {
+      return this.listStore.list || [];
+    },
     filteredInfoposts() {
       if (!this.searchQuery.trim()) {
         return this.infoposts;
@@ -201,9 +203,6 @@ export default {
       console.log("Selected tag:", tag);
 
       await this.fetchInfoPosts(tag);
-
-      this.infoposts = this.listStore.list;
-
       console.log(this.infoposts);
     },
     handleResize() {
@@ -217,7 +216,6 @@ export default {
       this.questionStore.FetchUnansweredCount()
     ]);
 
-    this.infoposts = this.listStore.list;
     this.questionStore.announcementsCount = this.infoposts.length;
 
     console.log(this.infoposts);
