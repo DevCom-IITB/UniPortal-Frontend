@@ -5,6 +5,7 @@ import UnAnswered from "../views/UnAnswered.vue";
 import Answered from "../views/Answered.vue";
 import Infopost from "../views/Infopost.vue";
 import Questionview from "../views/Questionview.vue";
+import WhatsAppGroups from "../views/WhatsAppGroups.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     name: "Questionview",
     component: Questionview,
     props: true,
+  },
+  {
+    path: import.meta.env.VITE_BASE + "/whatsapp-groups",
+    name: "WhatsAppGroups",
+    component: WhatsAppGroups,
   },
 ];
 

@@ -146,7 +146,7 @@ export default {
       window.open("https://gymkhana.iitb.ac.in/~smp/");
     },
     async whatsapp() {
-      window.open("https://chat.whatsapp.com/");
+      this.$router.push({ name: 'WhatsAppGroups' });
     },
     async smpEmail() {
       window.open("mailto:smp@iitb.ac.in");

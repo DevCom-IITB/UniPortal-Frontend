@@ -372,7 +372,7 @@ export default {
       this.showDropdown = false;
     },
     whatsapp() {
-      window.open("https://chat.whatsapp.com/", "_blank");
+      this.$router.push({ name: 'WhatsAppGroups' });
       this.showDropdown = false;
     },
     smpEmail() {
