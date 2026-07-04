@@ -9,7 +9,7 @@ export const useListStore = defineStore("list", {
   actions: {
     async SetList(list) {
       this.list = list;
-      console.log("List was set : ", this.list);
+      // console.log("List was set : ", this.list);
     },
     async AddCommentQuestion(qid, comment) {
       console.log("adding comment to question in list : ", qid);
