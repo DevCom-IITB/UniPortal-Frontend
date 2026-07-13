@@ -87,91 +87,103 @@ export default {
       searchQuery: "",
       isSearchFocused: false,
       departments: [
-        {
-          id: 1,
-          name: "Applied Geophysics",
-          description: "Unearth the secrets of our planet, from seismic waves to tectonic shifts.",
-          whatsappLink: "https://chat.whatsapp.com/F60j5fY95msJkHcQuJRml4"
-        },
-        {
-          id: 2,
-          name: "Chemical Engineering",
-          description: "Master the molecules that matter, from renewable fuels to advanced materials.",
-          whatsappLink: "https://chat.whatsapp.com/JaEWOdbI31jLX0P6oGoRl5?s=cl&p=a&ilr=2"
-        },
-        {
-          id: 3,
-          name: "Civil Engineering",
-          description: "Design the skylines and infrastructures that define modern civilization.",
-          whatsappLink: "https://chat.whatsapp.com/HuQtHbjlBOxCSOBl7lhUwR?s=cl&p=i&mlu=2&amv=1"
-        },
-        {
-          id: 4,
-          name: "Computer Science Engineering",
-          description: "Code the future, from artificial intelligence to scalable software systems.",
-          whatsappLink: "https://chat.whatsapp.com/EfCGOV1w2v5D4q4fHGsFVm?mode=gi_t"
-        },
-        {
-          id: 5,
-          name: "Economics",
-          description: "Decode the dynamics of global markets and human decision-making.",
-          whatsappLink: "https://chat.whatsapp.com/FKmiVHFRgNkKKlHeUKb5tB?s=cl&p=i&mlu=1&amv=1"
-        },
-        {
-          id: 6,
-          name: "Electrical Engineering",
-          description: "Power the world with innovations in circuits, systems, and quantum tech.",
-          whatsappLink: "https://chat.whatsapp.com/JdMVdQqs695FnjzOcSNgTD?s=sh&p=a&ilr=4"
-        },
-        {
-          id: 7,
-          name: "Energy Science and Engineering",
-          description: "Pioneer sustainable solutions to meet the world's growing energy demands.",
-          whatsappLink: "https://chat.whatsapp.com/DzwGKv5oCVaBFvPswcXkYG"
-        },
-        {
-          id: 8,
-          name: "Engineering Physics",
-          description: "Bridge the gap between theoretical physics and cutting-edge technology.",
-          whatsappLink: "https://chat.whatsapp.com/BX6vvAR5UcB0JYUCijZ3IK"
-        },
-        {
-          id: 9,
-          name: "ESED",
-          description: "Engineer solutions to protect ecosystems and build a sustainable future.",
-          whatsappLink: "https://chat.whatsapp.com/IWYxdSUz7Sx6sy5ZqSg847?s=sw&p=i&mlu=0"
-        },
-        {
-          id: 10,
-          name: "IDC",
-          description: "Blend art, technology, and human psychology to craft beautiful experiences.",
-          whatsappLink: "https://chat.whatsapp.com/DAFvFLRSILs7qFQQZO0ksK?mode=gi_t"
-        },
-        {
-          id: 11,
-          name: "IEOR",
-          description: "Optimize complex systems and drive data-backed operational excellence.",
-          whatsappLink: "https://chat.whatsapp.com/G25igD7iD7684KvXpilQbT"
-        },
-        {
-          id: 12,
-          name: "Mathematics",
-          description: "Explore the abstract logic and elegant structures that govern the universe.",
-          whatsappLink: "https://chat.whatsapp.com/HmVGVE8ohc28DsD105aoR9"
-        },
-        {
-          id: 13,
-          name: "Mechanical Engineering",
-          description: "Innovate the mechanics of motion, from nanoscale machines to aerospace engines.",
-          whatsappLink: "https://chat.whatsapp.com/H1K4OhY1Od8CQCTQlJX6Ah?s=cl&p=i&mlu=2"
-        },
-        {
-          id: 14,
-          name: "Meta",
-          description: "Forge the future by discovering and developing revolutionary new materials.",
-          whatsappLink: "https://chat.whatsapp.com/FjKW9pJwevB2matBCvqCIC"
-        }
-      ]
+                      {
+                        id: 1,
+                        name: "Aerospace Engineering",
+                        description: "Chart the course beyond gravity, from rocket propulsion to aircraft design.",
+                        whatsappLink: "https://chat.whatsapp.com/HYIUlECYVQX85O7uczqnit?s=cl&p=a&ilr=1"
+                      },
+                      {
+                        id: 2,
+                        name: "Applied Geophysics",
+                        description: "Unearth the secrets of our planet, from seismic waves to tectonic shifts.",
+                        whatsappLink: "https://chat.whatsapp.com/F60j5fY95msJkHcQuJRml4"
+                      },
+                      {
+                        id: 3,
+                        name: "Chemical Engineering",
+                        description: "Master the molecules that matter, from renewable fuels to advanced materials.",
+                        whatsappLink: "https://chat.whatsapp.com/JaEWOdbI31jLX0P6oGoRl5?s=cl&p=a&ilr=2"
+                      },
+                      {
+                        id: 4,
+                        name: "Chemistry",
+                        description: "Delve into the reactions and structures that shape matter itself.",
+                        whatsappLink: "https://chat.whatsapp.com/DV4qSn788jo7t0fpfQoSQD"
+                      },
+                      {
+                        id: 5,
+                        name: "Civil Engineering",
+                        description: "Design the skylines and infrastructures that define modern civilization.",
+                        whatsappLink: "https://chat.whatsapp.com/HuQtHbjlBOxCSOBl7lhUwR?s=cl&p=i&mlu=2&amv=1"
+                      },
+                      {
+                        id: 6,
+                        name: "Computer Science Engineering",
+                        description: "Code the future, from artificial intelligence to scalable software systems.",
+                        whatsappLink: "https://chat.whatsapp.com/EfCGOV1w2v5D4q4fHGsFVm?mode=gi_t"
+                      },
+                      {
+                        id: 7,
+                        name: "Economics",
+                        description: "Decode the dynamics of global markets and human decision-making.",
+                        whatsappLink: "https://chat.whatsapp.com/FKmiVHFRgNkKKlHeUKb5tB?s=cl&p=i&mlu=1&amv=1"
+                      },
+                      {
+                        id: 8,
+                        name: "Electrical Engineering",
+                        description: "Power the world with innovations in circuits, systems, and quantum tech.",
+                        whatsappLink: "https://chat.whatsapp.com/JEXHSZFKWWoG9rnp8uXwjQ?s=sh&p=a&ilr=0"
+                      },
+                      {
+                        id: 9,
+                        name: "Energy Science and Engineering",
+                        description: "Pioneer sustainable solutions to meet the world's growing energy demands.",
+                        whatsappLink: "https://chat.whatsapp.com/DzwGKv5oCVaBFvPswcXkYG"
+                      },
+                      {
+                        id: 10,
+                        name: "Engineering Physics",
+                        description: "Bridge the gap between theoretical physics and cutting-edge technology.",
+                        whatsappLink: "https://chat.whatsapp.com/BX6vvAR5UcB0JYUCijZ3IK"
+                      },
+                      {
+                        id: 11,
+                        name: "ESED",
+                        description: "Engineer solutions to protect ecosystems and build a sustainable future.",
+                        whatsappLink: "https://chat.whatsapp.com/IWYxdSUz7Sx6sy5ZqSg847?s=sw&p=i&mlu=0"
+                      },
+                      {
+                        id: 12,
+                        name: "IDC",
+                        description: "Blend art, technology, and human psychology to craft beautiful experiences.",
+                        whatsappLink: "https://chat.whatsapp.com/DAFvFLRSILs7qFQQZO0ksK?mode=gi_t"
+                      },
+                      {
+                        id: 13,
+                        name: "IEOR",
+                        description: "Optimize complex systems and drive data-backed operational excellence.",
+                        whatsappLink: "https://chat.whatsapp.com/G25igD7iD7684KvXpilQbT"
+                      },
+                      {
+                        id: 14,
+                        name: "Mathematics",
+                        description: "Explore the abstract logic and elegant structures that govern the universe.",
+                        whatsappLink: "https://chat.whatsapp.com/HmVGVE8ohc28DsD105aoR9"
+                      },
+                      {
+                        id: 15,
+                        name: "Mechanical Engineering",
+                        description: "Innovate the mechanics of motion, from nanoscale machines to aerospace engines.",
+                        whatsappLink: "https://chat.whatsapp.com/H1K4OhY1Od8CQCTQlJX6Ah?s=cl&p=i&mlu=2"
+                      },
+                      {
+                        id: 16,
+                        name: "Meta",
+                        description: "Forge the future by discovering and developing revolutionary new materials.",
+                        whatsappLink: "https://chat.whatsapp.com/FjKW9pJwevB2matBCvqCIC"
+                      }
+                    ]
     };
   },
   computed: {
